@@ -1,0 +1,1 @@
+Localtable automated tests

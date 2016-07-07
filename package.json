@@ -1,0 +1,53 @@
+{
+  "name": "TacticalMastery",
+  "decription": "TacticalMastery Backend Api",
+  "private": true,
+  "author": "Denis Matei",
+  "scripts": {
+    "start": "scripts/run",
+    "test": "NODE_ENV=test _mocha -R spec --compilers js:babel-core/register --recursive",
+    "postinstall": "scripts/postinstall",
+    "lint": "eslint api"
+  },
+  "main": "dist/index.js",
+  "dependencies": {
+    "babel-cli": "^6.7.5",
+    "babel-core": "^6.7.6",
+    "babel-eslint": "^6.0.2",
+    "babel-plugin-transform-runtime": "^6.7.5",
+    "babel-preset-es2015": "^6.6.0",
+    "babel-preset-stage-0": "^6.5.0",
+    "babel-runtime": "^6.6.1",
+    "bcrypt": "^0.8.5",
+    "bluebird": "^2.9.34",
+    "body-parser": "^1.13.2",
+    "config3": "^1.0.0",
+    "cors": "*",
+    "eslint": "^2.4.0",
+    "express": "^4.13.1",
+    "express-promise-router": "0.0.9",
+    "jsonwebtoken": "~5.0.4",
+    "later": "^1.2.0",
+    "lodash": "^3.10.1",
+    "morgan": "~1.6.0",
+    "q": "^1.4.1",
+    "sendgrid": "^2.0.0",
+    "through": "~2.3.7",
+    "twilio": "^2.9.1",
+    "winston": "~1.0.1"
+  },
+  "devDependencies": {
+    "chai": "^2.3.0",
+    "chai-as-promised": "^5.3.0",
+    "eslint": "^2.8.0",
+    "eslint-config-standard": "^5.1.0",
+    "eslint-plugin-promise": "^1.1.0",
+    "eslint-plugin-standard": "^1.3.1",
+    "mocha": "^2.2.5",
+    "nodemon": "^1.9.1",
+    "supertest": "^0.15.0"
+  },
+  "engines": {
+    "node": "~5.10.1"
+  }
+}
