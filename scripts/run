@@ -1,5 +1,6 @@
 #!/bin/sh
 if [ "$NODE_ENV" = "production" ] || [ "$NODE_ENV" = "staging" ]; then
+  forever stopall
   forever start dist/server.js
 else
   nodemon --exec ./node_modules/.bin/babel-node server.js
