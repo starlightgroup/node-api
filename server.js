@@ -1,6 +1,5 @@
 import express from 'express';
 import fs from 'fs';
-import passport from 'passport';
 import morgan from 'morgan';
 import logger from './api/common/log';
 import cors from 'cors';
