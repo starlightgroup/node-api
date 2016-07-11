@@ -9,5 +9,5 @@ export default function (router) {
   router.use(resSuccess);
 
 
-  router.post('/send-email', mailCtrl.sendAffiliate);
+  router.post('/add-contact', mailCtrl.addContact);
 };
