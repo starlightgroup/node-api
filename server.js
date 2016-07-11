@@ -6,6 +6,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import config from 'config3';
 import expressPromiseRouter from 'express-promise-router';
+import https from 'https';
 
 import * as routes from './config/routes';
 
@@ -44,7 +45,18 @@ app.use(function (err, req, res, next) {
   }
 });
 
-app.listen(process.env.PORT || 4000);
+if(process.env.NODE_ENV === 'production') {
+  var options = {
+    cert: fs.readFileSync('/etc/nginx/ssl/tacticalmastery_chained.crt'),
+    key: fs.readFileSync('/etc/nginx/ssl/tacticalmastery.key')
+  };
+  const server = https.createServer(options, app);
+  server.listen(process.env.PORT || 4000);
+}
+else {
+  app.listen(process.env.PORT || 4000);
+}
+
 
 if (process.env.PORT === undefined) {
   console.log("Server Started at port : " + 4000);
