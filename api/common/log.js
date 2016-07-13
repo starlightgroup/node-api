@@ -1,23 +1,22 @@
-/**
- * Created by DreamSoft on 7/30/2015.
- */
 'use strict';
 
 var through = require('through');
 var winston = require('winston');
+require('winston-papertrail').Papertrail;
 
 var logger = new winston.Logger({
   transports: [
-    new (winston.transports.Console)({
+    new (winston.transports.Papertrail)({
       silent: process.env.NODE_ENV === 'test',
-      colorize: true,
-      timestamp: true
-    })
+      host: 'logs4.papertrailapp.com',
+      port: 50493
+    }),
+
   ]
 });
 
-logger.asStream = function asStream(level) {
-  return through(function (data) {
+logger.asStream = function asStream(level){
+  return through(function(data){
     logger.log(level, String(data));
   });
 };

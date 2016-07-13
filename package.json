@@ -36,7 +36,8 @@
     "sendgrid": "^2.0.0",
     "through": "~2.3.7",
     "twilio": "^2.9.1",
-    "winston": "~1.0.1"
+    "winston": "~1.0.1",
+    "winston-papertrail": "^1.0.2"
   },
   "devDependencies": {
     "chai": "^2.3.0",
