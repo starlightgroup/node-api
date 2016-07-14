@@ -11,4 +11,5 @@ export default function (router) {
 
   router.post('/add-contact', mailCtrl.addContact);
   router.get('/get-lead/:id', mailCtrl.getLead);
+  router.post('/create-lead', mailCtrl.createLead);
 };

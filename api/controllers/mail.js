@@ -45,7 +45,31 @@ async function getLead(req, res, next) {
     }
 }
 
+async function createLead(req, res, next) {
+    const campaignId = 3;
+    req.body.loginId = config.konnective.loginId;
+    req.body.password = config.konnective.password;
+
+    const options = {
+        uri: 'https://api.konnektive.com/order/query/',
+        qs: req.body,
+        headers: {
+            'User-Agent': 'Request-Promise'
+        },
+        json: true // Automatically parses the JSON string in the response
+    };
+    const response = await request(options);
+    console.log(response);
+    if(response.result == "ERROR") {
+        res.error(response.message)
+    }
+    else {
+        res.success(response.message);
+    }
+}
+
 export default {
     addContact: addContact,
     getLead: getLead,
+    createLead: createLead,
 }
