@@ -1,3 +1,4 @@
+require('newrelic');
 import express from 'express';
 import fs from 'fs';
 import morgan from 'morgan';
