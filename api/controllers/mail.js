@@ -49,9 +49,11 @@ async function createLead(req, res, next) {
     const campaignId = 3;
     req.body.loginId = config.konnective.loginId;
     req.body.password = config.konnective.password;
+    req.body.campaignId = 3;
+    req.body.emailAddress = req.body.emailAddress || config.email;
 
     const options = {
-        uri: 'https://api.konnektive.com/order/query/',
+        uri: 'https://api.konnektive.com/leads/import/',
         qs: req.body,
         headers: {
             'User-Agent': 'Request-Promise'

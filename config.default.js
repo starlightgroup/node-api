@@ -9,5 +9,6 @@ module.exports = {
   konnective: {
     loginId: 'tmapi',
     password: '5up3rdup354p19000X'
-  }
+  },
+  email: 'pending@tacticalmastery.com'
 };
