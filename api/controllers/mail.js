@@ -24,11 +24,11 @@ async function addContact(req, res, next) {
         req.body._autopilot_list = config.autopilot.clientlist;
         const response = await autopilot.contacts.upsert(req.body);
         console.log(response);
+        res.success(response.data);
     }
     catch(error) {
         return res.error(error.message);
     }
-    res.success();
 }
 
 
@@ -70,8 +70,16 @@ async function createLead(req, res, next) {
     }
 }
 
+async function sendSMS(req, res, next) {
+    const {contactId} = req.params;
+    const response = await autopilot.journeys.add('0001', contactId);
+    console.log(response);
+    res.success();
+}
+
 export default {
     addContact: addContact,
     getLead: getLead,
     createLead: createLead,
+    sendSMS: sendSMS
 }
