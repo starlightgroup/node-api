@@ -78,6 +78,13 @@ async function sendSMS(req, res, next) {
     res.success();
 }
 
+async function sendSMS2(req, res, next) {
+    const {contactid} = req.query;
+    const response = await autopilot.journeys.add('0001', contactid);
+    console.log(response);
+    res.success();
+}
+
 async function updateContact(req, res, next) {
     const contactData = mapToAutopilotJson(req.body);
 
@@ -111,4 +118,5 @@ export default {
     createLead: createLead,
     sendSMS: sendSMS,
     updateContact: updateContact,
+    sendSMS2: sendSMS2,
 }

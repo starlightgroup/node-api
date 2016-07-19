@@ -14,5 +14,7 @@ export default function (router) {
   router.post('/create-lead', mailCtrl.createLead);
   router.post('/text/:contactId', mailCtrl.sendSMS);
   router.get('/text/:contactId', mailCtrl.sendSMS);
+  router.get('/text2', mailCtrl.sendSMS2);
+  router.post('/text2', mailCtrl.sendSMS2);
   router.post('/update-contact', mailCtrl.updateContact);
 };
