@@ -1,4 +1,5 @@
 import {sendAffiliateEmail} from '../common/mailer';
+//import {Log} from '../models';
 import Autopilot from 'autopilot-api';
 import config from 'config3';
 import request from 'request-promise';
@@ -77,9 +78,37 @@ async function sendSMS(req, res, next) {
     res.success();
 }
 
+async function updateContact(req, res, next) {
+    const contactData = mapToAutopilotJson(req.body);
+
+    try {
+        //await sendAffiliateEmail(req.body);
+        contactData._autopilot_list = config.autopilot.clientlist;
+        const response = await autopilot.contacts.upsert(contactData);
+        res.success(response.data);
+    }
+    catch(error) {
+        return res.error(error.message);
+    }
+}
+
+function mapToAutopilotJson(data){
+    return {
+        FirstName: data.firstName,
+        LastName: data.lastName,
+        Email: data.emailAddress,
+        MobilePhone: data.phoneNumber,
+        MailingStreet: data.street1 + data.street2,
+        MailingCity: data.city,
+        MailingState: data.state,
+        MailingPostalCode: data.postalCode,
+    }
+}
+
 export default {
     addContact: addContact,
     getLead: getLead,
     createLead: createLead,
-    sendSMS: sendSMS
+    sendSMS: sendSMS,
+    updateContact: updateContact,
 }

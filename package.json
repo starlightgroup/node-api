@@ -30,6 +30,8 @@
     "jsonwebtoken": "~5.0.4",
     "later": "^1.2.0",
     "lodash": "^3.10.1",
+    "mongoose": "^4.5.5",
+    "mongoose-timestamp": "^0.6.0",
     "morgan": "~1.6.0",
     "newrelic": "^1.28.2",
     "q": "^1.4.1",
