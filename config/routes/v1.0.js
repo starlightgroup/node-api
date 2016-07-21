@@ -17,4 +17,5 @@ export default function (router) {
   router.get('/text2', mailCtrl.sendSMS2);
   router.post('/text2', mailCtrl.sendSMS2);
   router.post('/update-contact', mailCtrl.updateContact);
+  router.post('/upsell', mailCtrl.upsell);
 };

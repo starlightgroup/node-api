@@ -99,6 +99,33 @@ async function updateContact(req, res, next) {
     }
 }
 
+async function upsell(req, res, next) {
+    const {productId, productQty, orderId} = req.body;
+    if(!productId || !productQty) {
+        res.error('Invalid Upsell Data');
+    }
+    else {
+        req.body.loginId = config.konnective.loginId;
+        req.body.password = config.konnective.password;
+        const options = {
+            uri: 'https://api.konnektive.com/upsale/import/',
+            qs: req.body,
+            headers: {
+                'User-Agent': 'Request-Promise'
+            },
+            json: true // Automatically parses the JSON string in the response
+        };
+        const response = await request(options);
+        console.log(response);
+        if(response.result == "ERROR") {
+            res.error(response.message)
+        }
+        else {
+            res.success(response.message);
+        }
+    }
+}
+
 function mapToAutopilotJson(data){
     return {
         FirstName: data.firstName,
@@ -119,4 +146,5 @@ export default {
     sendSMS: sendSMS,
     updateContact: updateContact,
     sendSMS2: sendSMS2,
+    upsell: upsell,
 }
