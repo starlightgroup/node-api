@@ -8,7 +8,8 @@ import bodyParser from 'body-parser';
 import config from 'config3';
 import expressPromiseRouter from 'express-promise-router';
 import https from 'https';
-
+import redis from './config/redis';
+import csvimport from './config/import';
 import * as routes from './config/routes';
 
 //import './config/seed'

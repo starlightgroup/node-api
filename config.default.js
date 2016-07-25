@@ -10,6 +10,9 @@ module.exports = {
     loginId: 'tmapi',
     password: '5up3rdup354p19000X'
   },
+  redis: {
+    REDIS_URL: 'redis://localhost:6379'
+  },
   MONGO_URI: '',
   email: 'pending@tacticalmastery.com'
 };

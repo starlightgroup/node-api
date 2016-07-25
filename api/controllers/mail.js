@@ -3,6 +3,7 @@ import {sendAffiliateEmail} from '../common/mailer';
 import Autopilot from 'autopilot-api';
 import config from 'config3';
 import request from 'request-promise';
+import * as redis from '../common/redis';
 
 const autopilot = new Autopilot(config.autopilot.key);
 
@@ -126,6 +127,38 @@ async function upsell(req, res, next) {
     }
 }
 
+async function getStateInfo(req, res, next) {
+    const {stateNumber} = req.params;
+    const details = await redis.getJson(stateNumber);
+    if(details) {
+        res.success({data: mapToStateDetails(details)});
+    }
+    else {
+        res.error('state not found');
+    }
+}
+
+function mapToStateDetails(data) {
+    return {
+        zip: data[0],
+        type: data[1],
+        primary_city: data[2],
+        acceptable_cities: data[3],
+        unacceptable_cities: data[4],
+        state: data[5],
+        county: data[6],
+        timezone: data[7],
+        area_codes: data[8],
+        latitude: data[9],
+        longitude: data[10],
+        world_region: data[11],
+        country: data[12],
+        decommissioned: data[13],
+        estimated_population: data[14],
+        notes: data[15]
+    }
+}
+
 function mapToAutopilotJson(data){
     return {
         FirstName: data.firstName,
@@ -147,4 +180,5 @@ export default {
     updateContact: updateContact,
     sendSMS2: sendSMS2,
     upsell: upsell,
+    getStateInfo: getStateInfo,
 }
