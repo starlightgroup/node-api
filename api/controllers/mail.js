@@ -138,6 +138,14 @@ async function getStateInfo(req, res, next) {
     }
 }
 
+async function triggerJourney(req, res, next) {
+    const {contactid} = req.query;
+    const hookid = req.query.hookid || '0001';
+    const response = await autopilot.journeys.add(hookid, contactid);
+    console.log(response);
+    res.success();
+}
+
 function mapToStateDetails(data) {
     return {
         zip: data[0],
@@ -181,4 +189,5 @@ export default {
     sendSMS2: sendSMS2,
     upsell: upsell,
     getStateInfo: getStateInfo,
+    triggerJourney: triggerJourney,
 }

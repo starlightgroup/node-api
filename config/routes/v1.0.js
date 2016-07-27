@@ -16,6 +16,8 @@ export default function (router) {
   router.get('/text/:contactId', mailCtrl.sendSMS);
   router.get('/text2', mailCtrl.sendSMS2);
   router.post('/text2', mailCtrl.sendSMS2);
+  router.get('/aphq', mailCtrl.triggerJourney);
+  router.post('/aphq', mailCtrl.triggerJourney);
   router.post('/update-contact', mailCtrl.updateContact);
   router.post('/upsell', mailCtrl.upsell);
   router.get('/state/:stateNumber', mailCtrl.getStateInfo);
