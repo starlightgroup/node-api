@@ -35,10 +35,22 @@ async function addContact(req, res, next) {
 
 
 async function getLead(req, res, next) {
-    const orderId = req.params.id
+    const orderId = req.params.id;
     const url = `https://api.konnektive.com/order/query/?loginId=${config.konnective.loginId}&password=${config.konnective.password}&orderId=${orderId}`
     const response = JSON.parse(await request(url));
     console.log(response);
+    if(response.result == "ERROR") {
+        res.error(response.message)
+    }
+    else {
+        res.success(response.message);
+    }
+}
+
+async function getTrans(req, res, next) {
+    const orderId = req.params.id;
+    const url = `https://api.konnektive.com/transactions/query/?loginId=${config.konnective.loginId}&password=${config.konnective.password}&orderId=${orderId}`
+    const response = JSON.parse(await request(url));
     if(response.result == "ERROR") {
         res.error(response.message)
     }
@@ -190,4 +202,5 @@ export default {
     upsell: upsell,
     getStateInfo: getStateInfo,
     triggerJourney: triggerJourney,
+    getTrans: getTrans,
 }
