@@ -161,7 +161,7 @@ async function triggerJourney(req, res, next) {
 
 async function getIpinfo(req, res, next) {
     const clientIp = requestIp.getClientIp(req);
-    const ipinfo = await request(`http://ipinfo.io/${clientIp}`);
+    const ipinfo = JSON.parse(await request(`http://ipinfo.io/${clientIp}`));
     res.send(ipinfo);
 }
 
