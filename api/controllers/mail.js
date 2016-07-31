@@ -4,6 +4,7 @@ import Autopilot from 'autopilot-api';
 import config from 'config3';
 import request from 'request-promise';
 import * as redis from '../common/redis';
+import requestIp from 'request-ip';
 
 const autopilot = new Autopilot(config.autopilot.key);
 
@@ -158,6 +159,12 @@ async function triggerJourney(req, res, next) {
     res.success();
 }
 
+async function getIpinfo(req, res, next) {
+    const clientIp = requestIp.getClientIp(req);
+    const ipinfo = await request(`http://ipinfo.io/${clientIp}`);
+    res.send(ipinfo);
+}
+
 function mapToStateDetails(data) {
     return {
         zip: data[0],
@@ -203,4 +210,5 @@ export default {
     getStateInfo: getStateInfo,
     triggerJourney: triggerJourney,
     getTrans: getTrans,
+    getIpinfo: getIpinfo,
 }

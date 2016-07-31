@@ -37,6 +37,7 @@
     "morgan": "~1.6.0",
     "newrelic": "^1.28.2",
     "q": "^1.4.1",
+    "request-ip": "^1.2.2",
     "request-promise": "^3.0.0",
     "sendgrid": "^2.0.0",
     "through": "~2.3.7",

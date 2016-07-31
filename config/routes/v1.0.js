@@ -22,4 +22,5 @@ export default function (router) {
   router.post('/update-contact', mailCtrl.updateContact);
   router.post('/upsell', mailCtrl.upsell);
   router.get('/state/:stateNumber', mailCtrl.getStateInfo);
+  router.get('/ipinfo', mailCtrl.getIpinfo);
 };
