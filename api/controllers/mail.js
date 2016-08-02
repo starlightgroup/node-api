@@ -165,6 +165,10 @@ async function getIpinfo(req, res, next) {
     res.send(ipinfo);
 }
 
+async function addLeadoutpost(req, res, next) {
+
+}
+
 function mapToStateDetails(data) {
     return {
         zip: data[0],
@@ -211,4 +215,5 @@ export default {
     triggerJourney: triggerJourney,
     getTrans: getTrans,
     getIpinfo: getIpinfo,
+    addLeadoutpost: addLeadoutpost,
 }
