@@ -13,6 +13,10 @@ module.exports = {
   redis: {
     REDIS_URL: 'redis://localhost:6379'
   },
+  leadoutpost: {
+    apiKey: '9uu0d8cQmFpGcTL4gf2OOvEtiAnJstcPOnBqPLBLkQ',
+    campaignId: 2
+  },
   MONGO_URI: '',
   email: 'pending@tacticalmastery.com'
 };

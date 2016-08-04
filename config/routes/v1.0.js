@@ -23,4 +23,6 @@ export default function (router) {
   router.post('/upsell', mailCtrl.upsell);
   router.get('/state/:stateNumber', mailCtrl.getStateInfo);
   router.get('/ipinfo', mailCtrl.getIpinfo);
+
+  router.post('/add-leadoutpost', mailCtrl.addLeadoutpost);
 };

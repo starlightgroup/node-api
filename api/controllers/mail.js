@@ -167,7 +167,20 @@ async function getIpinfo(req, res, next) {
 }
 
 async function addLeadoutpost(req, res, next) {
+    req.body.apiKey = config.leadoutpost.apiKey;
+    req.body.campaignId = config.leadoutpost.campaignId;
 
+    const options = {
+        uri: 'https://www.leadoutpost.com/api/v1/lead',
+        qs: req.body,
+        headers: {
+            'User-Agent': 'Request-Promise'
+        },
+        json: true // Automatically parses the JSON string in the response
+    };
+
+    const response = await request.post(options);
+    res.send(response);
 }
 
 function mapToStateDetails(data) {
