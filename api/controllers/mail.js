@@ -36,6 +36,37 @@ async function addContact(req, res, next) {
 }
 
 
+async function addKonnektiveOrder(req, res, next) {
+    if(!req.body.cardNumber || !req.body.cardSecurityCode || !req.body.cardMonth  || !req.body.cardYear){
+        return res.error("Invalid Card Details");
+    }
+
+    req.body.campaignId = 3;
+    req.body.loginId = config.konnective.loginId;
+    req.body.password = config.konnective.password;
+    req.body.paySource = 'CREDITCARD';
+    //req.body.cardExpiryDate = `${req.body.month}/${req.body.year}`;
+
+    const options = {
+        uri: 'https://api.konnektive.com/order/import/',
+        qs: req.body,
+        headers: {
+            'User-Agent': 'Request-Promise'
+        },
+        json: true // Automatically parses the JSON string in the response
+    };
+
+    const response = await request(options);
+    console.log(response);
+
+    if(response.result == "ERROR") {
+        res.error(response.message)
+    }
+    else {
+        res.success(response.message);
+    }
+}
+
 async function getLead(req, res, next) {
     const orderId = req.params.id;
     const url = `https://api.konnektive.com/order/query/?loginId=${config.konnective.loginId}&password=${config.konnective.password}&orderId=${orderId}`
@@ -61,7 +92,7 @@ async function getTrans(req, res, next) {
     }
 }
 
-async function createLead(req, res, next) {
+async function createKonnektiveLead(req, res, next) {
     const campaignId = 3;
     req.body.loginId = config.konnective.loginId;
     req.body.password = config.konnective.password;
@@ -220,7 +251,7 @@ function mapToAutopilotJson(data){
 export default {
     addContact: addContact,
     getLead: getLead,
-    createLead: createLead,
+    createKonnektiveLead: createKonnektiveLead,
     sendSMS: sendSMS,
     updateContact: updateContact,
     sendSMS2: sendSMS2,
@@ -230,4 +261,5 @@ export default {
     getTrans: getTrans,
     getIpinfo: getIpinfo,
     addLeadoutpost: addLeadoutpost,
+    addKonnektiveOrder: addKonnektiveOrder,
 }

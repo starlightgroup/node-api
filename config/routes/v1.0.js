@@ -12,7 +12,8 @@ export default function (router) {
   router.post('/add-contact', mailCtrl.addContact);
   router.get('/get-lead/:id', mailCtrl.getLead);
   router.get('/get-trans/:id', mailCtrl.getTrans);
-  router.post('/create-lead', mailCtrl.createLead);
+  router.post('/create-lead', mailCtrl.createKonnektiveLead);
+  router.post('/create-order', mailCtrl.addKonnektiveOrder);
   router.post('/text/:contactId', mailCtrl.sendSMS);
   router.get('/text/:contactId', mailCtrl.sendSMS);
   router.get('/text2', mailCtrl.sendSMS2);
