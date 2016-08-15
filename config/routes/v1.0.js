@@ -9,11 +9,14 @@ export default function (router) {
   router.use(resSuccess);
 
 
-  router.post('/add-contact', mailCtrl.addContact);
+
   router.get('/get-lead/:id', mailCtrl.getLead);
-  router.get('/get-trans/:id', mailCtrl.getTrans);
   router.post('/create-lead', mailCtrl.createKonnektiveLead);
   router.post('/create-order', mailCtrl.addKonnektiveOrder);
+  router.post('/upsell', mailCtrl.upsell);
+  router.get('/get-trans/:id', mailCtrl.getTrans);
+
+  router.post('/add-contact', mailCtrl.addContact);
   router.post('/text/:contactId', mailCtrl.sendSMS);
   router.get('/text/:contactId', mailCtrl.sendSMS);
   router.get('/text2', mailCtrl.sendSMS2);
@@ -21,7 +24,6 @@ export default function (router) {
   router.get('/aphq', mailCtrl.triggerJourney);
   router.post('/aphq', mailCtrl.triggerJourney);
   router.post('/update-contact', mailCtrl.updateContact);
-  router.post('/upsell', mailCtrl.upsell);
   router.get('/state/:stateNumber', mailCtrl.getStateInfo);
   router.get('/ipinfo', mailCtrl.getIpinfo);
 

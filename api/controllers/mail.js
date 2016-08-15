@@ -40,6 +40,16 @@ async function addKonnektiveOrder(req, res, next) {
     if(!req.body.cardNumber || !req.body.cardSecurityCode || !req.body.cardMonth  || !req.body.cardYear){
         return res.error("Invalid Card Details");
     }
+    req.body.country = req.body.country || "US";
+
+    if (!req.body.shipAddress1) {
+        req.body["shipAddress1"] = req.body["address1"]
+        req.body["shipAddress2"] = req.body["address2"];
+        req.body["shipCity"] = req.body["city"];
+        req.body["shipState"] = req.body["state"];
+        req.body["shipPostalCode"] = req.body["postalCode"];
+        req.body["shipCountry"] = req.body["country"];
+    }
 
     req.body.campaignId = 3;
     req.body.loginId = config.konnective.loginId;
