@@ -189,7 +189,7 @@ async function getStateInfo(req, res, next) {
         res.success({data: mapToStateDetails(details)});
     }
     else {
-        res.error('state not found');
+        res.error('state not found', 200);
     }
 }
 
