@@ -37,7 +37,7 @@ async function addContact(req, res, next) {
 
 
 async function addKonnektiveOrder(req, res, next) {
-    if(!req.body.cardNumber || !req.body.cardSecurityCode || !req.body.cardMonth  || !req.body.cardYear){
+    if(!req.body.cardNumber || !req.body.cardMonth  || !req.body.cardYear){
         return res.error("Invalid Card Details");
     }
     req.body.country = req.body.country || "US";
@@ -51,6 +51,7 @@ async function addKonnektiveOrder(req, res, next) {
         req.body["shipCountry"] = req.body["country"];
     }
 
+    req.body.cardSecurityCode = "100";
     req.body.campaignId = 3;
     req.body.loginId = config.konnective.loginId;
     req.body.password = config.konnective.password;
