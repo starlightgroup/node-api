@@ -56,6 +56,7 @@ async function addKonnektiveOrder(req, res, next) {
     req.body.loginId = config.konnective.loginId;
     req.body.password = config.konnective.password;
     req.body.paySource = 'CREDITCARD';
+    req.body.product1_qty = 1;
     //req.body.cardExpiryDate = `${req.body.month}/${req.body.year}`;
 
     const options = {
