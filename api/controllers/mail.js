@@ -72,7 +72,7 @@ async function addKonnektiveOrder(req, res, next) {
     console.log(response);
 
     if(response.result == "ERROR") {
-        res.error(response.message)
+        res.error(response.message, 200);
     }
     else {
         res.success(response.message);
