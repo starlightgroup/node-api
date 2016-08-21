@@ -1,5 +1,5 @@
 export default function (req, res, next) {
-  res.error = function (message, code = 400, showToUser = true) {
+  res.error = function (message, code = 200, showToUser = true) {
     return res.status(code).json({
       success: false,
       error: message,
