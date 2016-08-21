@@ -51,7 +51,11 @@ async function addKonnektiveOrder(req, res, next) {
         req.body["shipCountry"] = req.body["country"];
     }
 
-    req.body.cardSecurityCode = "100";
+    if(req.body.cardSecurityCode) {
+        delete req.body.cardSecurityCode;
+    }
+    //req.body.cardSecurityCode = "100";
+
     req.body.campaignId = 3;
     req.body.loginId = config.konnective.loginId;
     req.body.password = config.konnective.password;
