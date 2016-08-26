@@ -1,1 +1,3 @@
 # tacticalmastery api
+
+`npm start`
