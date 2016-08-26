@@ -5,6 +5,7 @@ import config from 'config3';
 import request from 'request-promise';
 import * as redis from '../common/redis';
 import requestIp from 'request-ip';
+import phone from 'phone';
 
 const autopilot = new Autopilot(config.autopilot.key);
 
@@ -24,10 +25,35 @@ const autopilot = new Autopilot(config.autopilot.key);
 
 async function addContact(req, res, next) {
     try {
+        const leadoutpost = {
+            firstName: req.body.FirstName,
+            lastName: req.body.LastName,
+            email: req.body.Email,
+            phone: req.body.MobilePhone
+        };
+
         //await sendAffiliateEmail(req.body);
         req.body._autopilot_list = config.autopilot.clientlist;
         const response = await autopilot.contacts.upsert(req.body);
         console.log(response);
+
+        leadoutpost.apiKey = config.leadoutpost.apiKey;
+        leadoutpost.campaignId = config.leadoutpost.campaignId;
+
+        const options = {
+            uri: 'https://www.leadoutpost.com/api/v1/lead',
+            qs: leadoutpost,
+            headers: {
+                'User-Agent': 'Request-Promise'
+            },
+            json: true // Automatically parses the JSON string in the response
+        };
+
+        if(phone(leadoutpost.phone, 'US')[0]) {
+            const leadoutpostResponse = await request.post(options);
+            console.log(leadoutpostResponse)
+        }
+
         res.success(response.data);
     }
     catch(error) {
@@ -265,6 +291,16 @@ function mapToAutopilotJson(data){
     }
 }
 
+async function verifyPhoneNumber(req, res, next) {
+    const number = req.params.phone;
+    console.log(phone(number, 'US')[0]);
+    if(!phone(number, 'US')[0]) {
+        return res.error('Invalid phone number');
+    }
+
+    return res.success({formatted: phone(number, 'US')[0]});
+}
+
 export default {
     addContact: addContact,
     getLead: getLead,
@@ -279,4 +315,5 @@ export default {
     getIpinfo: getIpinfo,
     addLeadoutpost: addLeadoutpost,
     addKonnektiveOrder: addKonnektiveOrder,
+    verifyPhoneNumber: verifyPhoneNumber,
 }

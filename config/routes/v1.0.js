@@ -16,6 +16,8 @@ export default function (router) {
   router.post('/upsell', mailCtrl.upsell);
   router.get('/get-trans/:id', mailCtrl.getTrans);
 
+  router.get('/verify-phone/:phone', mailCtrl.verifyPhoneNumber);
+
   router.post('/add-contact', mailCtrl.addContact);
   router.post('/text/:contactId', mailCtrl.sendSMS);
   router.get('/text/:contactId', mailCtrl.sendSMS);

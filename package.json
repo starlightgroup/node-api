@@ -36,6 +36,7 @@
     "mongoose-timestamp": "^0.6.0",
     "morgan": "~1.6.0",
     "newrelic": "^1.28.2",
+    "phone": "^1.0.8",
     "q": "^1.4.1",
     "request-ip": "^1.2.2",
     "request-promise": "^3.0.0",

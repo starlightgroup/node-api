@@ -14,8 +14,8 @@ module.exports = {
     REDIS_URL: 'redis://localhost:6379'
   },
   leadoutpost: {
-    apiKey: '9uu0d8cQmFpGcTL4gf2OOvEtiAnJstcPOnBqPLBLkQ',
-    campaignId: 2
+    apiKey: 'yOTowCJSAYZXG2p8cV2yonr8AMcwjBwQC6Yp3IfbI',
+    campaignId: 5
   },
   MONGO_URI: '',
   email: 'pending@tacticalmastery.com'
