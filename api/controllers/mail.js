@@ -10,6 +10,38 @@ import phone from 'phone';
 const autopilot = new Autopilot(config.autopilot.key);
 
 
+async function migrate(req, res, next) {
+    let contacts = await autopilot.lists.roster(config.autopilot.clientlist);
+    while(contacts.data.contacts.length >= 100) {
+        let contact = {};
+        for(contact of contacts.data.contacts) {
+            if(contact.MobilePhone && phone(contact.MobilePhone, 'US')[0]) {
+                const leadoutpost = {
+                    firstName: contact.FirstName,
+                    lastName: contact.LastName,
+                    email: contact.Email,
+                    phone: contact.MobilePhone
+                };
+                leadoutpost.apiKey = config.leadoutpost.apiKey;
+                leadoutpost.campaignId = config.leadoutpost.campaignId;
+                const options = {
+                    uri: 'https://www.leadoutpost.com/api/v1/lead',
+                    qs: leadoutpost,
+                    headers: {
+                        'User-Agent': 'Request-Promise'
+                    },
+                    json: true // Automatically parses the JSON string in the response
+                };
+                await request.post(options);
+                console.log(contact.contact_id, contact.Email, contact.MobilePhone, contact.FirstName, contact.LastName)
+            }
+        }
+        contacts = await autopilot.lists.roster(config.autopilot.clientlist, contact.contact_id);
+        console.log("last----------------", contact.contact_id);
+    }
+    res.success({length: contacts.data.contacts.length});
+
+}
 /*
  * add contact to autopilot
  *
@@ -176,12 +208,30 @@ async function sendSMS2(req, res, next) {
 
 async function updateContact(req, res, next) {
     const contactData = mapToAutopilotJson(req.body);
+    const leadoutpostData = mapToLeadoutpostJson(req.body);
 
     try {
         //await sendAffiliateEmail(req.body);
         contactData._autopilot_list = config.autopilot.clientlist;
         const response = await autopilot.contacts.upsert(contactData);
         res.success(response.data);
+
+        leadoutpostData.apiKey = config.leadoutpost.apiKey;
+        leadoutpostData.campaignId = config.leadoutpost.campaignId;
+
+        const options = {
+            uri: 'https://www.leadoutpost.com/api/v1/lead',
+            qs: leadoutpostData,
+            headers: {
+                'User-Agent': 'Request-Promise'
+            },
+            json: true // Automatically parses the JSON string in the response
+        };
+
+        if(phone(leadoutpostData.phone, 'US')[0]) {
+            const leadoutpostResponse = await request.post(options);
+            console.log(leadoutpostResponse)
+        }
     }
     catch(error) {
         return res.error(error.message);
@@ -291,6 +341,19 @@ function mapToAutopilotJson(data){
     }
 }
 
+function mapToLeadoutpostJson(data) {
+    return {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.emailAddress,
+        phone: data.phoneNumber,
+        address: data.street1 + data.street2,
+        city: data.city,
+        state: data.state,
+        zip: data.postalCode,
+    }
+}
+
 async function verifyPhoneNumber(req, res, next) {
     const number = req.params.phone;
     console.log(phone(number, 'US')[0]);
@@ -316,4 +379,6 @@ export default {
     addLeadoutpost: addLeadoutpost,
     addKonnektiveOrder: addKonnektiveOrder,
     verifyPhoneNumber: verifyPhoneNumber,
+
+    migrate: migrate,
 }
