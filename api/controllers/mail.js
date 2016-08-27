@@ -81,10 +81,8 @@ async function addContact(req, res, next) {
             json: true // Automatically parses the JSON string in the response
         };
 
-        if(phone(leadoutpost.phone, 'US')[0]) {
-            const leadoutpostResponse = await request.post(options);
-            console.log(leadoutpostResponse)
-        }
+        const leadoutpostResponse = await request.post(options);
+        console.log(leadoutpostResponse)
 
         res.success(response.data);
     }
@@ -228,10 +226,8 @@ async function updateContact(req, res, next) {
             json: true // Automatically parses the JSON string in the response
         };
 
-        if(phone(leadoutpostData.phone, 'US')[0]) {
-            const leadoutpostResponse = await request.post(options);
-            console.log(leadoutpostResponse)
-        }
+        const leadoutpostResponse = await request.post(options);
+        console.log(leadoutpostResponse)
     }
     catch(error) {
         return res.error(error.message);
