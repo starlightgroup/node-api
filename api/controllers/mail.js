@@ -61,7 +61,7 @@ async function addContact(req, res, next) {
             firstName: req.body.FirstName,
             lastName: req.body.LastName,
             email: req.body.Email,
-            phone: req.body.Phone || req.body.MobilePhone
+            phone: req.body.MobilePhone || req.body.Phone
         };
         if(!req.body.MobilePhone) {
             req.body.MobilePhone = req.body.Phone;
