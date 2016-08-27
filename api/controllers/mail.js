@@ -61,7 +61,7 @@ async function addContact(req, res, next) {
             firstName: req.body.FirstName,
             lastName: req.body.LastName,
             email: req.body.Email,
-            phone: req.body.MobilePhone
+            phone: req.body.Phone
         };
 
         //await sendAffiliateEmail(req.body);
