@@ -61,9 +61,11 @@ async function addContact(req, res, next) {
             firstName: req.body.FirstName,
             lastName: req.body.LastName,
             email: req.body.Email,
-            phone: req.body.Phone
+            phone: req.body.Phone || req.body.MobilePhone
         };
-
+        if(!req.body.MobilePhone) {
+            req.body.MobilePhone = req.body.Phone;
+        }
         //await sendAffiliateEmail(req.body);
         req.body._autopilot_list = config.autopilot.clientlist;
         const response = await autopilot.contacts.upsert(req.body);
