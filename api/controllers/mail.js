@@ -66,6 +66,10 @@ async function addContact(req, res, next) {
         if(!req.body.MobilePhone) {
             req.body.MobilePhone = req.body.Phone;
         }
+
+        if(!req.body.Phone) {
+            req.body.Phone = req.body.MobilePhone;
+        }
         //await sendAffiliateEmail(req.body);
         req.body._autopilot_list = config.autopilot.clientlist;
         const response = await autopilot.contacts.upsert(req.body);
