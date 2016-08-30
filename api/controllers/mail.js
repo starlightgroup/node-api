@@ -11,16 +11,16 @@ const autopilot = new Autopilot(config.autopilot.key);
 
 
 async function migrate(req, res, next) {
-    let contacts = await autopilot.lists.roster(config.autopilot.clientlist);
+    let contacts = await autopilot.lists.roster(config.autopilot.clientlist, 'person_0E8607F2-E308-438F-BF16-FB627DB4A4C9');
     while(contacts.data.contacts.length >= 100) {
         let contact = {};
         for(contact of contacts.data.contacts) {
-            if(contact.MobilePhone && phone(contact.MobilePhone, 'US')[0]) {
+            if(contact.Phone && phone(contact.Phone, 'US')[0]) {
                 const leadoutpost = {
                     firstName: contact.FirstName,
                     lastName: contact.LastName,
                     email: contact.Email,
-                    phone: contact.MobilePhone
+                    phone: contact.Phone
                 };
                 leadoutpost.apiKey = config.leadoutpost.apiKey;
                 leadoutpost.campaignId = config.leadoutpost.campaignId;
@@ -33,7 +33,7 @@ async function migrate(req, res, next) {
                     json: true // Automatically parses the JSON string in the response
                 };
                 await request.post(options);
-                console.log(contact.contact_id, contact.Email, contact.MobilePhone, contact.FirstName, contact.LastName)
+                console.log(contact.contact_id, contact.Email, contact.Phone, contact.FirstName, contact.LastName)
             }
         }
         contacts = await autopilot.lists.roster(config.autopilot.clientlist, contact.contact_id);
@@ -336,7 +336,7 @@ function mapToAutopilotJson(data){
         LastName: data.lastName,
         Email: data.emailAddress,
         MobilePhone: data.phoneNumber,
-        MailingStreet: data.street1 + data.street2,
+        MailingStreet: data.address1 + data.address2,
         MailingCity: data.city,
         MailingState: data.state,
         MailingPostalCode: data.postalCode,
@@ -349,7 +349,7 @@ function mapToLeadoutpostJson(data) {
         lastName: data.lastName,
         email: data.emailAddress,
         phone: data.phoneNumber,
-        address: data.street1 + data.street2,
+        address: data.address1 + data.address2,
         city: data.city,
         state: data.state,
         zip: data.postalCode,
