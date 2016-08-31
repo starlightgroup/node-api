@@ -72,8 +72,7 @@ async function addContact(req, res, next) {
         }
         //await sendAffiliateEmail(req.body);
         req.body._autopilot_list = config.autopilot.clientlist;
-        const response = await autopilot.contacts.upsert(req.body);
-        console.log(response);
+        autopilot.contacts.upsert(req.body);
 
         leadoutpost.apiKey = config.leadoutpost.apiKey;
         leadoutpost.campaignId = config.leadoutpost.campaignId;
@@ -87,13 +86,12 @@ async function addContact(req, res, next) {
             json: true // Automatically parses the JSON string in the response
         };
 
-        const leadoutpostResponse = await request.post(options);
-        console.log(leadoutpostResponse)
+        request.post(options);
 
-        res.success(response.data);
+        res.success();
     }
     catch(error) {
-        return res.error(error.message);
+        console.log(error.message);
     }
 }
 
@@ -217,8 +215,8 @@ async function updateContact(req, res, next) {
     try {
         //await sendAffiliateEmail(req.body);
         contactData._autopilot_list = config.autopilot.clientlist;
-        const response = await autopilot.contacts.upsert(contactData);
-        res.success(response.data);
+        autopilot.contacts.upsert(contactData);
+        res.success();
 
         leadoutpostData.apiKey = config.leadoutpost.apiKey;
         leadoutpostData.campaignId = config.leadoutpost.campaignId;
@@ -232,8 +230,7 @@ async function updateContact(req, res, next) {
             json: true // Automatically parses the JSON string in the response
         };
 
-        const leadoutpostResponse = await request.post(options);
-        console.log(leadoutpostResponse)
+        request.post(options);
     }
     catch(error) {
         return res.error(error.message);
