@@ -121,8 +121,11 @@ async function addKonnektiveOrder(req, res, next) {
     req.body.password = config.konnective.password;
     req.body.paySource = 'CREDITCARD';
     req.body.product1_qty = 1;
+    req.body.product1_id = req.body.productId;
     req.body.lastName = req.body.lastName || 'NA';
     //req.body.cardExpiryDate = `${req.body.month}/${req.body.year}`;
+
+    delete req.body.productId;
 
     const options = {
         uri: 'https://api.konnektive.com/order/import/',
