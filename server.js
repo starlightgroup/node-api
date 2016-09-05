@@ -30,6 +30,33 @@ app.use(function (req, res, next) {
   next();
 });
 
+function logResponseBody(req, res, next) {
+  var oldWrite = res.write,
+    oldEnd = res.end;
+
+  var chunks = [];
+
+  res.write = function (chunk) {
+    chunks.push(new Buffer(chunk));
+
+    oldWrite.apply(res, arguments);
+  };
+
+  res.end = function (chunk) {
+    if (chunk)
+      chunks.push(new Buffer(chunk));
+
+    var body = Buffer.concat(chunks).toString('utf8');
+    logger.info(body);
+
+    oldEnd.apply(res, arguments);
+  };
+
+  next();
+}
+
+app.use(logResponseBody);
+
 // route with appropriate version prefix
 Object.keys(routes).forEach(r => {
   const router = expressPromiseRouter();
