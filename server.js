@@ -8,6 +8,7 @@ import bodyParser from 'body-parser';
 import config from 'config3';
 import expressPromiseRouter from 'express-promise-router';
 import https from 'https';
+import express_enforces_ssl from 'express-enforces-ssl';
 import redis from './config/redis';
 import csvimport from './config/import';
 import * as routes from './config/routes';
@@ -15,6 +16,9 @@ import * as routes from './config/routes';
 //import './config/seed'
 
 export const app = express();
+
+app.enable('trust proxy');
+app.use(express_enforces_ssl());
 
 app.set('superSecret', config.LOCALTABLE_SECRET);
 app.use('/api', morgan('combined', {stream: logger.asStream('info')}));
