@@ -13,14 +13,15 @@ import helmet from 'helmet';
 import redis from './config/redis';
 import csvimport from './config/import';
 import * as routes from './config/routes';
-
+import xFrameOptions from 'x-frame-options';
 //import './config/seed'
 
 export const app = express();
 
 app.enable('trust proxy');
 app.use(express_enforces_ssl());
-app.use(helmet())
+app.use(helmet());
+app.use(xFrameOptions());
 
 app.set('superSecret', config.LOCALTABLE_SECRET);
 app.use('/api', morgan('combined', {stream: logger.asStream('info')}));
