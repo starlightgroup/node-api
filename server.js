@@ -9,7 +9,7 @@ import config from 'config3';
 import expressPromiseRouter from 'express-promise-router';
 import https from 'https';
 import http from 'http';
-import express_enforces_ssl from 'express-enforces-ssl';
+import forceSSL from 'express-force-ssl';
 import helmet from 'helmet';
 import redis from './config/redis';
 import csvimport from './config/import';
@@ -19,8 +19,16 @@ import xFrameOptions from 'x-frame-options';
 
 export const app = express();
 
-app.enable('trust proxy');
-app.use(express_enforces_ssl());
+if(process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
+  app.set('forceSSLOptions', {
+    enable301Redirects: true,
+    trustXFPHeader: true,
+    httpsPort: 4443,
+    sslRequiredMessage: 'SSL Required.'
+  });
+  app.use(forceSSL);
+}
+
 app.use(helmet());
 app.use(xFrameOptions());
 
