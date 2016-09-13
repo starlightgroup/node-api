@@ -8,6 +8,7 @@ import bodyParser from 'body-parser';
 import config from 'config3';
 import expressPromiseRouter from 'express-promise-router';
 import https from 'https';
+import http from 'http';
 import express_enforces_ssl from 'express-enforces-ssl';
 import helmet from 'helmet';
 import redis from './config/redis';
@@ -81,21 +82,19 @@ app.use(function (err, req, res, next) {
   }
 });
 
-if(process.env.NODE_ENV === 'production') {
+var https_port = (process.env.HTTPS_PORT || 4443);
+var http_port = (process.env.HTTP_PORT || 4000);
+
+if(process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
   var options = {
-    cert: fs.readFileSync('/etc/nginx/ssl/tacticalmastery_chained.crt'),
-    key: fs.readFileSync('/etc/nginx/ssl/tacticalmastery.key')
+    cert: fs.readFileSync('/etc/nginx/ssl/wildcard/tacticalmastery_chained2.crt'),
+    key: fs.readFileSync('/etc/nginx/ssl/wildcard/tacticalmastery.key'),
+    requestCert: false,
+    rejectUnauthorized: false
   };
-  const server = https.createServer(options, app);
-  server.listen(process.env.PORT || 4000);
-}
-else {
-  app.listen(process.env.PORT || 4000);
+  https.createServer(options,app).listen(https_port);
+  console.log("HTTPS Server Started at port : " + https_port);
 }
 
-
-if (process.env.PORT === undefined) {
-  console.log("Server Started at port : " + 4000);
-} else {
-  console.log("Server Started at port : " + process.env.PORT);
-}
+http.createServer(app).listen(http_port);
+console.log("Server Started at port : " + http_port);
