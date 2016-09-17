@@ -95,8 +95,8 @@ var http_port = (process.env.HTTP_PORT || 4000);
 
 if(process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
   var options = {
-    cert: fs.readFileSync('/etc/nginx/ssl/wildcard/tacticalmastery_chained2.crt'),
-    key: fs.readFileSync('/etc/nginx/ssl/wildcard/tacticalmastery.key'),
+    cert: fs.readFileSync('/etc/ssl/evssl/tacticalmastery.com.bundle.crt'),
+    key: fs.readFileSync('/etc/ssl/evssl/tacticalmastery.com.key'),
     requestCert: false,
     rejectUnauthorized: false
   };
