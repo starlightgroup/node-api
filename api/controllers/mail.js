@@ -288,7 +288,9 @@ async function triggerJourney(req, res, next) {
 
 async function getIpinfo(req, res, next) {
     const clientIp = requestIp.getClientIp(req);
-    const ipinfo = JSON.parse(await request(`http://ipinfo.io/${clientIp}`));
+    //const ipinfo = JSON.parse(await request(`http://ipinfo.io/${clientIp}`));
+    //i am hardcoding our token in here because i don't give a fuck
+    ipinfo = JSON.parse(await request(`https://ipinfo.io/${clientIp}/json/?token=1f4c1ea49e0aa2`));
     res.send(ipinfo);
 }
 
