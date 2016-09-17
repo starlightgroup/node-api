@@ -95,6 +95,7 @@ var http_port = (process.env.HTTP_PORT || 4000);
 
 if(process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
   var options = {
+    //new location of evssl certs
     cert: fs.readFileSync('/etc/ssl/evssl/tacticalmastery.com.bundle.crt'),
     key: fs.readFileSync('/etc/ssl/evssl/tacticalmastery.com.key'),
     requestCert: false,
