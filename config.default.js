@@ -7,8 +7,8 @@ module.exports = {
     clientlist: 'contactlist_59EA0BF8-46D0-4733-B6C5-4F2EB7C890AA'
   },
   konnective: {
-    loginId: 'tmapi',
-    password: '5up3rdup354p19000X'
+    loginId: 'apisonapis',
+    password: '#G1IS&%xzDlP'
   },
   redis: {
     REDIS_URL: 'redis://localhost:6379'
