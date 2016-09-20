@@ -15,7 +15,6 @@ import redis from './config/redis';
 import csvimport from './config/import';
 import * as routes from './config/routes';
 import xFrameOptions from 'x-frame-options';
-//import './config/seed'
 
 export const app = express();
 

@@ -1,5 +1,3 @@
-import {sendAffiliateEmail} from '../common/mailer';
-//import {Log} from '../models';
 import Autopilot from 'autopilot-api';
 import config from 'config3';
 import request from 'request-promise';
@@ -70,7 +68,7 @@ async function addContact(req, res, next) {
         if(!req.body.Phone) {
             req.body.Phone = req.body.MobilePhone;
         }
-        //await sendAffiliateEmail(req.body);
+
         req.body._autopilot_list = config.autopilot.clientlist;
         autopilot.contacts.upsert(req.body);
 
@@ -216,7 +214,7 @@ async function updateContact(req, res, next) {
     const leadoutpostData = mapToLeadoutpostJson(req.body);
 
     try {
-        //await sendAffiliateEmail(req.body);
+
         contactData._autopilot_list = config.autopilot.clientlist;
         autopilot.contacts.upsert(contactData);
         res.success();
