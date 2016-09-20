@@ -1,9 +1,9 @@
 import Autopilot from 'autopilot-api';
 import config from 'config3';
 import request from 'request-promise';
-import * as redis from '../common/redis';
 import requestIp from 'request-ip';
 import phone from 'phone';
+import {State} from '../models/index';
 
 const autopilot = new Autopilot(config.autopilot.key);
 
@@ -267,9 +267,9 @@ async function upsell(req, res, next) {
 
 async function getStateInfo(req, res, next) {
     const {stateNumber} = req.params;
-    const details = await redis.getJson(stateNumber);
+    const details = await State.findOne({zip: stateNumber}).lean();
     if(details) {
-        res.success({data: mapToStateDetails(details)});
+        res.success({data: details});
     }
     else {
         res.error('state not found', 200);

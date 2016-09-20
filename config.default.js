@@ -17,6 +17,6 @@ module.exports = {
     apiKey: 'yOTowCJSAYZXG2p8cV2yonr8AMcwjBwQC6Yp3IfbI',
     campaignId: 5
   },
-  MONGO_URI: '',
+  MONGO_URI: "mongodb://6Pjm5nFufcoBHcDwXjuG:zDg43sbzdajSnOINsyJILoZg3ulYKS@aws-us-east-1-portal.9.dblayer.com:15374/tumedia",
   email: 'pending@tacticalmastery.com'
 };

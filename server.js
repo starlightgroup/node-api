@@ -11,8 +11,6 @@ import https from 'https';
 import http from 'http';
 import forceSSL from 'express-force-ssl';
 import helmet from 'helmet';
-import redis from './config/redis';
-import csvimport from './config/import';
 import * as routes from './config/routes';
 import xFrameOptions from 'x-frame-options';
 
