@@ -4,6 +4,16 @@ var env = process.env;
 module.exports =  {
   sendgridkey: env.SENDGRIDKEY,
   autopilot: {
-    key: env.AUTOPILOTKEY
-  }
+    key: env.AUTOPILOTKEY,
+    clientlist: env.CLIENTLIST
+  },
+  konnective: {
+    loginId: env.KONNEKTIVE_LOGINID,
+    password: env.KONNEKTIVE_PASSWORD
+  },
+  leadoutpost: {
+    apiKey: env.LEADOUTPOST_APIKEY,
+    campaignId: env.LEADOUTPOST_CANPAIGNID,
+  },
+  MONGO_URI: env.MONGO_URI
 };
