@@ -2,7 +2,6 @@
 var env = process.env;
 
 module.exports =  {
-  sendgridkey: env.SENDGRIDKEY,
   autopilot: {
     key: env.AUTOPILOTKEY,
     clientlist: env.CLIENTLIST
