@@ -23,6 +23,7 @@
     "mongoose": "^4.6.1",
     "morgan": "^1.7.0",
     "phone": "^1.0.8",
+    "request-promise": "^4.1.1",
     "through": "~2.3.7",
     "winston": "~1.0.1",
     "x-frame-options": "^1.0.0"
