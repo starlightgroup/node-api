@@ -24,7 +24,8 @@
     "morgan": "^1.7.0",
     "phone": "^1.0.8",
     "through": "~2.3.7",
-    "winston": "~1.0.1",
+    "winston": "^2.2.0",
+    "winston-papertrail": "^1.0.2",
     "x-frame-options": "^1.0.0"
   },
   "engines": {
