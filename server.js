@@ -37,12 +37,6 @@ app.use(cors());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-
-app.use(function (req, res, next) {
-  res.set(`X-Powered-By`, `TacticalMastery`);
-  next();
-});
-
 function logResponseBody(req, res, next) {
   var oldWrite = res.write,
     oldEnd = res.end;
