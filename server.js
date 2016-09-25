@@ -27,6 +27,19 @@ if(process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') 
 }
 
 app.use(helmet());
+app.use(helmet.dnsPrefetchControl());
+app.use(helmet.noCache());
+
+var thirtyDaysInMilliseconds = 2592000000;
+app.use(helmet.hpkp({
+  maxAge: thirtyDaysInMilliseconds,
+  sha256s: [
+    'pEQ8aOVkL/O5dmTSlOADJOHmBKUxb2EjVN6zkX0jPGo=', // tacticalmastery sha256 base64
+    'jezwmprE+yEzD7h+8JuYTX/VLCYsUQU+KMVS1O1zI9I='  // tacticalsales sha256 base64
+  ],
+  includeSubdomains: true
+}))
+
 app.use(xFrameOptions());
 
 app.set('superSecret', config.LOCALTABLE_SECRET);
@@ -36,12 +49,6 @@ app.use(cors());
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
-
-
-app.use(function (req, res, next) {
-  res.set(`X-Powered-By`, `TacticalMastery`);
-  next();
-});
 
 function logResponseBody(req, res, next) {
   var oldWrite = res.write,
