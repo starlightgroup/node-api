@@ -26,6 +26,7 @@
     "mongoose": "^4.6.1",
     "morgan": "^1.7.0",
     "newrelic": "^1.30.3",
+    "nodemon": "*",
     "phone": "^1.0.8",
     "request-ip": "^1.2.2",
     "request-promise": "^3.0.0",
