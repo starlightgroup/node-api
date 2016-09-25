@@ -27,6 +27,9 @@ if(process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') 
 }
 
 app.use(helmet());
+app.use(helmet.dnsPrefetchControl());
+app.use(helmet.noCache());
+
 var thirtyDaysInMilliseconds = 2592000000;
 app.use(helmet.hpkp({
   maxAge: thirtyDaysInMilliseconds,
