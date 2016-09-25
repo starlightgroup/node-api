@@ -2,20 +2,20 @@
 
 module.exports = {
   autopilot: {
-    key: 'testkey',
-    clientlist: 'testlist'
+    key: "testkey",
+    clientlist: "testlist"
   },
   konnective: {
-    loginId: 'testkey',
-    password: 'testpass'
+    loginId: "testkey",
+    password: "testpass"
   },
   redis: {
-    REDIS_URL: 'redis://localhost:6379'
+    REDIS_URL: "redis://localhost:6379"
   },
   leadoutpost: {
-    apiKey: 'testkey',
+    apiKey: "testkey",
     campaignId: 5
   },
   MONGO_URI: "mongodb://localhost:27017/tumedia",
-  email: 'pending@tacticalmastery.com'
+  email: "pending@tacticalmastery.com"
 };

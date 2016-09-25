@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
-var through = require('through');
-var winston = require('winston');
+var through = require("through");
+var winston = require("winston");
 
 var logger = new winston.Logger({
   transports: [
