@@ -27,6 +27,16 @@ if(process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') 
 }
 
 app.use(helmet());
+var thirtyDaysInMilliseconds = 2592000000;
+app.use(helmet.hpkp({
+  maxAge: thirtyDaysInMilliseconds,
+  sha256s: [
+    'pEQ8aOVkL/O5dmTSlOADJOHmBKUxb2EjVN6zkX0jPGo=', // tacticalmastery sha256 base64
+    'jezwmprE+yEzD7h+8JuYTX/VLCYsUQU+KMVS1O1zI9I='  // tacticalsales sha256 base64
+  ],
+  includeSubdomains: true
+}))
+
 app.use(xFrameOptions());
 
 app.set('superSecret', config.LOCALTABLE_SECRET);
