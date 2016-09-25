@@ -25,14 +25,12 @@
     "helmet": "^2.2.0",
     "mongoose": "^4.6.1",
     "morgan": "^1.7.0",
-    "newrelic": "^1.30.3",
     "nodemon": "*",
     "phone": "^1.0.8",
     "request-ip": "^1.2.2",
     "request-promise": "^3.0.0",
     "through": "~2.3.7",
     "winston": "~1.0.1",
-    "winston-papertrail": "^1.0.2",
     "x-frame-options": "^1.0.0"
   },
   "engines": {
