@@ -87,10 +87,12 @@ Object.keys(routes).forEach(r => {
   app.use(`/api/${r.replace('_', '.')}`, router);
 });
 
-app.use(function (err, req, res, next) {
+app.use(function (err, req, res) {
   if (err) {
     console.log(err);
-    if (typeof err.status != "undefined")   res.status(err.status);
+    if (typeof err.status != "undefined")   {
+      res.status(err.status);
+    }
     res.error(err.message || err);
   }
 });
