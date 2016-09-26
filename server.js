@@ -15,7 +15,7 @@ import xFrameOptions from 'x-frame-options';
 
 export const app = express();
 
-if(process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
+if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
   app.set('forceSSLOptions', {
     enable301Redirects: true,
     trustXFPHeader: true,
@@ -64,8 +64,9 @@ function logResponseBody(req, res, next) {
 
   res.end = function (chunk) {
     /** global: Buffer */
-    if (chunk)
+    if (chunk) {
       chunks.push(new Buffer(chunk));
+    }
 
     var body = Buffer.concat(chunks).toString('utf8');
     logger.info(body);
@@ -90,7 +91,7 @@ Object.keys(routes).forEach(r => {
 app.use(function (err, req, res) {
   if (err) {
     console.log(err);
-    if (typeof err.status != "undefined")   {
+    if (typeof err.status != "undefined") {
       res.status(err.status);
     }
     res.error(err.message || err);
@@ -100,7 +101,7 @@ app.use(function (err, req, res) {
 var https_port = (process.env.HTTPS_PORT || 4443);
 var http_port = (process.env.HTTP_PORT || 4000);
 
-if(process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
+if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
   var options = {
     //new location of evssl certs
     cert: fs.readFileSync('/etc/ssl/evssl/tacticalmastery.com.bundle.crt'),
@@ -108,7 +109,7 @@ if(process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') 
     requestCert: false,
     rejectUnauthorized: false
   };
-  https.createServer(options,app).listen(https_port);
+  https.createServer(options, app).listen(https_port);
   console.log("HTTPS Server Started at port : " + https_port);
 }
 
