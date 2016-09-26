@@ -56,12 +56,14 @@ function logResponseBody(req, res, next) {
   var chunks = [];
 
   res.write = function (chunk) {
+    /** global: Buffer */
     chunks.push(new Buffer(chunk));
 
     oldWrite.apply(res, arguments);
   };
 
   res.end = function (chunk) {
+    /** global: Buffer */
     if (chunk)
       chunks.push(new Buffer(chunk));
 
