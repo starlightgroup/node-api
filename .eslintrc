@@ -1,0 +1,8 @@
+{
+  "parser": "babel-eslint",
+  "extend": "eslint:all",
+  "parserOptions": {
+    "sourceType": "module",
+    "allowImportExportEverywhere": false
+  }
+}
