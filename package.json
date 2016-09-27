@@ -7,7 +7,7 @@
     "start": "scripts/run",
     "postinstall": "scripts/postinstall"
   },
-  "main": "dist/index.js",
+  "main": "server.js",
   "dependencies": {
     "autopilot-api": "^1.2.0",
     "babel-cli": "^6.14.0",
