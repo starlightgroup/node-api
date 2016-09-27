@@ -18,7 +18,7 @@
     "cors": "*",
     "express": "^4.14.0",
     "express-force-ssl": "^0.3.2",
-    "express-promise-router": "0.0.9",
+    "express-promise-router": "^1.1.1",
     "helmet": "^2.2.0",
     "mongoose": "^4.6.1",
     "morgan": "^1.7.0",
