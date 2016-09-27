@@ -37,7 +37,7 @@ app.use(helmet.hpkp({
     'jezwmprE+yEzD7h+8JuYTX/VLCYsUQU+KMVS1O1zI9I='  // tacticalsales sha256 base64
   ],
   includeSubdomains: true
-}))
+}));
 
 app.use(xFrameOptions());
 

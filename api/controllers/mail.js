@@ -31,7 +31,7 @@ async function migrate(req, res, next) {
                     json: true // Automatically parses the JSON string in the response
                 };
                 await request.post(options);
-                console.log(contact.contact_id, contact.Email, contact.Phone, contact.FirstName, contact.LastName)
+                console.log(contact.contact_id, contact.Email, contact.Phone, contact.FirstName, contact.LastName);
             }
         }
         contacts = await autopilot.lists.roster(config.autopilot.clientlist, contact.contact_id);
@@ -101,7 +101,7 @@ async function addKonnektiveOrder(req, res, next) {
     req.body.country = req.body.country || "US";
 
     if (!req.body.shipAddress1) {
-        req.body["shipAddress1"] = req.body["address1"]
+        req.body["shipAddress1"] = req.body["address1"];
         req.body["shipAddress2"] = req.body["address2"];
         req.body["shipCity"] = req.body["city"];
         req.body["shipState"] = req.body["state"];
@@ -147,11 +147,11 @@ async function addKonnektiveOrder(req, res, next) {
 
 async function getLead(req, res, next) {
     const orderId = req.params.id;
-    const url = `https://api.konnektive.com/order/query/?loginId=${config.konnective.loginId}&password=${config.konnective.password}&orderId=${orderId}`
+    const url = `https://api.konnektive.com/order/query/?loginId=${config.konnective.loginId}&password=${config.konnective.password}&orderId=${orderId}`;
     const response = JSON.parse(await request(url));
     console.log(response);
     if(response.result == "ERROR") {
-        res.error(response.message)
+        res.error(response.message);
     }
     else {
         res.success(response.message);
@@ -160,10 +160,10 @@ async function getLead(req, res, next) {
 
 async function getTrans(req, res, next) {
     const orderId = req.params.id;
-    const url = `https://api.konnektive.com/transactions/query/?loginId=${config.konnective.loginId}&password=${config.konnective.password}&orderId=${orderId}`
+    const url = `https://api.konnektive.com/transactions/query/?loginId=${config.konnective.loginId}&password=${config.konnective.password}&orderId=${orderId}`;
     const response = JSON.parse(await request(url));
     if(response.result == "ERROR") {
-        res.error(response.message)
+        res.error(response.message);
     }
     else {
         res.success(response.message);
@@ -188,7 +188,7 @@ async function createKonnektiveLead(req, res, next) {
     const response = await request(options);
     console.log(response);
     if(response.result == "ERROR") {
-        res.error(response.message)
+        res.error(response.message);
     }
     else {
         res.success(response.message);
@@ -257,7 +257,7 @@ async function upsell(req, res, next) {
         const response = await request(options);
         console.log(response);
         if(response.result == "ERROR") {
-            res.error(response.message)
+            res.error(response.message);
         }
         else {
             res.success(response.message);
@@ -288,7 +288,7 @@ async function getIpinfo(req, res, next) {
     const clientIp = requestIp.getClientIp(req);
     //const ipinfo = JSON.parse(await request(`http://ipinfo.io/${clientIp}`));
     //i am hardcoding our token in here because i don't give a fuck
-    ipinfo = JSON.parse(await request(`https://ipinfo.io/${clientIp}/json/?token=1f4c1ea49e0aa2`));
+    const ipinfo = JSON.parse(await request(`https://ipinfo.io/${clientIp}/json/?token=1f4c1ea49e0aa2`));
     res.send(ipinfo);
 }
 
@@ -327,7 +327,7 @@ function mapToStateDetails(data) {
         decommissioned: data[13],
         estimated_population: data[14],
         notes: data[15]
-    }
+    };
 }
 
 function mapToAutopilotJson(data){
@@ -340,7 +340,7 @@ function mapToAutopilotJson(data){
         MailingCity: data.city,
         MailingState: data.state,
         MailingPostalCode: data.postalCode,
-    }
+    };
 }
 
 function mapToLeadoutpostJson(data) {
@@ -353,7 +353,7 @@ function mapToLeadoutpostJson(data) {
         city: data.city,
         state: data.state,
         zip: data.postalCode,
-    }
+    };
 }
 
 async function verifyPhoneNumber(req, res, next) {
@@ -383,4 +383,4 @@ export default {
     verifyPhoneNumber: verifyPhoneNumber,
 
     migrate: migrate,
-}
+};
