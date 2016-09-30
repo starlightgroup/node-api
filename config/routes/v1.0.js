@@ -32,4 +32,4 @@ export default function (router) {
   router.post('/add-leadoutpost', mailCtrl.addLeadoutpost);
 
   //router.get('/run-migrator', mailCtrl.migrate);
-};
+}
