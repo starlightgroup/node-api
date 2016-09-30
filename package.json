@@ -43,7 +43,7 @@
   "private": true,
   "scripts": {
     "postinstall": "rm -rf dist && babel . --ignore node_modules --out-dir dist --source-maps",
-    "lint": "eslint . --ignore node_modules",
+    "lint": "eslint . --ignore node_modules --debug",
     "start": "scripts/run"
   }
 }

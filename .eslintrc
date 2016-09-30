@@ -1,8 +1,12 @@
 {
   "parser": "babel-eslint",
-  "extend": "eslint:all",
-  "parserOptions": {
-    "sourceType": "module",
-    "allowImportExportEverywhere": false
+  "env": {
+    "node": true,
+    "es6": true,
+    "browser": false
+  },
+  "extends": "eslint:recommended",
+  "rules":{
+    "no-unused-vars": ["error", { "argsIgnorePattern": "next" }]
   }
 }
