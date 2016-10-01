@@ -49,7 +49,7 @@ app.use(cors());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-function logResponseBody(req, res, next) {
+function logResponseBody(err, req, res, next) {
   var oldWrite = res.write,
     oldEnd = res.end;
 
@@ -88,7 +88,7 @@ Object.keys(routes).forEach(r => {
   app.use(`/api/${r.replace('_', '.')}`, router);
 });
 
-app.use(function (err, req, res) {
+app.use(function (err, req, res, next) {
   if (err) {
     logger.info(err);
     if (typeof err.status != "undefined") {

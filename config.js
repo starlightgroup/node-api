@@ -12,7 +12,7 @@ module.exports =  {
   },
   leadoutpost: {
     apiKey: env.LEADOUTPOST_APIKEY,
-    campaignId: env.LEADOUTPOST_CANPAIGNID,
+    campaignId: env.LEADOUTPOST_CANPAIGNID
   },
   MONGO_URI: env.MONGO_URI
 };

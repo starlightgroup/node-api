@@ -240,7 +240,7 @@ async function updateContact(req, res, next) {
 }
 
 async function upsell(req, res, next) {
-    const {productId, productQty, orderId} = req.body;
+    const {productId, productQty} = req.body;
     if(!productId || !productQty) {
         res.error('Invalid Upsell Data');
     }
@@ -319,7 +319,7 @@ function mapToAutopilotJson(data){
         MailingStreet: data.address1 + " " +  data.address2,
         MailingCity: data.city,
         MailingState: data.state,
-        MailingPostalCode: data.postalCode,
+        MailingPostalCode: data.postalCode
     };
 }
 
@@ -332,7 +332,7 @@ function mapToLeadoutpostJson(data) {
         address: data.address1 + " " + data.address2,
         city: data.city,
         state: data.state,
-        zip: data.postalCode,
+        zip: data.postalCode
     };
 }
 
@@ -362,5 +362,5 @@ export default {
     addKonnektiveOrder: addKonnektiveOrder,
     verifyPhoneNumber: verifyPhoneNumber,
 
-    migrate: migrate,
+    migrate: migrate
 };

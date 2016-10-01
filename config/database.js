@@ -1,4 +1,4 @@
-import logger from '../../api/common/log';
+import logger from '../api/common/log';
 import mongoose from 'mongoose';
 import config from 'config3';
 
