@@ -1,5 +1,5 @@
 {
-  "name": "tactical-mastery-api",
+  "name": "@expertflashlights/tactical-mastery-api",
   "description": "TacticalMastery Backend Api",
   "version": "0.1.0",
   "author": "Denis Matei",
@@ -40,10 +40,20 @@
   ],
   "license": "MIT",
   "main": "server.js",
-  "private": true,
   "scripts": {
     "postinstall": "rm -rf dist && babel . --ignore node_modules --out-dir dist --source-maps",
     "lint": "eslint . --ignore node_modules --debug",
     "start": "scripts/run"
-  }
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/internetmarketing10/node-api.git"
+  },
+  "bugs": {
+    "url": "https://github.com/internetmarketing10/node-api/issues"
+  },
+  "homepage": "https://github.com/internetmarketing10/node-api#readme"
 }
