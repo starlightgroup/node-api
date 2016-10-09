@@ -49,7 +49,7 @@ app.use(cors());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
-function logResponseBody(req, res, next) {
+function logResponseBody(err, req, res, next) {
   var oldWrite = res.write,
     oldEnd = res.end;
 
@@ -88,9 +88,9 @@ Object.keys(routes).forEach(r => {
   app.use(`/api/${r.replace('_', '.')}`, router);
 });
 
-app.use(function (err, req, res) {
+app.use(function (err, req, res, next) {
   if (err) {
-    console.log(err);
+    logger.info(err);
     if (typeof err.status != "undefined") {
       res.status(err.status);
     }
@@ -110,8 +110,8 @@ if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging')
     rejectUnauthorized: false
   };
   https.createServer(options, app).listen(https_port);
-  console.log("HTTPS Server Started at port : " + https_port);
+  logger.info("HTTPS Server Started at port : " + https_port);
 }
 
 http.createServer(app).listen(http_port);
-console.log("Server Started at port : " + http_port);
+logger.info("Server Started at port : " + http_port);

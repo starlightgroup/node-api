@@ -7,7 +7,7 @@ import mongoose, { Schema } from 'mongoose';
 const State = new Schema({
   zip: {
     type: String,
-    index: true,
+    index: true
   },
   type: String,
   primary_city: String,

@@ -1,3 +1,4 @@
+import logger from '../../api/common/log';
 import Autopilot from 'autopilot-api';
 import config from 'config3';
 import request from 'request-promise';
@@ -31,11 +32,11 @@ async function migrate(req, res, next) {
                     json: true // Automatically parses the JSON string in the response
                 };
                 await request.post(options);
-                console.log(contact.contact_id, contact.Email, contact.Phone, contact.FirstName, contact.LastName);
+                logger.info(contact.contact_id, contact.Email, contact.Phone, contact.FirstName, contact.LastName);
             }
         }
         contacts = await autopilot.lists.roster(config.autopilot.clientlist, contact.contact_id);
-        console.log("last----------------", contact.contact_id);
+        logger.info("last----------------", contact.contact_id);
     }
     res.success({length: contacts.data.contacts.length});
 
@@ -89,7 +90,7 @@ async function addContact(req, res, next) {
         res.success();
     }
     catch(error) {
-        console.log(error.message);
+        logger.info(error.message);
     }
 }
 
@@ -135,7 +136,7 @@ async function addKonnektiveOrder(req, res, next) {
     };
 
     const response = await request(options);
-    console.log(response);
+    logger.info(response);
 
     if(response.result == "ERROR") {
         res.error(response.message, 200);
@@ -149,7 +150,7 @@ async function getLead(req, res, next) {
     const orderId = req.params.id;
     const url = `https://api.konnektive.com/order/query/?loginId=${config.konnective.loginId}&password=${config.konnective.password}&orderId=${orderId}`;
     const response = JSON.parse(await request(url));
-    console.log(response);
+    logger.info(response);
     if(response.result == "ERROR") {
         res.error(response.message);
     }
@@ -174,7 +175,7 @@ async function createKonnektiveLead(req, res, next) {
     const campaignId = 3;
     req.body.loginId = config.konnective.loginId;
     req.body.password = config.konnective.password;
-    req.body.campaignId = 3;
+    req.body.campaignId = campaignId;
     req.body.emailAddress = req.body.emailAddress || config.email;
 
     const options = {
@@ -186,7 +187,7 @@ async function createKonnektiveLead(req, res, next) {
         json: true // Automatically parses the JSON string in the response
     };
     const response = await request(options);
-    console.log(response);
+    logger.info(response);
     if(response.result == "ERROR") {
         res.error(response.message);
     }
@@ -198,14 +199,14 @@ async function createKonnektiveLead(req, res, next) {
 async function sendSMS(req, res, next) {
     const {contactId} = req.params;
     const response = await autopilot.journeys.add('0001', contactId);
-    console.log(response);
+    logger.info(response);
     res.success();
 }
 
 async function sendSMS2(req, res, next) {
     const {contactid} = req.query;
     const response = await autopilot.journeys.add('0001', contactid);
-    console.log(response);
+    logger.info(response);
     res.success();
 }
 
@@ -239,7 +240,7 @@ async function updateContact(req, res, next) {
 }
 
 async function upsell(req, res, next) {
-    const {productId, productQty, orderId} = req.body;
+    const {productId, productQty} = req.body;
     if(!productId || !productQty) {
         res.error('Invalid Upsell Data');
     }
@@ -255,7 +256,7 @@ async function upsell(req, res, next) {
             json: true // Automatically parses the JSON string in the response
         };
         const response = await request(options);
-        console.log(response);
+        logger.info(response);
         if(response.result == "ERROR") {
             res.error(response.message);
         }
@@ -280,7 +281,7 @@ async function triggerJourney(req, res, next) {
     const {contactid} = req.query;
     const hookid = req.query.hookid || '0001';
     const response = await autopilot.journeys.add(hookid, contactid);
-    console.log(response);
+    logger.info(response);
     res.success();
 }
 
@@ -309,27 +310,6 @@ async function addLeadoutpost(req, res, next) {
     res.send(response);
 }
 
-function mapToStateDetails(data) {
-    return {
-        zip: data[0],
-        type: data[1],
-        primary_city: data[2],
-        acceptable_cities: data[3],
-        unacceptable_cities: data[4],
-        state: data[5],
-        county: data[6],
-        timezone: data[7],
-        area_codes: data[8],
-        latitude: data[9],
-        longitude: data[10],
-        world_region: data[11],
-        country: data[12],
-        decommissioned: data[13],
-        estimated_population: data[14],
-        notes: data[15]
-    };
-}
-
 function mapToAutopilotJson(data){
     return {
         FirstName: data.firstName,
@@ -339,7 +319,7 @@ function mapToAutopilotJson(data){
         MailingStreet: data.address1 + " " +  data.address2,
         MailingCity: data.city,
         MailingState: data.state,
-        MailingPostalCode: data.postalCode,
+        MailingPostalCode: data.postalCode
     };
 }
 
@@ -352,13 +332,13 @@ function mapToLeadoutpostJson(data) {
         address: data.address1 + " " + data.address2,
         city: data.city,
         state: data.state,
-        zip: data.postalCode,
+        zip: data.postalCode
     };
 }
 
 async function verifyPhoneNumber(req, res, next) {
     const number = req.params.phone;
-    console.log(phone(number, 'US')[0]);
+    logger.info(phone(number, 'US')[0]);
     if(!phone(number, 'US')[0]) {
         return res.error('Invalid phone number');
     }
@@ -382,5 +362,5 @@ export default {
     addKonnektiveOrder: addKonnektiveOrder,
     verifyPhoneNumber: verifyPhoneNumber,
 
-    migrate: migrate,
+    migrate: migrate
 };
