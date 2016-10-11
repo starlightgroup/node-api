@@ -1,3 +1,4 @@
 import database from '../../config/database';
 
-export {default as Log} from './log';
+/** global: default */
+export {default as State} from './state';

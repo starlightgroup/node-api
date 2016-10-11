@@ -1,7 +1,19 @@
 import mongoose from 'mongoose';
 import config from 'config3';
 
-mongoose.connect(config.MONGO_URI);
+async function connectWithRetry () {
+  try {
+    // Auto-reconnect only works once we're connected
+    await mongoose.connect(config.MONGO_URI, { server: { auto_reconnect:true } });
+  }
+  catch (err) {
+    console.error('Failed to connect to mongo on startup - retrying in 5 sec', err.message);
+    // Otherwise wee want to try again within a few seconds
+    setTimeout(connectWithRetry, 5000);
+  }
+}
+
+connectWithRetry();
 
 mongoose.connection.on('connected', () => {
   console.log(`Mongoose connection open on ${config.MONGO_URI}`);
