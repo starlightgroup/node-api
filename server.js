@@ -1,3 +1,4 @@
+require('newrelic');
 import express from 'express';
 import fs from 'fs';
 import morgan from 'morgan';
@@ -7,6 +8,7 @@ import bodyParser from 'body-parser';
 import config from 'config3';
 import expressPromiseRouter from 'express-promise-router';
 import https from 'https';
+import http from 'http';
 import forceSSL from 'express-force-ssl';
 import helmet from 'helmet';
 import redis from './config/redis';
@@ -89,6 +91,7 @@ app.use(function (err, req, res, next) {
 });
 
 var https_port = (process.env.HTTPS_PORT || 4443);
+var http_port = (process.env.HTTP_PORT || 4000);
 
 if(process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
   var options = {
@@ -101,3 +104,6 @@ if(process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') 
   https.createServer(options,app).listen(https_port);
   console.log("HTTPS Server Started at port : " + https_port);
 }
+
+http.createServer(app).listen(http_port);
+console.log("Server Started at port : " + http_port);
