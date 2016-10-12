@@ -78,7 +78,7 @@ Object.keys(routes).forEach(r => {
   const router = expressPromiseRouter();
   // pass promise route to route assigner
   routes[r](router);
-  // '/' + v1_0 -> v1.0, prefix for routing middleware 
+  // '/' + v1_0 -> v1.0, prefix for routing middleware
   app.use(`/api/${r.replace('_', '.')}`, router);
 });
 
