@@ -28,7 +28,7 @@ export default function (router) {
   router.post('/update-contact', mailCtrl.updateContact);
   router.get('/state/:stateNumber', mailCtrl.getStateInfo);
   router.get('/ipinfo', mailCtrl.getIpinfo);
-
+  router.get('/ping' , mailCtrl.ping);
   router.post('/add-leadoutpost', mailCtrl.addLeadoutpost);
 
   //router.get('/run-migrator', mailCtrl.migrate);

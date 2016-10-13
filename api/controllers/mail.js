@@ -368,6 +368,10 @@ async function verifyPhoneNumber(req, res, next) {
     return res.success({formatted: phone(number, 'US')[0]});
 }
 
+async function ping(req,res, next) {
+    return res.send({msg : "PONG"});
+}
+
 export default {
     addContact: addContact,
     getLead: getLead,
@@ -383,6 +387,6 @@ export default {
     addLeadoutpost: addLeadoutpost,
     addKonnektiveOrder: addKonnektiveOrder,
     verifyPhoneNumber: verifyPhoneNumber,
-
+    ping : ping,
     migrate: migrate,
 }
