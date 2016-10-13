@@ -19,6 +19,8 @@ import xFrameOptions from 'x-frame-options';
 
 export const app = express();
 
+console.log("Currently Runningg On : " , process.env.NODE_ENV);
+
 if(process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
   app.set('forceSSLOptions', {
     enable301Redirects: true,
@@ -103,7 +105,8 @@ if(process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') 
   };
   https.createServer(options,app).listen(https_port);
   console.log("HTTPS Server Started at port : " + https_port);
+} else if (process.env.NODE_ENV === 'development') {
+  http.createServer(app).listen(http_port);
+  console.log("Server Started at port : " + http_port);
 }
 
-http.createServer(app).listen(http_port);
-console.log("Server Started at port : " + http_port);
