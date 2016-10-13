@@ -1,8 +1,9 @@
 {
-  "name": "TacticalMastery",
+  "name": "tactical-mastery",
+  "version": "1.0",
   "decription": "TacticalMastery Backend Api",
   "private": true,
-  "author": "Denis Matei",
+  "author": "Larby & Mike",
   "scripts": {
     "start": "scripts/run",
     "test": "NODE_ENV=test _mocha -R spec --compilers js:babel-core/register --recursive",
@@ -12,7 +13,7 @@
   "main": "dist/index.js",
   "dependencies": {
     "autopilot-api": "^1.2.0",
-    "bluebird": "^2.9.34",
+    "bluebird": "^3.4.6",
     "body-parser": "^1.13.2",
     "config3": "^1.0.0",
     "cors": "^2.8.1",
