@@ -13,7 +13,7 @@ import forceSSL from 'express-force-ssl';
 import helmet from 'helmet';
 import redis from './config/redis';
 import csvimport from './config/import';
-import * as routes from './config/routes';
+import {routes} from './config/routes/v1.0';
 import xFrameOptions from 'x-frame-options';
 //import './config/seed'
 

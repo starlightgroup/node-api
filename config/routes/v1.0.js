@@ -1,15 +1,12 @@
 import mailCtrl from '../../api/controllers/mail';
-
-
 import resError from '../../api/middlewares/res_error';
 import resSuccess from '../../api/middlewares/res_success';
 
-export default function (router) {
+function route(router) {
   router.use(resError);
   router.use(resSuccess);
 
-
-
+  
   router.get('/get-lead/:id', mailCtrl.getLead);
   router.post('/create-lead', mailCtrl.createKonnektiveLead);
   router.post('/create-order', mailCtrl.addKonnektiveOrder);
@@ -33,3 +30,7 @@ export default function (router) {
 
   //router.get('/run-migrator', mailCtrl.migrate);
 };
+
+var routes = {v1_0 : route};
+
+export {routes}
