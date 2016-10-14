@@ -197,20 +197,6 @@ async function createKonnektiveLead(req, res, next) {
     }
 }
 
-async function sendSMS(req, res, next) {
-    const {contactId} = req.params;
-    const response = await autopilot.journeys.add('0001', contactId);
-    console.log(response);
-    res.success();
-}
-
-async function sendSMS2(req, res, next) {
-    const {contactid} = req.query;
-    const response = await autopilot.journeys.add('0001', contactid);
-    console.log(response);
-    res.success();
-}
-
 async function updateContact(req, res, next) {
     const contactData = mapToAutopilotJson(req.body);
     const leadoutpostData = mapToLeadoutpostJson(req.body);
@@ -376,9 +362,9 @@ export default {
     addContact: addContact,
     getLead: getLead,
     createKonnektiveLead: createKonnektiveLead,
-    sendSMS: sendSMS,
+    //sendSMS: sendSMS,
     updateContact: updateContact,
-    sendSMS2: sendSMS2,
+    //sendSMS2: sendSMS2,
     upsell: upsell,
     getStateInfo: getStateInfo,
     triggerJourney: triggerJourney,
