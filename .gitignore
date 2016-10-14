@@ -6,3 +6,5 @@ dist
 babel
 newrelic_agent.log
 npm-debug.log
+server-log.log
+
