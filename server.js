@@ -11,6 +11,7 @@ import https from 'https';
 import http from 'http';
 import forceSSL from 'express-force-ssl';
 import helmet from 'helmet';
+import raven from 'raven';
 import redis from './config/redis';
 import csvimport from './config/import';
 import {routes} from './config/routes/v1.0';
@@ -20,6 +21,8 @@ import xFrameOptions from 'x-frame-options';
 export const app = express();
 
 console.log("Currently Runningg On : " , process.env.NODE_ENV);
+
+app.use(raven.middleware.express.requestHandler('https://547e29c8a3854f969ff5912c76f34ef0:62c29411c70e46df81438b09d05526b0@sentry.io/106191'));
 
 if(process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
   app.set('forceSSLOptions', {
@@ -83,6 +86,8 @@ Object.keys(routes).forEach(r => {
   // '/' + v1_0 -> v1.0, prefix for routing middleware
   app.use(`/api/${r.replace('_', '.')}`, router);
 });
+
+app.use(raven.middleware.express.errorHandler('https://547e29c8a3854f969ff5912c76f34ef0:62c29411c70e46df81438b09d05526b0@sentry.io/106191'));
 
 app.use(function (err, req, res, next) {
   if (err) {

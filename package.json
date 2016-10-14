@@ -29,6 +29,7 @@
     "morgan": "^1.7.0",
     "newrelic": "^1.28.2",
     "phone": "^1.0.8",
+    "raven": "^0.12.1",
     "request-ip": "^1.2.2",
     "request-promise": "^4.1.1",
     "sendgrid": "^4.5.0",
