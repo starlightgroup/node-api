@@ -6,7 +6,8 @@
   "author": "Larby & Mike",
   "scripts": {
     "start": "scripts/run",
-    "test": "NODE_ENV=test _mocha -R spec --compilers js:babel-core/register --recursive",
+    "test": "snyk test",
+    "test-unit" : "NODE_ENV=test _mocha -R spec --compilers js:babel-core/register --recursive",
     "postinstall": "scripts/postinstall",
     "lint": "eslint api"
   },
@@ -54,7 +55,8 @@
     "eslint-plugin-standard": "^2.0.1",
     "mocha": "^3.1.2",
     "nodemon": "^1.9.1",
-    "supertest": "^2.0.0"
+    "supertest": "^2.0.0",
+    "snyk": "^1.19.1"
   },
   "engines": {
     "node": "~5.10.1"
