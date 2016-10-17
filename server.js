@@ -103,8 +103,11 @@ var http_port = (process.env.HTTP_PORT || 4000);
 if(process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
   var options = {
     //new location of evssl certs
-    cert: fs.readFileSync('/etc/ssl/evssl/tacticalmastery.com.bundle.crt'),
-    key: fs.readFileSync('/etc/ssl/evssl/tacticalmastery.com.key'),
+    //cert: fs.readFileSync('/etc/ssl/evssl/tacticalmastery.com.bundle.crt'),
+    //key: fs.readFileSync('/etc/ssl/evssl/tacticalmastery.com.key'),
+    cert: fs.readFileSync('/etc/nginx/ssl/tacticalmastery_cf.crt'),
+    key: fs.readFileSync('/etc/nginx/ssl/tacticalmastery_cf.key'),
+    
     requestCert: false,
     rejectUnauthorized: false
   };
