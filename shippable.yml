@@ -9,6 +9,6 @@ build:
   ci:
     - npm install
     - npm install -g nodemon
-script:
-  - npm run postinstall
-  - npm start
+    - npm run postinstall
+    - npm start
+  
