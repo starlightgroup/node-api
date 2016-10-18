@@ -1,9 +1,14 @@
 language: node_js
 node_js:
   - '6'
-  - '5'
 services:
   - redis
+env:
+  - NODE_ENV=production
+build:
+  ci:
+    - npm install
+    - npm install -g nodemon
 script:
   - npm run postinstall
   - npm start
