@@ -3,6 +3,8 @@ node_js:
   - '6'
 services:
   - redis
+env:
+  - NODE_ENV=production
 build:
   ci:
     - npm install
