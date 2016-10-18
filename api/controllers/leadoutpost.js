@@ -1,5 +1,6 @@
 import Autopilot from 'autopilot-api';
 import config from 'config3';
+import request from 'request-promise';
 const autopilot = new Autopilot(config.autopilot.key);
 
 async function migrate(req, res, next) {
@@ -48,7 +49,7 @@ async function migrate(req, res, next) {
  *
  */
 
-async function addContact(req, res, next) {
+async function addContact(req, res, next) {    
     try {
         const leadoutpost = {
             firstName: req.body.FirstName,
@@ -69,6 +70,8 @@ async function addContact(req, res, next) {
 
         leadoutpost.apiKey = config.leadoutpost.apiKey;
         leadoutpost.campaignId = config.leadoutpost.campaignId;
+
+        console.log("addContact" ,leadoutpost);
 
         const options = {
             uri: 'https://www.leadoutpost.com/api/v1/lead',
