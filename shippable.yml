@@ -8,7 +8,9 @@ env:
 build:
   ci:
     - npm install
-    - npm install -g babel-cli babel-plugin-transform-runtime
+    - npm install -g babel-cli
+    - npm install -g babel-plugin-transform-runtime
+    - npm install babel-plugin-transform-runtime
     - npm install -g snyk
     - npm run postinstall
     - npm start
