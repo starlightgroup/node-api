@@ -80,22 +80,32 @@ async function getTrans(req, res, next) {
 }
 
 async function createKonnektiveLead(req, res, next) {
+
+    console.log("createKonnektiveLead create-lead------------------------------------->");
+
     const campaignId = 3;
-    req.body.loginId = config.konnective.loginId;
-    req.body.password = config.konnective.password;
-    req.body.campaignId = 3;
-    req.body.emailAddress = req.body.emailAddress || config.email;
+    
+    var body = {};
+    body.loginId = config.konnective.loginId;
+    body.password = config.konnective.password;
+    body.campaignId = campaignId;
+    body.firstName = req.body.firstName;
+    body.lastName = req.body.lastName || "NA";
+    body.phoneNumber = req.body.phoneNumber;
+    body.emailAddress = req.body.emailAddress || config.email;
+
+    console.log(body);
 
     const options = {
         uri: 'https://api.konnektive.com/leads/import/',
-        qs: req.body,
+        qs: body,
         headers: {
             'User-Agent': 'Request-Promise'
         },
         json: true // Automatically parses the JSON string in the response
     };
     const response = await request(options);
-    console.log(response);
+    console.log("response--------------------------------->",response);
     if(response.result == "ERROR") {
         res.error(response.message);
     }
