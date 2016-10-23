@@ -5,3 +5,5 @@ if [[ "$DEPLOYMENT_GROUP_NAME" == "node-app1" ]]; then
 else
   export NODE_ENV="staging"
 fi
+
+npm i -g babel
