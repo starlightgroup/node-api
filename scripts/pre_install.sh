@@ -8,7 +8,7 @@ else
   export NODE_ENV="staging"
 fi
 
-npm i -g babel
+npm i -g babel forever
 
 if [[ -d "${API_DIR}" ]]; then
   rm -rf "${API_DIR}"
