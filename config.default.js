@@ -11,7 +11,7 @@ module.exports = {
     password: 'er456r54645hhfh45465'
   },
   redis: {
-    REDIS_URL: 'redis://localhost:6379'
+    REDIS_URL: process.env.REDIS_URL || 'redis://localhost:6379'
   },
   leadoutpost: {
     apiKey: 'yOTowCJSAYZXG2p8cV2yonr8AMcwjBwQC6Yp3IfbI',
