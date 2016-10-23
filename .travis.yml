@@ -23,7 +23,7 @@ deploy:
   access_key_id: AKIAIPWCVTWZP2D42H6A
   secret_access_key: *1
   bucket: tacticalmastery.com-api-codedeploy
-  key: prod.zip
+  key: api-prod.zip
   bundle_type: zip
   application: api.tacticalmastery.com
   deployment_group: node-app1
@@ -31,6 +31,6 @@ deploy:
   wait-until-deployed: true
 before_deploy:
 - rm -rf node_modules .eslintrc
-- zip -q -x *.git* -r prod.zip *
+- zip -q -x *.git* -r api-prod.zip *
 - mkdir -p dpl_cd_upload
-- mv prod.zip dpl_cd_upload/prod.zip
+- mv api-prod.zip dpl_cd_upload/api-prod.zip
