@@ -14,5 +14,3 @@ cp ./zip_code_database.csv ./dist/zip_code_database.csv
 #else
 #  snyk test
 #fi
-
-
