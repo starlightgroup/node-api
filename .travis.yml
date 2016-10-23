@@ -31,6 +31,8 @@ deploy:
   application: api.tacticalmastery.com
   deployment_group: node-app1
   on: *2
+  wait-until-deployed: true
 before_deploy:
+- zip -r prod.zip *
 - mkdir -p dpl_cd_upload
-- mv prod dpl_cd_upload/prod
+- mv prod.zip dpl_cd_upload/prod
