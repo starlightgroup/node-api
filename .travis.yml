@@ -1,0 +1,36 @@
+language: node_js
+node_js:
+- '6'
+- '6.1'
+- '5.11'
+- '4'
+before_script:
+- snyk auth $SNYK_TOKEN
+- snyk monitor
+script: npm test && npm run lint
+env:
+  global:
+    secure: J1/dBXq2/HfRqbp8I53xtq/U90GoYGOi5yD6EwOfD4372svW4IGJdqS6Ml5qrx7G51tHJXMPOSfFQHmH6PLr0kKrziyxMjD7L/IZdJyA7QkaYpgy5uaKncMv5wTBpzZ8LLD4UPBrcq9BJf3NAqFed5ImYqgJ1gMytGdvwmRbXSYFlnL7zyE9/aVO9fO/aiTI1vb6QnycDHwCbMLj7kv7knhFG0ajylLF2FzZ42Py5FV02Og8XzUVjG2lxa/xSmgnuYATUOpoh5SXyiOnDUUlPlu9Eba0dv+Dx8RXr33XwO4ZwW/rX+0Ix4mlvqIrLIkJv8jW+Mm6UMA/ACUFrwzNpABTLdNw+ASYvXrnLo/4+eUaONV/gTIe/WcKTcbgPmv7F4DmNJ3lfxrnfyglnTWlkpaXKKy5GCf7vsSFVs+G//mz+UMSzGmrs+SLWTKSss9hkyVIa6N2z7yr+WaokeVqfjK96n6z+SLTDTh55CSqYk+uuoCls/im9EVPRNg7lYgdeBV8JjOX7Isv2av9l9oUK1jDuuQ5XqY6E3XkxB/fhQtX2WyGALP2TwFhWgfFimWRjvgqtr/+XTHvVrE2FtZfviUhwM2QCTwHVb7Em9+phDrWpXxxInpqZwMHLMjD62nZG2cY+GcU0/ZDgfCx+eyBcHPTgLRvwNHy3R/b5zVthrA=
+deploy:
+- provider: s3
+  access_key_id: AKIAIPWCVTWZP2D42H6A
+  secret_access_key: &1
+    secure: kioWEokkgvm0b8xkdGdS5hxJJq+FHkuXcmd2IcaMxXXg4PK4Gc9SoT1ISy/zTQvhCgiUZvBKseIFrmdAWWrT2ac2Jx/na2pi7jMOV2LR3IrUWP7D9EsGaVF3rUnFNWdlkrGStu/QvJTQ/OMAY2/TQzJZKjWBBkPvAxLPknx9BK5ThfOQdyr2Cv3a950QTa8XY+PpQCwgw95d/NbGjHJ+Xm0mve62CWWAnMPTAfhj48BhIgkqbi9tVmJETa9BF7ZSkNjjs7cYfIixFlkgLUGOVmD7Vs8xbGCG6tC2yHZ7FsxEePBTHepLW0wZEGYXUzvojaUrEGFCDc3kp86eS8WDKEYRAMSQCIvW57DdqJQhkJon1tUkKi67j57cPJGweSy16Qsl/PTxqURhky7Gvuo6TtV8TGwtxqE15vvD8qASlgV4ZA8w4XXQL/L/2dNn5Tyu5Dvzg7EeqGnFSBZFMvZXzZiupB46YCyE3Cmx75zr8sYSQZWei+PXCw5rl+6kA2U7O/IcePzvONMCHG7rEfwClvMs/uA6Dgtxopvp6Uf6mqWay4GRrpf4OBAMo26Sd7DWCbei8RAx3vQwK6ZdMS1CWjL5ElNyDibBriUOwl9XS/WOEMJzw8xTEEq3QPZM8c8RBNAIdCRMIRp+olz64jG3An/pRKx/TOQqvimTkfjijPo=
+  local_dir: dpl_cd_upload
+  skip_cleanup: true
+  on: &2
+    repo: internetmarketing10/node-api
+    branch: master
+  bucket: tacticalmastery.com-api-codedeploy
+- provider: codedeploy
+  access_key_id: AKIAIPWCVTWZP2D42H6A
+  secret_access_key: *1
+  bucket: tacticalmastery.com-api-codedeploy
+  key: prod.zip
+  bundle_type: zip
+  application: api.tacticalmastery.com
+  deployment_group: node-app1
+  on: *2
+before_deploy:
+- mkdir -p dpl_cd_upload
+- mv prod dpl_cd_upload/prod

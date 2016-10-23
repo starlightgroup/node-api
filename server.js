@@ -20,7 +20,7 @@ import xFrameOptions from 'x-frame-options';
 
 export const app = express();
 
-console.log("Currently Runningg On : " , process.env.NODE_ENV);
+console.log("Currently Running On : " , process.env.NODE_ENV);
 
 app.use(raven.middleware.express.requestHandler('https://547e29c8a3854f969ff5912c76f34ef0:62c29411c70e46df81438b09d05526b0@sentry.io/106191'));
 
@@ -107,7 +107,7 @@ if(process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') 
     //key: fs.readFileSync('/etc/ssl/evssl/tacticalmastery.com.key'),
     cert: fs.readFileSync('/etc/nginx/ssl/tacticalmastery_cf.crt'),
     key: fs.readFileSync('/etc/nginx/ssl/tacticalmastery_cf.key'),
-    
+
     requestCert: false,
     rejectUnauthorized: false
   };
@@ -117,4 +117,3 @@ if(process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') 
   http.createServer(app).listen(http_port);
   console.log("Server Started at port : " + http_port);
 }
-
