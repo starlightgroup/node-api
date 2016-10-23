@@ -5,4 +5,6 @@ if [[ "$DEPLOYMENT_GROUP_NAME" == "node-app1" ]]; then
 else
   export NODE_ENV="staging"
 fi
+rm -rf /opt/node-api/node_modules
+cd /opt/node-api
 npm i
