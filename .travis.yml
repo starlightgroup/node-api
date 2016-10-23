@@ -1,9 +1,6 @@
 language: node_js
 node_js:
 - '6'
-- '6.1'
-- '5.11'
-- '4'
 before_script:
 - snyk auth $SNYK_TOKEN
 - snyk monitor
@@ -35,4 +32,4 @@ deploy:
 before_deploy:
 - zip -r prod.zip *
 - mkdir -p dpl_cd_upload
-- mv prod.zip dpl_cd_upload/prod
+- mv prod.zip dpl_cd_upload/prod.zip
