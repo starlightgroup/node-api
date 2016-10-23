@@ -1,7 +1,13 @@
 language: node_js
 node_js:
-  - "6"
-  - "6.1"
-  - "5.11"
-  - "4"
+  - '6'
+  - '6.1'
+  - '5.11'
+  - '4'
+before_script:
+  - snyk auth $SNYK_TOKEN
+  - snyk monitor
 script: npm test && npm run lint
+env:
+  global:
+    secure: pLYOYB3DWGYkLdtgxTRazfbd/E933BMZwmi9ZsEdhmvNOchKcFepF9mhmJTBhldmvGmPIuY07aQpeiuwq1sdJlbZDjwHFSNifAE5CyITly18Px/Gej7F1tPeIMOGPHRPPAQ/P+ojBNraNXmWoGGUj9q+0/ETzBNvx0WGuH4N2wk95fl7Yoh15u+Af4WCcjJxmwvQjS2jiwEbG+K5zEFgETf/C0Q7porJ4luMHJXbmfnwtvbg8jvHE/395SqwbEI/UErDu7RCPBvyucZybpP1bpMkCVMxxtFEkxX4xbTw4OPE+3OBvgeRrhkC8j3M1dC5Zd5UeTptIlI+b6jD+dQVC3whTUW6GzVJnXi3SmuzEt+m/Gc3fhk7696ewPawEWZO0XQxMShJy4O14ATptO5qIjA9JhxE56Vq4NXBVagsnVsTi4cgPlQghJ9/MbYN/Jxr3OqXy0K96y4XNu+YPUsYd3x3ceITDYdGdTK2RhkMQci3BtO8Girg1jIr+raW8+Dk1MwTQ9Fva+IXOFOzZEk9fmdm75BaRqFfthYSctxs4apqoWj4vayw4TbAr9MuvvzX7ZGj74jsGXuMxrGe6NUE6LGtDWXd/v4F6aD2OaO20sko5R8sEzKSRC9suFocBncW+IGoOPBFyH7Ju9D3bOheSvdtrRU4xEDRIwYMrLY/+KY=
