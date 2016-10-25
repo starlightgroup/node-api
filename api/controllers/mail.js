@@ -58,7 +58,7 @@ function mapToStateDetails(data) {
     };
 }
 
-function mapToAutopilotJson(data){
+export function mapToAutopilotJson(data){
     return {
         FirstName: data.firstName,
         LastName: data.lastName,
@@ -71,7 +71,7 @@ function mapToAutopilotJson(data){
     };
 }
 
-function mapToLeadoutpostJson(data) {
+export function mapToLeadoutpostJson(data) {
     return {
         firstName: data.firstName,
         lastName: data.lastName,
@@ -98,7 +98,7 @@ async function ping(req,res, next) {
     return res.send({msg : "PONG"});
 }
 
-export default {    
+export default {
     getStateInfo: getStateInfo,
     triggerJourney: triggerJourney,
     getIpinfo: getIpinfo,

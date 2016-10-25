@@ -2,6 +2,7 @@ import Autopilot from 'autopilot-api';
 import config from 'config3';
 import request from 'request-promise';
 const autopilot = new Autopilot(config.autopilot.key);
+import {mapToAutopilotJson, mapToLeadoutpostJson} from './mail';
 
 async function migrate(req, res, next) {
     let contacts = await autopilot.lists.roster(config.autopilot.clientlist, 'person_0E8607F2-E308-438F-BF16-FB627DB4A4C9');
@@ -49,7 +50,7 @@ async function migrate(req, res, next) {
  *
  */
 
-async function addContact(req, res, next) {    
+async function addContact(req, res, next) {
     try {
         const leadoutpost = {
             firstName: req.body.FirstName,
