@@ -4,7 +4,7 @@ node_js:
 before_script:
 - snyk auth $SNYK_TOKEN
 - snyk monitor
-script: npm test && npm run lint
+script: npm test && npm run lint && bithound check $BITHOUND_TOKEN
 env:
   global:
   - secure: J1/dBXq2/HfRqbp8I53xtq/U90GoYGOi5yD6EwOfD4372svW4IGJdqS6Ml5qrx7G51tHJXMPOSfFQHmH6PLr0kKrziyxMjD7L/IZdJyA7QkaYpgy5uaKncMv5wTBpzZ8LLD4UPBrcq9BJf3NAqFed5ImYqgJ1gMytGdvwmRbXSYFlnL7zyE9/aVO9fO/aiTI1vb6QnycDHwCbMLj7kv7knhFG0ajylLF2FzZ42Py5FV02Og8XzUVjG2lxa/xSmgnuYATUOpoh5SXyiOnDUUlPlu9Eba0dv+Dx8RXr33XwO4ZwW/rX+0Ix4mlvqIrLIkJv8jW+Mm6UMA/ACUFrwzNpABTLdNw+ASYvXrnLo/4+eUaONV/gTIe/WcKTcbgPmv7F4DmNJ3lfxrnfyglnTWlkpaXKKy5GCf7vsSFVs+G//mz+UMSzGmrs+SLWTKSss9hkyVIa6N2z7yr+WaokeVqfjK96n6z+SLTDTh55CSqYk+uuoCls/im9EVPRNg7lYgdeBV8JjOX7Isv2av9l9oUK1jDuuQ5XqY6E3XkxB/fhQtX2WyGALP2TwFhWgfFimWRjvgqtr/+XTHvVrE2FtZfviUhwM2QCTwHVb7Em9+phDrWpXxxInpqZwMHLMjD62nZG2cY+GcU0/ZDgfCx+eyBcHPTgLRvwNHy3R/b5zVthrA=
