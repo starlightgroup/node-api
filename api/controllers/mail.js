@@ -1,4 +1,4 @@
-import {sendAffiliateEmail} from '../common/mailer';
+//import {sendAffiliateEmail} from '../common/mailer';
 //import {Log} from '../models';
 import Autopilot from 'autopilot-api';
 import config from 'config3';
