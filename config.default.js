@@ -16,7 +16,8 @@ module.exports = {
     REDIS_URL:'redis://localhost:6379'
   },
   leadoutpost: {
-    apiKey: 'yOTowCJSAYZXG2p8cV2yonr8AMcwjBwQC6Yp3IfbI',
+    //apiKey: 'yOTowCJSAYZXG2p8cV2yonr8AMcwjBwQC6Yp3IfbI',
+    apiKey : 'CITg0XHH3kGJQ4kkjZizRxzUEINR2nZaLRRstUyHs',
     campaignId: 5
   },
   MONGO_URI: '',
