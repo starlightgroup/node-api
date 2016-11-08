@@ -15,7 +15,7 @@
   },
   "main": "dist/index.js",
   "dependencies": {
-    "autopilot-api": "^1.2.0",
+    "autopilot-api": "^2.0.0",
     "bluebird": "^3.4.6",
     "body-parser": "^1.13.2",
     "config3": "^1.0.0",
@@ -36,11 +36,11 @@
     "request-ip": "^1.2.2",
     "request-promise": "^4.1.1",
     "sendgrid": "^4.7.0",
+    "snyk": "^1.19.1",
     "through": "~2.3.7",
     "twilio": "^2.11.0",
     "winston": "^2.2.0",
-    "x-frame-options": "^1.0.0",
-    "snyk": "^1.19.1"
+    "x-frame-options": "^1.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.7.5",
