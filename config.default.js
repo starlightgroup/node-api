@@ -1,7 +1,7 @@
 /* do NOT change this to ES6 export or config wont work */
 
 module.exports = {
-  sendgridkey: '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',
+  //sendgridkey: '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',
   autopilot: {
     // key: 'f2eeea98acd847dabcc1b430870f2cb5',
     key : 'dfec2c98885c47789c8d5c52a2a8fad5',
