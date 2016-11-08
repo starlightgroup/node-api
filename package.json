@@ -9,7 +9,9 @@
     "test": "snyk test",
     "test-unit": "NODE_ENV=test _mocha -R spec --compilers js:babel-core/register --recursive",
     "postinstall": "scripts/postinstall",
-    "lint": "eslint api"
+    "lint": "eslint api",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "main": "dist/index.js",
   "dependencies": {
@@ -37,7 +39,8 @@
     "through": "~2.3.7",
     "twilio": "^2.11.0",
     "winston": "^2.2.0",
-    "x-frame-options": "^1.0.0"
+    "x-frame-options": "^1.0.0",
+    "snyk": "^1.19.1"
   },
   "devDependencies": {
     "babel-cli": "^6.7.5",
@@ -56,10 +59,10 @@
     "eslint-plugin-standard": "^2.0.1",
     "mocha": "^3.1.2",
     "nodemon": "^1.9.1",
-    "snyk": "^1.19.1",
     "supertest": "^2.0.0"
   },
   "engines": {
     "node": "~5.10.1"
-  }
+  },
+  "snyk": true
 }
