@@ -8,8 +8,8 @@ module.exports = {
     clientlist: 'contactlist_59EA0BF8-46D0-4733-B6C5-4F2EB7C890AA'
   },
   konnective: {
-    loginId: 'flashlighttactlarbyA',
-    password: 'fdg456gb5r678dfgn856hjv87e546kjgf8u8hdfg856t'
+    loginId: 'flashlightsforever',
+    password: 'asdfdasHGKKhasdhf%G^&*asdsd'
   },
   redis: {
     // REDIS_URL: process.env.REDIS_URL || 'redis://localhost:6379'
