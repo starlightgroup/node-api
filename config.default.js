@@ -9,7 +9,7 @@ module.exports = {
   },
   konnective: {
     loginId: 'flashlightsforever',
-    password: 'asdfdasHGKKhasdhf%G^&*asdsd'
+    password: 'gCx3N8DGqDhTTh'
   },
   redis: {
     // REDIS_URL: process.env.REDIS_URL || 'redis://localhost:6379'
