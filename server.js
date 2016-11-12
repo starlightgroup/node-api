@@ -46,6 +46,7 @@ app.use(helmet.hpkp({
   maxAge: oneDayInSeconds,
   sha256s: ['AbCdEfSeTyLBvTjEOhGD1627853=', 'ZyXwYuBdQsPIUVxNGRDAKGgxhJVu456=']
 }));
+app.use(helmet.noCache());
 app.use(xFrameOptions());
 
 app.set('superSecret', config.LOCALTABLE_SECRET);
