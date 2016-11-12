@@ -35,6 +35,17 @@ if(process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') 
 }
 
 app.use(helmet());
+app.use(helmet.referrerPolicy());
+app.use(helmet.contentSecurityPolicy({
+  directives: {
+    defaultSrc: ["'self' , 'tacticalmastery.com'"]
+  }
+}));
+var oneDayInSeconds = 86400;
+app.use(helmet.hpkp({
+  maxAge: oneDayInSeconds,
+  sha256s: ['AbCdEfSeTyLBvTjEOhGD1627853=', 'ZyXwYuBdQsPIUVxNGRDAKGgxhJVu456=']
+}));
 app.use(xFrameOptions());
 
 app.set('superSecret', config.LOCALTABLE_SECRET);
