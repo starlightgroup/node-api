@@ -8,7 +8,6 @@ import bodyParser from 'body-parser';
 import config from 'config3';
 import expressPromiseRouter from 'express-promise-router';
 import https from 'https';
-import http from 'http';
 import forceSSL from 'express-force-ssl';
 import helmet from 'helmet';
 import raven from 'raven';
@@ -24,15 +23,14 @@ console.log("Currently Running On : " , process.env.NODE_ENV);
 
 app.use(raven.middleware.express.requestHandler('https://547e29c8a3854f969ff5912c76f34ef0:62c29411c70e46df81438b09d05526b0@sentry.io/106191'));
 
-if(process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
-  app.set('forceSSLOptions', {
-    enable301Redirects: true,
-    trustXFPHeader: true,
-    httpsPort: 4443,
-    sslRequiredMessage: 'SSL Required.'
-  });
-  app.use(forceSSL);
-}
+
+app.set('forceSSLOptions', {
+  enable301Redirects: true,
+  trustXFPHeader: false,
+  httpsPort: 4443,
+  sslRequiredMessage: 'SSL Required.'
+});
+app.use(forceSSL);
 
 app.use(helmet());
 app.use(helmet.referrerPolicy());
@@ -110,22 +108,15 @@ app.use(function (err, req, res, next) {
 });
 
 var https_port = (process.env.HTTPS_PORT || 4443);
-var http_port = (process.env.HTTP_PORT || 4000);
 
-if(process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging') {
-  var options = {
-    //new location of evssl certs
-    //cert: fs.readFileSync('/etc/ssl/evssl/tacticalmastery.com.bundle.crt'),
-    //key: fs.readFileSync('/etc/ssl/evssl/tacticalmastery.com.key'),
-    cert: fs.readFileSync('/etc/nginx/ssl/tacticalmastery_cf.crt'),
-    key: fs.readFileSync('/etc/nginx/ssl/tacticalmastery_cf.key'),
+var options = {
+  //new location of evssl certs
+  cert: fs.readFileSync('/etc/nginx/ssl/tacticalmastery_cf.crt'),
+  key: fs.readFileSync('/etc/nginx/ssl/tacticalmastery_cf.key'),
+  requestCert: true
+  //,rejectUnauthorized: true
+};
 
-    requestCert: false,
-    rejectUnauthorized: false
-  };
-  https.createServer(options,app).listen(https_port);
-  console.log("HTTPS Server Started at port : " + https_port);
-} else if (process.env.NODE_ENV === 'development') {
-  http.createServer(app).listen(http_port);
-  console.log("Server Started at port : " + http_port);
-}
+https.createServer(options,app).listen(https_port);
+console.log("HTTPS Server Started at port : " + https_port);
+
