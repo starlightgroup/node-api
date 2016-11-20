@@ -1,5 +1,5 @@
 import P from 'bluebird';
-import config from 'config3';
+import config from '../../server-config';
 const sendgrid = require('sendgrid')(config.sendgridkey);
 
 export async function sendAffiliateEmail({first_name, last_name, phone, skype, cell, background}) {

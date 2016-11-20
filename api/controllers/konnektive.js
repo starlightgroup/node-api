@@ -1,6 +1,6 @@
 import Autopilot from 'autopilot-api';
 import request from 'request-promise';
-import config from 'config3';
+import config from '../../server-config';
 const autopilot = new Autopilot(config.autopilot.key);
 
 async function addKonnektiveOrder(req, res, next) {
