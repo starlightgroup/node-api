@@ -4,7 +4,7 @@ import fs from 'fs';
 import morgan from 'morgan';
 import logger from './api/common/log';
 import bodyParser from 'body-parser';
-import config from 'config3';
+import config from './server-config';
 import expressPromiseRouter from 'express-promise-router';
 import https from 'https';
 import cors from 'cors';

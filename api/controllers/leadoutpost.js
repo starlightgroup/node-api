@@ -1,5 +1,5 @@
 import Autopilot from 'autopilot-api';
-import config from 'config3';
+import config from '../../server-config';
 import request from 'request-promise';
 const autopilot = new Autopilot(config.autopilot.key);
 import {mapToAutopilotJson, mapToLeadoutpostJson} from './mail';

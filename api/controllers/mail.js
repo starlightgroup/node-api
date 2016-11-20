@@ -1,7 +1,7 @@
 //import {sendAffiliateEmail} from '../common/mailer';
 //import {Log} from '../models';
 import Autopilot from 'autopilot-api';
-import config from 'config3';
+import config from '../../server-config';
 import * as redis from '../common/redis';
 // import requestIp from 'request-ip';
 import phone from 'phone';
