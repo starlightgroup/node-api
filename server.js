@@ -16,7 +16,7 @@ import csvimport from './config/import';
 import {routes} from './config/routes/v1.0';
 //import './config/seed'
 
-export const app = express();
+const app = express();
 
 console.log("Currently Running On : " , process.env.NODE_ENV);
 
