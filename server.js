@@ -41,6 +41,7 @@ app.use(forceSSL);
 
 app.use(helmet());
 app.use(helmet.referrerPolicy());
+app.use(helmet.frameguard({ action: 'deny' }));
 
 app.use(csp({
   directives: {
