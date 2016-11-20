@@ -3,25 +3,32 @@ import express from 'express';
 import fs from 'fs';
 import morgan from 'morgan';
 import logger from './api/common/log';
-import cors from 'cors';
 import bodyParser from 'body-parser';
 import config from 'config3';
 import expressPromiseRouter from 'express-promise-router';
 import https from 'https';
+import cors from 'cors';
 import forceSSL from 'express-force-ssl';
 import helmet from 'helmet';
+import csp from 'helmet-csp';
 import raven from 'raven';
 import redis from './config/redis';
 import csvimport from './config/import';
 import {routes} from './config/routes/v1.0';
-import xFrameOptions from 'x-frame-options';
 //import './config/seed'
 
-export const app = express();
+const app = express();
 
 console.log("Currently Running On : " , process.env.NODE_ENV);
 
 app.use(raven.middleware.express.requestHandler('https://547e29c8a3854f969ff5912c76f34ef0:62c29411c70e46df81438b09d05526b0@sentry.io/106191'));
+
+var corsOptions = {
+  origin: 'https://tacticalmastery.com',
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204 
+};
+
+app.use(cors(corsOptions));
 
 
 app.set('forceSSLOptions', {
@@ -34,23 +41,24 @@ app.use(forceSSL);
 
 app.use(helmet());
 app.use(helmet.referrerPolicy());
-app.use(helmet.contentSecurityPolicy({
+app.use(helmet.frameguard({ action: 'deny' }));
+
+app.use(csp({
   directives: {
     defaultSrc: ["'self' , 'tacticalmastery.com'"]
   }
 }));
+
 var oneDayInSeconds = 86400;
 app.use(helmet.hpkp({
   maxAge: oneDayInSeconds,
   sha256s: ['AbCdEfSeTyLBvTjEOhGD1627853=', 'ZyXwYuBdQsPIUVxNGRDAKGgxhJVu456=']
 }));
+
 app.use(helmet.noCache());
-app.use(xFrameOptions());
 
 app.set('superSecret', config.LOCALTABLE_SECRET);
 app.use('/api', morgan('combined', {stream: logger.asStream('info')}));
-
-//app.use(cors()); // Planned to do this on Nginx
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
