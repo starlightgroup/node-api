@@ -50,8 +50,6 @@ app.use(xFrameOptions());
 app.set('superSecret', config.LOCALTABLE_SECRET);
 app.use('/api', morgan('combined', {stream: logger.asStream('info')}));
 
-//app.use(cors()); // Planned to do this on Nginx
-
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
