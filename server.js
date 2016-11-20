@@ -3,18 +3,17 @@ import express from 'express';
 import fs from 'fs';
 import morgan from 'morgan';
 import logger from './api/common/log';
-import cors from 'cors';
 import bodyParser from 'body-parser';
 import config from 'config3';
 import expressPromiseRouter from 'express-promise-router';
 import https from 'https';
 import forceSSL from 'express-force-ssl';
 import helmet from 'helmet';
+import csp from 'helmet-csp';
 import raven from 'raven';
 import redis from './config/redis';
 import csvimport from './config/import';
 import {routes} from './config/routes/v1.0';
-import xFrameOptions from 'x-frame-options';
 //import './config/seed'
 
 export const app = express();
@@ -34,18 +33,20 @@ app.use(forceSSL);
 
 app.use(helmet());
 app.use(helmet.referrerPolicy());
-app.use(helmet.contentSecurityPolicy({
+
+app.use(csp({
   directives: {
     defaultSrc: ["'self' , 'tacticalmastery.com'"]
   }
 }));
+
 var oneDayInSeconds = 86400;
 app.use(helmet.hpkp({
   maxAge: oneDayInSeconds,
   sha256s: ['AbCdEfSeTyLBvTjEOhGD1627853=', 'ZyXwYuBdQsPIUVxNGRDAKGgxhJVu456=']
 }));
+
 app.use(helmet.noCache());
-app.use(xFrameOptions());
 
 app.set('superSecret', config.LOCALTABLE_SECRET);
 app.use('/api', morgan('combined', {stream: logger.asStream('info')}));

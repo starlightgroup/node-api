@@ -3,7 +3,7 @@
 import Autopilot from 'autopilot-api';
 import config from 'config3';
 import * as redis from '../common/redis';
-import requestIp from 'request-ip';
+// import requestIp from 'request-ip';
 import phone from 'phone';
 
 const autopilot = new Autopilot(config.autopilot.key);
