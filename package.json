@@ -31,7 +31,7 @@
     "phone": "^1.0.8",
     "raven": "^0.12.1",
     "request-promise": "^4.1.1",
-    "snyk": "^1.19.1",
+    "snyk": "^1.20.0",
     "through": "^2.3.8",
     "twilio": "^2.11.0",
     "winston": "^2.3.0",
@@ -55,9 +55,6 @@
     "mocha": "^3.1.2",
     "nodemon": "^1.11.0",
     "supertest": "^2.0.1"
-  },
-  "engines": {
-    "node": "~5.10.1"
-  },
+  },  
   "snyk": true
 }
