@@ -36,6 +36,6 @@ function route(router) {
   //router.get('/run-migrator', leadoutpostCtrl.migrate);
 };
 
-var routes = {v1_0 : route};
+var routes = {v2 : route};
 
 export {routes};
