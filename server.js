@@ -6,7 +6,7 @@ import bodyParser from 'body-parser';
 import config from './server-config';
 import expressPromiseRouter from 'express-promise-router';
 import https from 'https';
-import cors from 'cors';
+//import cors from 'cors';
 import forceSSL from 'express-force-ssl';
 import helmet from 'helmet';
 import csp from 'helmet-csp';
@@ -22,12 +22,12 @@ console.log("Currently Running On : " , process.env.NODE_ENV);
 
 app.use(raven.middleware.express.requestHandler('https://547e29c8a3854f969ff5912c76f34ef0:62c29411c70e46df81438b09d05526b0@sentry.io/106191'));
 
-var corsOptions = {
-  origin: 'https://tacticalmastery.com',
-  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204 
-};
+// var corsOptions = {
+//   origin: 'https://tacticalmastery.com',
+//   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204 
+// };
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 
 
 app.set('forceSSLOptions', {
@@ -44,7 +44,8 @@ app.use(helmet.frameguard({ action: 'deny' }));
 
 app.use(csp({
   directives: {
-    defaultSrc: ["'self' , 'tacticalmastery.com'"]
+    defaultSrc: ["'self'"],
+    styleSrc : ["'self'"]
   }
 }));
 
@@ -93,7 +94,7 @@ function logResponseBody(req, res, next) {
   next();
 }
 
-app.use(logResponseBody);
+//app.use(logResponseBody);
 
 // route with appropriate version prefix
 Object.keys(routes).forEach(r => {
