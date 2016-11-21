@@ -1,7 +1,7 @@
 require('newrelic');
 import express from 'express';
 import fs from 'fs';
-import morgan from 'morgan';
+//import morgan from 'morgan';
 import logger from './api/common/log';
 import bodyParser from 'body-parser';
 import config from './server-config';
@@ -57,8 +57,8 @@ app.use(helmet.hpkp({
 
 app.use(helmet.noCache());
 
-app.set('superSecret', config.LOCALTABLE_SECRET);
-app.use('/api', morgan('combined', {stream: logger.asStream('info')}));
+//app.set('superSecret', config.LOCALTABLE_SECRET);
+//app.use('/api', morgan('combined', {stream: logger.asStream('info')}));
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());

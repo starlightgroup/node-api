@@ -1,17 +1,17 @@
-import timestamps from 'mongoose-timestamp';
-import mongoose, { Schema } from 'mongoose';
+// import timestamps from 'mongoose-timestamp';
+// import mongoose, { Schema } from 'mongoose';
 
-/**
- * User Schema
- */
+// /**
+//  * User Schema
+//  */
 
-const Log = new Schema({
-  log: {
-    type: Schema.Types.Mixed
-  }
-});
+// const Log = new Schema({
+//   log: {
+//     type: Schema.Types.Mixed
+//   }
+// });
 
-Log.plugin(timestamps);
+// Log.plugin(timestamps);
 
 
-export default mongoose.model('log', Log);
+// export default mongoose.model('log', Log);
