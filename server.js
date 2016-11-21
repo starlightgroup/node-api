@@ -1,7 +1,6 @@
 require('newrelic');
 import express from 'express';
 import fs from 'fs';
-//import morgan from 'morgan';
 import logger from './api/common/log';
 import bodyParser from 'body-parser';
 import config from './server-config';
@@ -14,7 +13,7 @@ import csp from 'helmet-csp';
 import raven from 'raven';
 import redis from './config/redis';
 import csvimport from './config/import';
-import {routes} from './config/routes/v1.0';
+import {routes} from './config/routes/v2';
 //import './config/seed'
 
 const app = express();
@@ -102,7 +101,7 @@ Object.keys(routes).forEach(r => {
   // pass promise route to route assigner
   routes[r](router);
   // '/' + v1_0 -> v1.0, prefix for routing middleware
-  app.use(`/api/${r.replace('_', '.')}`, router);
+  app.use(`/api/${r}`, router);
 });
 
 app.use(raven.middleware.express.errorHandler('https://547e29c8a3854f969ff5912c76f34ef0:62c29411c70e46df81438b09d05526b0@sentry.io/106191'));
