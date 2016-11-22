@@ -6,7 +6,6 @@ import bodyParser from 'body-parser';
 import config from './server-config';
 import expressPromiseRouter from 'express-promise-router';
 import https from 'https';
-//import cors from 'cors';
 import forceSSL from 'express-force-ssl';
 import helmet from 'helmet';
 import csp from 'helmet-csp';
@@ -14,21 +13,12 @@ import raven from 'raven';
 import redis from './config/redis';
 import csvimport from './config/import';
 import {routes} from './config/routes/v2';
-//import './config/seed'
 
 const app = express();
 
 console.log("Currently Running On : " , process.env.NODE_ENV);
 
 app.use(raven.middleware.express.requestHandler('https://547e29c8a3854f969ff5912c76f34ef0:62c29411c70e46df81438b09d05526b0@sentry.io/106191'));
-
-// var corsOptions = {
-//   origin: 'https://tacticalmastery.com',
-//   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204 
-// };
-
-// app.use(cors(corsOptions));
-
 
 app.set('forceSSLOptions', {
   enable301Redirects: true,
@@ -56,9 +46,6 @@ app.use(helmet.hpkp({
 }));
 
 app.use(helmet.noCache());
-
-//app.set('superSecret', config.LOCALTABLE_SECRET);
-//app.use('/api', morgan('combined', {stream: logger.asStream('info')}));
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
@@ -94,14 +81,12 @@ function logResponseBody(req, res, next) {
   next();
 }
 
-//app.use(logResponseBody);
 
 // route with appropriate version prefix
 Object.keys(routes).forEach(r => {
   const router = expressPromiseRouter();
   // pass promise route to route assigner
   routes[r](router);
-  // '/' + v1_0 -> v1.0, prefix for routing middleware
   app.use(`/api/${r}`, router);
 });
 
@@ -122,7 +107,6 @@ var options = {
   cert: fs.readFileSync('/etc/nginx/ssl/tacticalmastery_cf.crt'),
   key: fs.readFileSync('/etc/nginx/ssl/tacticalmastery_cf.key'),
   requestCert: true
-  //,rejectUnauthorized: true
 };
 
 https.createServer(options,app).listen(https_port);
