@@ -1,6 +1,8 @@
 import Autopilot from 'autopilot-api';
 import config from '../../server-config';
 import request from 'request-promise';
+import xss from 'xss';
+
 const autopilot = new Autopilot(config.autopilot.key);
 import {mapToAutopilotJson, mapToLeadoutpostJson} from './mail';
 
@@ -51,20 +53,23 @@ async function migrate(req, res, next) {
  */
 
 async function addContact(req, res, next) {
+    console.log("--------------------------->add-contact");
     try {
         const leadoutpost = {
-            firstName: req.body.FirstName,
-            lastName: req.body.LastName,
-            email: req.body.Email,
-            phone: req.body.MobilePhone || req.body.Phone
+            firstName: xss(req.body.FirstName),
+            lastName: xss(req.body.LastName),
+            email: xss(req.body.Email),
+            phone: xss(req.body.MobilePhone) || xss(req.body.Phone)
         };
         if(!req.body.MobilePhone) {
-            req.body.MobilePhone = req.body.Phone;
+            req.body.MobilePhone = xss(req.body.Phone);
         }
 
         if(!req.body.Phone) {
-            req.body.Phone = req.body.MobilePhone;
+            req.body.Phone = xss(req.body.MobilePhone);
         }
+
+        console.log(req.body);
         //await sendAffiliateEmail(req.body);
         req.body._autopilot_list = config.autopilot.clientlist;
         autopilot.contacts.upsert(req.body);
