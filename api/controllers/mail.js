@@ -1,11 +1,11 @@
 import Autopilot from 'autopilot-api';
+import phone from 'phone';
+import xss from 'xss';
+
 import config from '../../server-config';
 import * as redis from '../common/redis';
-import phone from 'phone';
 
 const autopilot = new Autopilot(config.autopilot.key);
-
-
 
 async function getStateInfo(req, res, next) {
     const {stateNumber} = req.params;
@@ -57,27 +57,27 @@ function mapToStateDetails(data) {
 
 export function mapToAutopilotJson(data){
     return {
-        FirstName: data.firstName,
-        LastName: data.lastName,
-        Email: data.emailAddress,
-        MobilePhone: data.phoneNumber,
-        MailingStreet: data.address1 + " " +  data.address2,
-        MailingCity: data.city,
-        MailingState: data.state,
-        MailingPostalCode: data.postalCode,
+        FirstName: xss(data.firstName),
+        LastName: xss(data.lastName),
+        Email: xss(data.emailAddress),
+        MobilePhone: xss(data.phoneNumber),
+        MailingStreet: xss(data.address1) + " " +  xss(data.address2),
+        MailingCity: xss(data.city),
+        MailingState: xss(data.state),
+        MailingPostalCode: xss(data.postalCode)
     };
 }
 
 export function mapToLeadoutpostJson(data) {
     return {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        email: data.emailAddress,
-        phone: data.phoneNumber,
-        address: data.address1 + " " + data.address2,
-        city: data.city,
-        state: data.state,
-        zip: data.postalCode,
+        firstName: xss(data.firstName),
+        lastName: xss(data.lastName),
+        email: xss(data.emailAddress),
+        phone: xss(data.phoneNumber),
+        address: xss(data.address1) + " " + xss(data.address2),
+        city: xss(data.city),
+        state: xss(data.state),
+        zip: xss(data.postalCode)
     };
 }
 
