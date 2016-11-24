@@ -1,6 +1,8 @@
 import Autopilot from 'autopilot-api';
 import request from 'request-promise';
 import config from '../../server-config';
+import xss from 'xss';
+
 const autopilot = new Autopilot(config.autopilot.key);
 
 async function addKonnektiveOrder(req, res, next) {
@@ -81,7 +83,7 @@ async function getTrans(req, res, next) {
 
 async function createKonnektiveLead(req, res, next) {
 
-    console.log("createKonnektiveLead create-lead------------------------------------->");
+    console.log("createKonnektiveLead create-lead...");
 
     const campaignId = 3;
     
@@ -89,10 +91,11 @@ async function createKonnektiveLead(req, res, next) {
     body.loginId = config.konnective.loginId;
     body.password = config.konnective.password;
     body.campaignId = campaignId;
-    body.firstName = req.body.firstName;
-    body.lastName = req.body.lastName || "NA";
-    body.phoneNumber = req.body.phoneNumber;
-    body.emailAddress = req.body.emailAddress || config.email;
+    
+    body.firstName = xss(req.body.firstName);
+    body.lastName = xss(req.body.lastName) || "NA";
+    body.phoneNumber = xss(req.body.phoneNumber);
+    body.emailAddress = xss(req.body.emailAddress) || config.email;
 
     console.log(body);
 
@@ -105,7 +108,7 @@ async function createKonnektiveLead(req, res, next) {
         json: true // Automatically parses the JSON string in the response
     };
     const response = await request(options);
-    console.log("response--------------------------------->",response);
+    console.log("response...",response);
     if(response.result == "ERROR") {
         res.error(response.message);
     }
