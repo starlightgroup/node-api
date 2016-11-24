@@ -53,7 +53,7 @@ async function migrate(req, res, next) {
  */
 
 async function addContact(req, res, next) {
-    console.log("--------------------------->add-contact");
+    console.log("add-contact...");
     try {
         const leadoutpost = {
             firstName: xss(req.body.FirstName),
