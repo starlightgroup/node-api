@@ -8,6 +8,7 @@ import expressPromiseRouter from 'express-promise-router';
 import https from 'https';
 import forceSSL from 'express-force-ssl';
 import helmet from 'helmet';
+import hpp from 'hpp';
 import csp from 'helmet-csp';
 import raven from 'raven';
 import redis from './config/redis';
@@ -50,6 +51,7 @@ app.use(helmet.noCache());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
+app.use(hpp());
 
 app.use(function (req, res, next) {
   res.set(`X-Powered-By`, `TacticalMastery`);
