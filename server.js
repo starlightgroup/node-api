@@ -6,6 +6,7 @@ import bodyParser from 'body-parser';
 import config from './server-config';
 import expressPromiseRouter from 'express-promise-router';
 import expressContentLength from 'express-content-length-validator';
+import cookieSession from 'cookie-session';
 import https from 'https';
 import forceSSL from 'express-force-ssl';
 import helmet from 'helmet';
@@ -56,6 +57,18 @@ app.use(hpp());
 
 var MAX_CONTENT_LENGTH_ACCEPTED = 9999; 
 app.use(expressContentLength.validateMax({max: MAX_CONTENT_LENGTH_ACCEPTED, status: 400, message: "stop max size for the content-length!"})); // max size accepted for the content-length
+
+
+var expiryDate = new Date(Date.now() + 60 * 60 * 1000) // 1 hour
+app.use(cookieSession({
+  name: 'tmcookie',
+  keys: ['dfgEzfGDFrDFfgDh456dsrf34gDf48fg34hg7', 'fgdfg73465ghFghtxcDfdfdgdsfTfghxfdgedryYh'],
+  cookie: {
+    secure: true,
+    httpOnly: true,
+    expires: expiryDate
+  }
+}));
 
 app.use(function (req, res, next) {
   res.set(`X-Powered-By`, `TacticalMastery`);
