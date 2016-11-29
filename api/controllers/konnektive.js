@@ -75,7 +75,7 @@ async function addKonnektiveOrder(req, res, next) {
 }
 
 async function getLead(req, res, next) {
-    const orderId = req.params.id;
+    const orderId = xss(req.params.id);
     const url = `https://api.konnektive.com/order/query/?loginId=${config.konnective.loginId}&password=${config.konnective.password}&orderId=${orderId}`;
     const response = JSON.parse(await request(url));
     console.log(response);
@@ -88,7 +88,7 @@ async function getLead(req, res, next) {
 }
 
 async function getTrans(req, res, next) {
-    const orderId = req.params.id;
+    const orderId = xss(req.params.id);
     const url = `https://api.konnektive.com/transactions/query/?loginId=${config.konnective.loginId}&password=${config.konnective.password}&orderId=${orderId}`;
     const response = JSON.parse(await request(url));
     if(response.result == "ERROR") {
