@@ -8,7 +8,8 @@ import * as redis from '../common/redis';
 const autopilot = new Autopilot(config.autopilot.key);
 
 async function getStateInfo(req, res, next) {
-    const {stateNumber} = req.params;
+    const stateNumber = xss(req.params.stateNumber);
+    console.log(stateNumber);
     const details = await redis.getJson(stateNumber);
     if(details) {
         res.success({data: mapToStateDetails(details)});
