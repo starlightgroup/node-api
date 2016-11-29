@@ -15,15 +15,15 @@ function route(router) {
   router.post('/upsell', konnektiveCtrl.upsell);
   router.get('/get-trans/:id', konnektiveCtrl.getTrans);
 
-  router.post('/text/:contactId', smsCtrl.sendSMS);
-  router.get('/text/:contactId', smsCtrl.sendSMS);
-  router.get('/text2', smsCtrl.sendSMS2);
-  router.post('/text2', smsCtrl.sendSMS2);
+  // router.post('/text/:contactId', smsCtrl.sendSMS);
+  // router.get('/text/:contactId', smsCtrl.sendSMS);
+  // router.get('/text2', smsCtrl.sendSMS2);
+  // router.post('/text2', smsCtrl.sendSMS2);
 
-  router.get('/verify-phone/:phone', mailCtrl.verifyPhoneNumber);
+  // router.get('/verify-phone/:phone', mailCtrl.verifyPhoneNumber);
 
-  router.get('/aphq', mailCtrl.triggerJourney);
-  router.post('/aphq', mailCtrl.triggerJourney);
+  // router.get('/aphq', mailCtrl.triggerJourney);
+  // router.post('/aphq', mailCtrl.triggerJourney);
   
   router.get('/state/:stateNumber', mailCtrl.getStateInfo);
   // router.get('/ipinfo', mailCtrl.getIpinfo);
@@ -31,7 +31,7 @@ function route(router) {
   
   router.post('/add-contact', leadoutpostCtrl.addContact);
   router.post('/update-contact', leadoutpostCtrl.updateContact);
-  router.post('/add-leadoutpost', leadoutpostCtrl.addLeadoutpost);
+  //router.post('/add-leadoutpost', leadoutpostCtrl.addLeadoutpost);
 
   //router.get('/run-migrator', leadoutpostCtrl.migrate);
 };
