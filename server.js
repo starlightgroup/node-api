@@ -59,7 +59,7 @@ var MAX_CONTENT_LENGTH_ACCEPTED = 9999;
 app.use(expressContentLength.validateMax({max: MAX_CONTENT_LENGTH_ACCEPTED, status: 400, message: "stop max size for the content-length!"})); // max size accepted for the content-length
 
 
-var expiryDate = new Date(Date.now() + 60 * 60 * 1000) // 1 hour
+var expiryDate = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
 app.use(cookieSession({
   name: 'tmcookie',
   keys: ['dfgEzfGDFrDFfgDh456dsrf34gDf48fg34hg7', 'fgdfg73465ghFghtxcDfdfdgdsfTfghxfdgedryYh'],
