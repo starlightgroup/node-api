@@ -1,5 +1,5 @@
 import Autopilot from 'autopilot-api';
-import config from '../../config/server-config';
+import config from '../../config/deprecated.server-config';
 import request from 'request-promise';
 import xss from 'xss';
 

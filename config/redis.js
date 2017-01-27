@@ -1,7 +1,7 @@
 import RedisClient from 'ioredis';
 
 // let connectionDetails;
-import config from './server-config';
+import config from './deprecated.server-config';
 
 'use strict';
 const redisUrl = config.redis.url;

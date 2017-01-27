@@ -1,6 +1,6 @@
 import Autopilot from 'autopilot-api';
 import request from 'request-promise';
-import config from '../../config/server-config';
+import config from '../../config/deprecated.server-config';
 import xss from 'xss';
 
 const autopilot = new Autopilot(config.autopilot.key);

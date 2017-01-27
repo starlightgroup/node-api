@@ -3,19 +3,19 @@ import express from 'express';
 import fs from 'fs';
 import logger from './api/common/log';
 import bodyParser from 'body-parser';
-import config from './config/server-config';
+import config from './config/deprecated.server-config';
 import expressPromiseRouter from 'express-promise-router';
 import expressContentLength from 'express-content-length-validator';
 import cookieSession from 'cookie-session';
-import https from 'https';
-import http from 'http';
-import forceSSL from 'express-force-ssl';
+//import https from 'https';
+//import http from 'http';
+//import forceSSL from 'express-force-ssl';
 import helmet from 'helmet';
 import hpp from 'hpp';
 import csp from 'helmet-csp';
-import raven from 'raven';
+//import raven from 'raven';
 import redis from './config/redis';
-import csvimport from './config/import';
+import csvimport from './config/deprecated.import';
 import {routes} from './config/routes/v2';
 
 const app = express();
@@ -24,13 +24,13 @@ console.log("Currently Running On : " , process.env.NODE_ENV);
 
 // app.use(raven.middleware.express.requestHandler('https://547e29c8a3854f969ff5912c76f34ef0:62c29411c70e46df81438b09d05526b0@sentry.io/106191'));
 
-app.set('forceSSLOptions', {
-  enable301Redirects: true,
-  trustXFPHeader: false,
-  httpsPort: 4443,
-  sslRequiredMessage: 'SSL Required.'
-});
-app.use(forceSSL);
+//app.set('forceSSLOptions', {
+//  enable301Redirects: true,
+//  trustXFPHeader: false,
+//  httpsPort: 4443,
+//  sslRequiredMessage: 'SSL Required.'
+//});
+//app.use(forceSSL);
 
 app.use(helmet());
 app.use(helmet.referrerPolicy());
@@ -123,18 +123,24 @@ app.use(function (err, req, res, next) {
 if (process.env.NODE_ENV === 'production') {
   var https_port = (process.env.HTTPS_PORT || 4443);
 
-  //it is disaster to use `https` module instead of nginx!!!
-  var options = {
-    //new location of evssl certs
-    cert: fs.readFileSync('/etc/nginx/ssl/tacticalmastery_cf.crt'),
-    key: fs.readFileSync('/etc/nginx/ssl/tacticalmastery_cf.key'),
-    requestCert: true
-  };
+  /**
+   * feature/remove-unecessary
+   *
+   * Let's temporarily deprecate these for testing.
+   */
+  ////it is disaster to use `https` module instead of nginx!!!
+  //var options = {
+  //  //new location of evssl certs
+  //  cert: fs.readFileSync('/etc/nginx/ssl/tacticalmastery_cf.crt'),
+  //  key: fs.readFileSync('/etc/nginx/ssl/tacticalmastery_cf.key'),
+  //  requestCert: true
+  //};
 
   https.createServer(options,app).listen(https_port);
   console.log("HTTPS Server Started at port : " + https_port);
 } else {
-  var port = process.env.PORT || 3000;
+  // if NODE_ENV is development
+  var port = process.env.serverPort || 3000;
   http
     .createServer(app)
     .listen(port, function (error) {

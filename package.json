@@ -12,7 +12,7 @@
     "lint": "eslint api",
     "snyk-protect": "snyk protect",
     "prepublish": "npm run snyk-protect",
-    "start-docker":"babel-node server.js"
+    "start-docker": "babel-node server.js"
   },
   "main": "dist/index.js",
   "dependencies": {
@@ -37,7 +37,8 @@
     "request-promise": "^4.1.1",
     "snyk": "^1.20.0",
     "through": "^2.3.8",
-    "winston": "^2.3.0",
+    "winston": "^2.3.1",
+    "winston-redis": "^1.0.0",
     "xss": "^0.3.1"
   },
   "devDependencies": {
