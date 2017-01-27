@@ -8,6 +8,7 @@ import expressPromiseRouter from 'express-promise-router';
 import expressContentLength from 'express-content-length-validator';
 import cookieSession from 'cookie-session';
 import https from 'https';
+import http from 'http';
 import forceSSL from 'express-force-ssl';
 import helmet from 'helmet';
 import hpp from 'hpp';
@@ -119,15 +120,28 @@ app.use(function (err, req, res, next) {
   }
 });
 
-var https_port = (process.env.HTTPS_PORT || 4443);
+if (process.env.NODE_ENV === 'production') {
+  var https_port = (process.env.HTTPS_PORT || 4443);
 
-var options = {
-  //new location of evssl certs
-  cert: fs.readFileSync('/etc/nginx/ssl/tacticalmastery_cf.crt'),
-  key: fs.readFileSync('/etc/nginx/ssl/tacticalmastery_cf.key'),
-  requestCert: true
-};
+  //it is disaster to use `https` module instead of nginx!!!
+  var options = {
+    //new location of evssl certs
+    cert: fs.readFileSync('/etc/nginx/ssl/tacticalmastery_cf.crt'),
+    key: fs.readFileSync('/etc/nginx/ssl/tacticalmastery_cf.key'),
+    requestCert: true
+  };
 
-https.createServer(options,app).listen(https_port);
-console.log("HTTPS Server Started at port : " + https_port);
+  https.createServer(options,app).listen(https_port);
+  console.log("HTTPS Server Started at port : " + https_port);
+} else {
+  var port = process.env.PORT || 3000;
+  http
+    .createServer(app)
+    .listen(port, function (error) {
+      if(error) {
+        throw error
+      }
+      console.log('Application is listening on %s port', port);
+    });
+}
 
