@@ -8,11 +8,12 @@ module.exports = {
     password: 'gCx3N8DGqDhTTh'
   },
   redis: {
-    REDIS_URL:'redis://localhost:6379'
+    REDIS_URL: process.env.REDIS_URL || 'redis://localhost:6379',
   },
   leadoutpost: {
     apiKey : 'CITg0XHH3kGJQ4kkjZizRxzUEINR2nZaLRRstUyHs',
     campaignId: 5
   },
-  email: 'support@tacticalmastery.com'
+  email: 'support@tacticalmastery.com',
+  PORT: 3000
 };

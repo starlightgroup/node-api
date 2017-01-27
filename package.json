@@ -11,7 +11,8 @@
     "postinstall": "scripts/postinstall",
     "lint": "eslint api",
     "snyk-protect": "snyk protect",
-    "prepublish": "npm run snyk-protect"
+    "prepublish": "npm run snyk-protect",
+    "start-docker":"babel-node server.js"
   },
   "main": "dist/index.js",
   "dependencies": {
