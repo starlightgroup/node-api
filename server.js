@@ -3,7 +3,7 @@ import express from 'express';
 import fs from 'fs';
 import logger from './api/common/log';
 import bodyParser from 'body-parser';
-import config from './server-config';
+import config from './config/server-config';
 import expressPromiseRouter from 'express-promise-router';
 import expressContentLength from 'express-content-length-validator';
 import cookieSession from 'cookie-session';
@@ -22,7 +22,7 @@ const app = express();
 
 console.log("Currently Running On : " , process.env.NODE_ENV);
 
-app.use(raven.middleware.express.requestHandler('https://547e29c8a3854f969ff5912c76f34ef0:62c29411c70e46df81438b09d05526b0@sentry.io/106191'));
+// app.use(raven.middleware.express.requestHandler('https://547e29c8a3854f969ff5912c76f34ef0:62c29411c70e46df81438b09d05526b0@sentry.io/106191'));
 
 app.set('forceSSLOptions', {
   enable301Redirects: true,
@@ -110,7 +110,7 @@ Object.keys(routes).forEach(r => {
   app.use(`/api/${r}`, router);
 });
 
-app.use(raven.middleware.express.errorHandler('https://547e29c8a3854f969ff5912c76f34ef0:62c29411c70e46df81438b09d05526b0@sentry.io/106191'));
+// app.use(raven.middleware.express.errorHandler('https://547e29c8a3854f969ff5912c76f34ef0:62c29411c70e46df81438b09d05526b0@sentry.io/106191'));
 
 app.use(function (err, req, res, next) {
   if (err) {
@@ -139,7 +139,7 @@ if (process.env.NODE_ENV === 'production') {
     .createServer(app)
     .listen(port, function (error) {
       if(error) {
-        throw error
+        throw error;
       }
       console.log('Application is listening on %s port', port);
     });

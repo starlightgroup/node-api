@@ -2,7 +2,7 @@ import Autopilot from 'autopilot-api';
 import phone from 'phone';
 import xss from 'xss';
 
-import config from '../../server-config';
+import config from '../../config/server-config';
 import * as redis from '../common/redis';
 
 const autopilot = new Autopilot(config.autopilot.key);

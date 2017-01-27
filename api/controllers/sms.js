@@ -1,5 +1,5 @@
 import Autopilot from 'autopilot-api';
-import config from '../../server-config';
+import config from '../../config/server-config';
 const autopilot = new Autopilot(config.autopilot.key);
 
 async function sendSMS(req, res, next) {
