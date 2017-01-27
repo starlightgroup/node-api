@@ -45,7 +45,7 @@ async function addKonnektiveOrder(req, res, next) {
 
     body.campaignId = 3;
     body.loginId = config.konnective.loginId;
-    body.password = config.konnective.password;
+    body.key = config.konnective.key;
     body.paySource = 'CREDITCARD';
     body.product1_qty = 1;
     body.product1_id = req.body.productId;
@@ -76,7 +76,7 @@ async function addKonnektiveOrder(req, res, next) {
 
 async function getLead(req, res, next) {
     const orderId = xss(req.params.id);
-    const url = `https://api.konnektive.com/order/query/?loginId=${config.konnective.loginId}&password=${config.konnective.password}&orderId=${orderId}`;
+    const url = `https://api.konnektive.com/order/query/?loginId=${config.konnective.loginId}&password=${config.konnective.key}&orderId=${orderId}`;
     const response = JSON.parse(await request(url));
     console.log(response);
     if(response.result == "ERROR") {
@@ -89,7 +89,7 @@ async function getLead(req, res, next) {
 
 async function getTrans(req, res, next) {
     const orderId = xss(req.params.id);
-    const url = `https://api.konnektive.com/transactions/query/?loginId=${config.konnective.loginId}&password=${config.konnective.password}&orderId=${orderId}`;
+    const url = `https://api.konnektive.com/transactions/query/?loginId=${config.konnective.loginId}&password=${config.konnective.key}&orderId=${orderId}`;
     const response = JSON.parse(await request(url));
     if(response.result == "ERROR") {
         res.error(response.message);
@@ -107,7 +107,7 @@ async function createKonnektiveLead(req, res, next) {
     
     var body = {};
     body.loginId = config.konnective.loginId;
-    body.password = config.konnective.password;
+    body.key = config.konnective.key;
     body.campaignId = campaignId;
     
     body.firstName = xss(req.body.firstName);
@@ -144,7 +144,7 @@ async function upsell(req, res, next) {
     }
     else {
         req.body.loginId = config.konnective.loginId;
-        req.body.password = config.konnective.password;
+        req.body.password = config.konnective.key;
         const options = {
             uri: 'https://api.konnektive.com/upsale/import/',
             qs: req.body,

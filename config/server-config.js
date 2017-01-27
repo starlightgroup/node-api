@@ -1,3 +1,9 @@
+/**
+ * @deprecated
+ *
+ * Use ~/config/env instead
+ *
+ */
 module.exports = {
   autopilot: {
     key : 'dfec2c98885c47789c8d5c52a2a8fad5',
@@ -5,15 +11,15 @@ module.exports = {
   },
   konnective: {
     loginId: 'flashlightsforever',
-    password: 'gCx3N8DGqDhTTh'
+    key: 'gCx3N8DGqDhTTh'
   },
   redis: {
-    REDIS_URL: process.env.REDIS_URL || 'redis://localhost:6379',
+    url: process.env.url || 'redis://localhost:6379',
   },
   leadoutpost: {
-    apiKey : 'CITg0XHH3kGJQ4kkjZizRxzUEINR2nZaLRRstUyHs',
+    key : 'CITg0XHH3kGJQ4kkjZizRxzUEINR2nZaLRRstUyHs',
     campaignId: 5
   },
   email: 'support@tacticalmastery.com',
-  PORT: 3000
+  serverPort: 3000
 };

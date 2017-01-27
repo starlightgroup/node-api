@@ -4,7 +4,7 @@ import RedisClient from 'ioredis';
 import config from './server-config';
 
 'use strict';
-const redisUrl = config.redis.REDIS_URL;
+const redisUrl = config.redis.url;
 
 const redis = new RedisClient(redisUrl, {
   retryStrategy: function retryStrategy (times, isRecursive) {

@@ -18,7 +18,7 @@ async function migrate(req, res, next) {
                     email: contact.Email,
                     phone: contact.Phone
                 };
-                leadoutpost.apiKey = config.leadoutpost.apiKey;
+                leadoutpost.key = config.leadoutpost.key;
                 leadoutpost.campaignId = config.leadoutpost.campaignId;
                 const options = {
                     uri: 'https://www.leadoutpost.com/api/v1/lead',
@@ -74,7 +74,7 @@ async function addContact(req, res, next) {
         req.body._autopilot_list = config.autopilot.clientlist;
         autopilot.contacts.upsert(req.body);
 
-        leadoutpost.apiKey = config.leadoutpost.apiKey;
+        leadoutpost.key = config.leadoutpost.key;
         leadoutpost.campaignId = config.leadoutpost.campaignId;
 
         console.log("addContact" ,leadoutpost);
@@ -107,7 +107,7 @@ async function updateContact(req, res, next) {
         autopilot.contacts.upsert(contactData);
         res.success();
 
-        leadoutpostData.apiKey = config.leadoutpost.apiKey;
+        leadoutpostData.key = config.leadoutpost.key;
         leadoutpostData.campaignId = config.leadoutpost.campaignId;
 
         const options = {
@@ -127,7 +127,7 @@ async function updateContact(req, res, next) {
 }
 
 async function addLeadoutpost(req, res, next) {
-    req.body.apiKey = config.leadoutpost.apiKey;
+    req.body.apiKey = config.leadoutpost.key;
     req.body.campaignId = config.leadoutpost.campaignId;
 
     const options = {
