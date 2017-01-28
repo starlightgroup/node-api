@@ -1,0 +1,19 @@
+#!/bin/sh
+
+rm -rf dist
+
+# fetch node-api and front-end from github
+#  node-api is in ./node-api and flashlightsforever in ./flashlightsforever
+# transpile and move node-api to dist folder
+mkdir dist
+babel ./node-api --ignore node_modules --out-dir ./dist --source-maps
+cp ./node-api/zip_code_database.csv ./dist/zip_code_database.csv
+cp ./node-api/Dockerfile ./dist/Dockerfile
+cp ./node-api/package.json ./dist/package.json
+
+# build flashlightsforever
+mkdir dist/public
+cd flashlightsforever
+gulp
+mv tacticalsales/* ../dist/public
+
