@@ -9,9 +9,7 @@
     "test": "snyk test",
     "test-unit": "NODE_ENV=test _mocha -R spec --compilers js:babel-core/register --recursive",
     "postinstall": "scripts/postinstall",
-    "lint": "eslint api",
-    "snyk-protect": "snyk protect",
-    "prepublish": "npm run snyk-protect"
+    "lint": "eslint api"
   },
   "main": "dist/index.js",
   "dependencies": {
