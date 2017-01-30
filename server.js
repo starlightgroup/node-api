@@ -5,7 +5,7 @@ import bodyParser from 'body-parser';
 import config from './server-config';
 import expressPromiseRouter from 'express-promise-router';
 import expressContentLength from 'express-content-length-validator';
-import cookieSession from 'cookie-session';
+import cookieParser from 'cookie-parser';
 import https from 'https';
 import http from 'http';
 import forceSSL from 'express-force-ssl';
@@ -16,6 +16,7 @@ import raven from 'raven';
 import redis from './config/redis';
 import csvimport from './config/import';
 import {routes} from './config/routes/v2';
+import csurf from 'csurf';
 
 const app = express();
 
@@ -58,20 +59,16 @@ var MAX_CONTENT_LENGTH_ACCEPTED = 9999;
 app.use(expressContentLength.validateMax({max: MAX_CONTENT_LENGTH_ACCEPTED, status: 400, message: "stop max size for the content-length!"})); // max size accepted for the content-length
 
 
-var expiryDate = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
-app.use(cookieSession({
-  name: 'tmcookie',
-  keys: ['dfgEzfGDFrDFfgDh456dsrf34gDf48fg34hg7', 'fgdfg73465ghFghtxcDfdfdgdsfTfghxfdgedryYh'],
-  cookie: {
-    secure: true,
-    httpOnly: true,
-    expires: expiryDate
-  }
-}));
-
+app.use(cookieParser());
+app.use(csurf({ cookie: true }));
 app.use(function (req, res, next) {
-  res.set(`X-Powered-By`, `TacticalMastery`);
+  res.set('X-Powered-By', 'TacticalMastery');
   next();
+});
+app.get('/api_key.js', function(req, res) {
+    res.setHeader('content-type', 'text/javascript');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.end("window.api_key = '" + req.csrfToken() + "'");
 });
 
 function logResponseBody(req, res, next) {
@@ -113,10 +110,18 @@ app.use(express.static('public'))
 // app.use(raven.middleware.express.errorHandler('https://547e29c8a3854f969ff5912c76f34ef0:62c29411c70e46df81438b09d05526b0@sentry.io/106191'));
 
 app.use(function (err, req, res, next) {
+  console.log(err)
   if (err) {
-    console.log(err);
-    if (typeof err.status != "undefined")   res.status(err.status);
-    res.error(err.message || err);
+    if (err.code === 'EBADCSRFTOKEN') {
+      res.status(403).send('Invalid API Key')
+    }else {
+      if (typeof err.status != "undefined")   res.status(err.status);
+      if(res.error){
+        res.error(err.message || err);
+      }else {
+          res.status(err.code || 500 ).send(err.message || 'Server error')
+      }
+    }
   }
 });
 
