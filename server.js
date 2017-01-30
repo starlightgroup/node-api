@@ -1,4 +1,3 @@
-require('newrelic');
 import express from 'express';
 import fs from 'fs';
 import logger from './api/common/log';
@@ -12,7 +11,7 @@ import http from 'http';
 import forceSSL from 'express-force-ssl';
 import helmet from 'helmet';
 import hpp from 'hpp';
-// import csp from 'helmet-csp';
+import csp from 'helmet-csp';
 import raven from 'raven';
 import redis from './config/redis';
 import csvimport from './config/import';
@@ -21,7 +20,6 @@ import {routes} from './config/routes/v2';
 const app = express();
 
 console.log("Currently Running On : " , process.env.NODE_ENV);
-
 // app.use(raven.middleware.express.requestHandler('https://547e29c8a3854f969ff5912c76f34ef0:62c29411c70e46df81438b09d05526b0@sentry.io/106191'));
 
 // app.set('forceSSLOptions', {
@@ -140,3 +138,4 @@ var http_port = (process.env.http_PORT || 8000);
 http.createServer(app).listen(http_port);
 console.log("http Server Started at port : " + http_port);
 
+module.exports = exports = app;
