@@ -53,7 +53,6 @@ async function migrate(req, res, next) {
  */
 
 async function addContact(req, res, next) {
-    console.log("add-contact...");
     try {
         const leadoutpost = {
             firstName: xss(req.body.FirstName),
@@ -68,17 +67,12 @@ async function addContact(req, res, next) {
         if(!req.body.Phone) {
             req.body.Phone = xss(req.body.MobilePhone);
         }
-
-        console.log(req.body);
         //await sendAffiliateEmail(req.body);
         req.body._autopilot_list = config.autopilot.clientlist;
         autopilot.contacts.upsert(req.body);
 
         leadoutpost.apiKey = config.leadoutpost.apiKey;
         leadoutpost.campaignId = config.leadoutpost.campaignId;
-
-        console.log("addContact" ,leadoutpost);
-
         const options = {
             uri: 'https://www.leadoutpost.com/api/v1/lead',
             qs: leadoutpost,
@@ -87,13 +81,11 @@ async function addContact(req, res, next) {
             },
             json: true // Automatically parses the JSON string in the response
         };
-
         request.post(options);
-
         res.success();
     }
     catch(error) {
-        console.log(error.message);
+        return res.error(error.message);
     }
 }
 
@@ -129,7 +121,6 @@ async function updateContact(req, res, next) {
 async function addLeadoutpost(req, res, next) {
     req.body.apiKey = config.leadoutpost.apiKey;
     req.body.campaignId = config.leadoutpost.campaignId;
-
     const options = {
         uri: 'https://www.leadoutpost.com/api/v1/lead',
         qs: req.body,
