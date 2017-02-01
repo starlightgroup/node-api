@@ -2,8 +2,8 @@
 import supertest from 'supertest';
 import app from '../server.js';
 import util from 'util';
-import { expect } from 'chai'
-import { assert } from 'chai'
+import { expect } from 'chai';
+import { assert } from 'chai';
 
 require('should');
 
@@ -42,7 +42,7 @@ describe('web application', function () {
       .expect(200, {msg:'PONG'})
       .end(function (error, res) {
         if(error){
-          done(error)
+          done(error);
         } else {
           // console.log('/api/v2/ping cookies ',res.headers['set-cookie']);
           let sId=extractCookie(res, sessionIdCookieRegex);
@@ -53,7 +53,7 @@ describe('web application', function () {
             done();
           }
         }
-      })
+      });
   });
 
   describe('testing sessions', function () {
@@ -66,7 +66,7 @@ describe('web application', function () {
         .expect(200)
         .end(function (error, res) {
           if(error){
-            done(error)
+            done(error);
           } else {
             // console.log('/api/v2/testSession with session token cookies ',res.headers['set-cookie']);
 
@@ -78,11 +78,10 @@ describe('web application', function () {
             if(sId === false){
               done();
             } else {
-              done(new Error('PHPSESSID is reset! Bad session behaviour'))
+              done(new Error('PHPSESSID is reset! Bad session behaviour'));
             }
           }
-        })
-
+        });
     });
     it('sets proper data for /api/v2/testSession WITHOUT session token provided', function (done) {
       supertest(app)
@@ -91,7 +90,7 @@ describe('web application', function () {
         .expect(200)
         .end(function (error, res) {
           if(error){
-            done(error)
+            done(error);
           } else {
             // console.log('/api/v2/testSession 2 without session token cookies ',res.headers['set-cookie']);
 
@@ -104,13 +103,13 @@ describe('web application', function () {
             // console.log(res.headers['set-cookie']);
 
             if(sId === false){
-              done(new Error('PHPSESSID not set!'))
+              done(new Error('PHPSESSID not set!'));
             } else {
               sessionId = sId;
               done();
             }
           }
-        })
+        });
     });
   });
 

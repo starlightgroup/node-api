@@ -34,7 +34,7 @@ function route(router) {
 
 //related to https://starlightgroup.atlassian.net/browse/SG-5
 //shows 404 on production
-  router.get('/testSession', testSession)
+  router.get('/testSession', testSession);
 };
 
 var routes = {v2 : route};

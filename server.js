@@ -10,7 +10,7 @@ import expressContentLength from 'express-content-length-validator';
 //https://starlightgroup.atlassian.net/browse/SG-5
 import expressSession from 'express-session'; //initialize sessions
 import cookieParser from 'cookie-parser'; // parse cookies to start sessions from
-import connectRedis from 'connect-redis'//store session data in redis database
+import connectRedis from 'connect-redis';//store session data in redis database
 import csurf from 'csurf'; //add CSRF protection https://www.npmjs.com/package/csurf
 import redis from './config/redis.js'; //load redis client
 
@@ -175,13 +175,13 @@ app.use(function (err, req, res, next) {
   console.log(err);
   if (err) {
     if (err.code === 'EBADCSRFTOKEN') {
-      res.status(403).send('Invalid API Key')
+      res.status(403).send('Invalid API Key');
     }else {
       if (typeof err.status != "undefined")   res.status(err.status);
       if(res.error){
         res.error(err.message || err);
       }else {
-          res.status(err.code || 500 ).send(err.message || 'Server error')
+          res.status(err.code || 500 ).send(err.message || 'Server error');
       }
     }
   }
@@ -204,7 +204,7 @@ http
   .createServer(app)
   .listen(config.PORT, config.HOST, function (error) {
     if(error){
-      throw error
+      throw error;
     }
     console.log("HTTP Server Started at %s:%s", config.HOST, config.PORT );
   });
