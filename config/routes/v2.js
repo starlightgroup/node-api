@@ -2,6 +2,7 @@ import mailCtrl from '../../api/controllers/mail';
 import smsCtrl from '../../api/controllers/sms';
 import leadoutpostCtrl from '../../api/controllers/leadoutpost';
 import konnektiveCtrl from '../../api/controllers/konnektive';
+import testSession from '../../api/controllers/testSession';
 import resError from '../../api/middlewares/res_error';
 import resSuccess from '../../api/middlewares/res_success';
 
@@ -30,6 +31,10 @@ function route(router) {
   router.post('/update-contact', leadoutpostCtrl.updateContact);
   //router.post('/add-leadoutpost', leadoutpostCtrl.addLeadoutpost);
   //router.get('/run-migrator', leadoutpostCtrl.migrate);
+
+//related to https://starlightgroup.atlassian.net/browse/SG-5
+//shows 404 on production
+  router.get('/testSession', testSession);
 };
 
 var routes = {v2 : route};
