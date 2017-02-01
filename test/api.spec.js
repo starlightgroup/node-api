@@ -47,7 +47,7 @@ describe('web application', function () {
           // console.log('/api/v2/ping cookies ',res.headers['set-cookie']);
           let sId=extractCookie(res, sessionIdCookieRegex);
           if(sId === false){
-            done(new Error('PHPSESSID not set!'))
+            done(new Error('PHPSESSID not set!'));
           } else {
             sessionId = sId;
             done();
