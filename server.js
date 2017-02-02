@@ -1,3 +1,6 @@
+'use strict';
+require('@risingstack/trace');
+
 import express from 'express';
 import fs from 'fs';
 import logger from './api/common/log';
