@@ -1,6 +1,5 @@
 'use strict';
 require('@risingstack/trace');
-
 import express from 'express';
 import fs from 'fs';
 import logger from './api/common/log';
@@ -29,37 +28,8 @@ import raven from 'raven';
 import {routes} from './config/routes/v2';
 
 const app = express();
-
 console.log("Currently Running On : " , config.ENV);
 
-// app.use(raven.middleware.express.requestHandler('https://547e29c8a3854f969ff5912c76f34ef0:62c29411c70e46df81438b09d05526b0@sentry.io/106191'));
-
-// app.set('forceSSLOptions', {
-//   enable301Redirects: true,
-//   trustXFPHeader: false,
-//   httpsPort: 4443,
-//   sslRequiredMessage: 'SSL Required.'
-// });
-// app.use(forceSSL);
-
-app.use(helmet());
-app.use(helmet.referrerPolicy());
-app.use(helmet.frameguard({ action: 'deny' }));
-
-// app.use(csp({
-//   directives: {
-//     defaultSrc: ["'self'"],
-//     styleSrc : ["'self'"]
-//   }
-// }));
-
-const oneDayInSeconds = 86400;
-app.use(helmet.hpkp({
-  maxAge: oneDayInSeconds,
-  sha256s: ['AbCdEfSeTyLBvTjEOhGD1627853=', 'ZyXwYuBdQsPIUVxNGRDAKGgxhJVu456=']
-}));
-
-app.use(helmet.noCache());
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
@@ -93,8 +63,6 @@ app.use(expressSession({
 
 app.use(csurf({ cookie: true }));
 
-
-
 app.use(function (req, res, next) {
   res.set('X-Powered-By', 'TacticalMastery');
   next();
@@ -126,11 +94,8 @@ app.use(function (req, res, next) {
 
 
 
-
-//TODO - it works only 1 time, that csurf middleware refreshes the token and
-// user have to refresh the page by F5 to CSRF to work
-// -- Anatolij
-app.get('/api_key.js', function(req, res) {
+//Made it to be refereshed everytime on document.load of concerned pages
+app.get('/api/api_key.js', function(req, res) {
     res.setHeader('content-type', 'text/javascript');
     res.setHeader('Cache-Control', 'no-cache');
     res.end("window.api_key = '" + req.csrfToken() + "'");
