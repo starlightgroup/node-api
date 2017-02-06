@@ -91,11 +91,6 @@ app.use(expressSession({
 }));
 //end of SG-5
 
-app.use(function (req, res, next) {
-  res.set('X-Powered-By', 'TacticalMastery');
-  next();
-});
-
 
 //protect from tampering session - basic example
 //it saves IP and entry point into session.
@@ -106,6 +101,8 @@ app.use(function (req, res, next) {
 //https://starlightgroup.atlassian.net/browse/SG-8
 //https://starlightgroup.atlassian.net/browse/SG-9
 app.use(function (req, res, next) {
+  res.set('X-Powered-By', 'TacticalMastery'); //do not expose, that it is expressJS application
+
   //http://stackoverflow.com/a/10849772/1885921
   if (!req.session.ip) {
     req.session.ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
