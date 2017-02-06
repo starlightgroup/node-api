@@ -91,10 +91,6 @@ app.use(expressSession({
 }));
 //end of SG-5
 
-app.use(csurf({ cookie: true }));
-
-
-
 app.use(function (req, res, next) {
   res.set('X-Powered-By', 'TacticalMastery');
   next();
@@ -125,17 +121,25 @@ app.use(function (req, res, next) {
 });
 
 
+app.use(csurf({ cookie: true }));
 
-
-//TODO - it works only 1 time, that csurf middleware refreshes the token and
-// user have to refresh the page by F5 to CSRF to work
-// -- Anatolij
-app.get('/api_key.js', function(req, res) {
-    res.setHeader('content-type', 'text/javascript');
-    res.setHeader('Cache-Control', 'no-cache');
-    res.end("window.api_key = '" + req.csrfToken() + "'");
+//CSRF protection middleware with cookies
+//provide CSRF token in Anatolij's way - it works with angular 1.x from the box
+//https://starlightgroup.atlassian.net/browse/SG-14
+app.use(function (req,res,next) {
+  if (req.session) {
+    const token = req.csrfToken();
+    res.locals.csrf = token;
+    res.cookie('XSRF-TOKEN', token);
+    next();
+  } else {
+    next();
+  }
 });
+//END of SG-14
 
+
+//This function IS NEVER used -- Anatolij
 function logResponseBody(req, res, next) {
   const oldWrite = res.write,
     oldEnd = res.end;
