@@ -2,8 +2,8 @@
 import supertest from 'supertest';
 import app from '../server.js';
 import util from 'util';
-import { expect } from 'chai';
-import { assert } from 'chai';
+import {expect} from 'chai';
+import {assert} from 'chai';
 
 require('should');
 
@@ -40,7 +40,7 @@ describe('web application', function () {
     supertest(app)
       .get('/api/v2/ping')
       .expect('X-Powered-By', 'TacticalMastery')
-      .expect(200, { msg: 'PONG' })
+      .expect(200, {msg: 'PONG'})
       .end(function (error, res) {
         if (error) {
           done(error);
@@ -83,7 +83,7 @@ describe('web application', function () {
             if (csrf === false) {
               return done(new Error('XSRF-TOKEN not set!'));
             }
-            csrfToken=csrf;
+            csrfToken = csrf;
 
             let sId = extractCookie(res, sessionIdCookieRegex);
             if (sId === false) {
@@ -113,7 +113,7 @@ describe('web application', function () {
             if (csrf === false) {
               return done(new Error('XSRF-TOKEN not set!'));
             }
-            csrfToken=csrf;
+            csrfToken = csrf;
 
             let sId = extractCookie(res, sessionIdCookieRegex);
 
@@ -128,39 +128,69 @@ describe('web application', function () {
     });
   });
 
-  //i skipped this tests because they do not work of bad csrf token implementation of Safi - Anatolij
-  it.skip('it has 200 and pong on /api/v2/state/:state', function (done) {
+  it('it has 200 and pong on /api/v2/state/:state', function (done) {
     supertest(app)
       .get('/api/v2/state/00544')
+      .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
       .expect(200)
       .end(function (err, res) {
-        expect(res.body.data.state).to.equal('NY');
+        if (err) {
+          return done(err);
+        }
+        res.body.should.exist;
+        res.body.data.should.exist;
+        res.body.data.state.should.exist;
+        res.body.data.state.should.be.equal('NY');
         done();
       });
   });
 
-  //i skipped this tests because they do not work of bad csrf token implementation of Safi - Anatolij
-  it.skip('has 200 on POST /api/v2/add-contact', function (done) {
+
+  it('has 200 on POST /api/v2/add-contact', function (done) {
     supertest(app)
       .post('/api/v2/add-contact')
+      .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
       .send({
         FirstName: 'test_FirstName',
         LastName: 'test_LastName',
         Email: 'test@email.com',
-        Phone: '222-222-4444'
+        Phone: '222-222-4444',
+        _csrf: csrfToken
       })
-      .expect(200, done);
+      .expect(200, function (error, res) {
+        if (error) {
+          return done(error);
+        }
+        let csrf = extractCookie(res, csrfTokenCookieRegex);
+        if (csrf === false) {
+          return done(new Error('XSRF-TOKEN not set!'));
+        }
+        csrfToken = csrf;
+        done();
+      });
   });
 
-  it.skip('it has 200 on POST /api/v2/update-contact', function (done) {
+  it('it has 200 on POST /api/v2/update-contact', function (done) {
     supertest(app)
       .post('/api/v2/update-contact')
+      .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
       .send({
         firstName: 'test_FirstName_updated',
         lastName: 'test_LastName_updated',
         emailAddress: 'test@email.com',
-        phoneNumber: '111-222-3333'
+        phoneNumber: '111-222-3333',
+        _csrf: csrfToken
       })
-      .expect(200, done);
+      .expect(200, function (error, res) {
+        if (error) {
+          return done(error);
+        }
+        let csrf = extractCookie(res, csrfTokenCookieRegex);
+        if (csrf === false) {
+          return done(new Error('XSRF-TOKEN not set!'));
+        }
+        csrfToken = csrf;
+        done();
+      });
   });
 });
