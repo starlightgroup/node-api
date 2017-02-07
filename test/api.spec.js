@@ -170,6 +170,57 @@ describe('web application', function () {
       });
   });
 
+  it('has 403 on POST /api/v2/add-contact with missing CSRF token', function (done) {
+    supertest(app)
+      .post('/api/v2/add-contact')
+      .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
+      .send({
+        FirstName: 'test_FirstName',
+        LastName: 'test_LastName',
+        Email: 'test@email.com',
+        Phone: '222-222-4444',
+        // _csrf: csrfToken
+      })
+      .expect(403,'Invalid API Key')
+      .end(function (error, res) {
+        if (error) {
+          return done(error);
+        }
+        let csrf = extractCookie(res, csrfTokenCookieRegex);
+        if (csrf === false) {
+          return done(new Error('XSRF-TOKEN not set!'));
+        }
+        csrfToken = csrf;
+        done();
+      });
+  });
+
+  it('has 403 on POST /api/v2/add-contact with bad CSRF token', function (done) {
+    supertest(app)
+      .post('/api/v2/add-contact')
+      .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
+      .send({
+        FirstName: 'test_FirstName',
+        LastName: 'test_LastName',
+        Email: 'test@email.com',
+        Phone: '222-222-4444',
+        _csrf: 'Во имя Отца, и Сына, и Святаго духа, аминь!'
+      })
+      .expect(403,'Invalid API Key')
+      .end(function (error, res) {
+        if (error) {
+          return done(error);
+        }
+        let csrf = extractCookie(res, csrfTokenCookieRegex);
+        if (csrf === false) {
+          return done(new Error('XSRF-TOKEN not set!'));
+        }
+        csrfToken = csrf;
+        done();
+      });
+  });
+
+
   it('it has 200 on POST /api/v2/update-contact', function (done) {
     supertest(app)
       .post('/api/v2/update-contact')
