@@ -97,10 +97,8 @@ app.use(function (req,res,next) {
     const token = req.csrfToken();
     res.locals.csrf = token;
     res.cookie('XSRF-TOKEN', token);
-    next();
-  } else {
-    next();
   }
+  next();
 });
 //END of SG-14
 
