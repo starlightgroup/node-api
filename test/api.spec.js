@@ -290,4 +290,22 @@ describe('web application', function () {
         done();
       });
   });
+
+//TODO for missing tests - i have no idea what it have to return --Anatolij
+  it('has something usefull on GET /api/v2/get-lead/:id');
+  it('has something usefull on GET /api/v2//get-trans/:id');
+
+  it('has something usefull on POST /api/v2/create-lead');
+  it('has 403 on POST /api/v2/create-lead  with missing CSRF token');
+  it('has 403 on POST /api/v2/create-lead  with bad CSRF token');
+
+  it('has something usefull on POST /api/v2/create-order');
+  it('has 403 on POST /api/v2/create-order with missing CSRF token');
+  it('has 403 on POST /api/v2/create-order with bad CSRF token');
+
+  it('has something usefull on POST /api/v2/upsell');
+  it('has 403 on POST /api/v2/create-upsell with missing CSRF token');
+  it('has 403 on POST /api/v2/create-upsell with bad CSRF token');
+
+
 });
