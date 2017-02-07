@@ -1,6 +1,5 @@
 'use strict';
 require('@risingstack/trace');
-
 import express from 'express';
 import fs from 'fs';
 import logger from './api/common/log';
@@ -29,37 +28,8 @@ import raven from 'raven';
 import {routes} from './config/routes/v2';
 
 const app = express();
-
 console.log("Currently Running On : " , config.ENV);
 
-// app.use(raven.middleware.express.requestHandler('https://547e29c8a3854f969ff5912c76f34ef0:62c29411c70e46df81438b09d05526b0@sentry.io/106191'));
-
-// app.set('forceSSLOptions', {
-//   enable301Redirects: true,
-//   trustXFPHeader: false,
-//   httpsPort: 4443,
-//   sslRequiredMessage: 'SSL Required.'
-// });
-// app.use(forceSSL);
-
-app.use(helmet());
-app.use(helmet.referrerPolicy());
-app.use(helmet.frameguard({ action: 'deny' }));
-
-// app.use(csp({
-//   directives: {
-//     defaultSrc: ["'self'"],
-//     styleSrc : ["'self'"]
-//   }
-// }));
-
-const oneDayInSeconds = 86400;
-app.use(helmet.hpkp({
-  maxAge: oneDayInSeconds,
-  sha256s: ['AbCdEfSeTyLBvTjEOhGD1627853=', 'ZyXwYuBdQsPIUVxNGRDAKGgxhJVu456=']
-}));
-
-app.use(helmet.noCache());
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
@@ -90,7 +60,6 @@ app.use(expressSession({
   saveUninitialized: true
 }));
 //end of SG-5
-
 
 //protect from tampering session - basic example
 //it saves IP and entry point into session.

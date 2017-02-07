@@ -27,8 +27,8 @@ module.exports = {
     clientlist:  process.env.CLIENT_LIST || 'contactlist_59EA0BF8-46D0-4733-B6C5-4F2EB7C890AA'
   },
   konnective: {
-    loginId:  process.env.KONNECTIVE_LOGIN_ID || 'flashlightsforever',
-    password:  process.env.KONNECTIVE_PASSWORD || 'gCx3N8DGqDhTTh'
+    loginId:  process.env.KONNECTIVE_LOGIN_ID || 'konnective_api_user',
+    password:  process.env.KONNECTIVE_PASSWORD || 'kz8A3hHQVN'
   },
   redis: {
     REDIS_URL: redisUrl
