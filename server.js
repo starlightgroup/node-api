@@ -61,14 +61,6 @@ app.use(expressSession({
 }));
 //end of SG-5
 
-app.use(csurf({ cookie: true }));
-
-app.use(function (req, res, next) {
-  res.set('X-Powered-By', 'TacticalMastery');
-  next();
-});
-
-
 //protect from tampering session - basic example
 //it saves IP and entry point into session.
 //if IP changes, it is likely to be bot or somebody using tor
@@ -78,6 +70,8 @@ app.use(function (req, res, next) {
 //https://starlightgroup.atlassian.net/browse/SG-8
 //https://starlightgroup.atlassian.net/browse/SG-9
 app.use(function (req, res, next) {
+  res.set('X-Powered-By', 'TacticalMastery'); //do not expose, that it is expressJS application
+
   //http://stackoverflow.com/a/10849772/1885921
   if (!req.session.ip) {
     req.session.ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
@@ -93,14 +87,25 @@ app.use(function (req, res, next) {
 });
 
 
+app.use(csurf({ cookie: true }));
 
-//Made it to be refereshed everytime on document.load of concerned pages
-app.get('/api/api_key.js', function(req, res) {
-    res.setHeader('content-type', 'text/javascript');
-    res.setHeader('Cache-Control', 'no-cache');
-    res.end("window.api_key = '" + req.csrfToken() + "'");
+//CSRF protection middleware with cookies
+//provide CSRF token in Anatolij's way - it works with angular 1.x from the box
+//https://starlightgroup.atlassian.net/browse/SG-14
+app.use(function (req,res,next) {
+  if (req.session) {
+    const token = req.csrfToken();
+    res.locals.csrf = token;
+    res.cookie('XSRF-TOKEN', token);
+    next();
+  } else {
+    next();
+  }
 });
+//END of SG-14
 
+
+//This function IS NEVER used -- Anatolij
 function logResponseBody(req, res, next) {
   const oldWrite = res.write,
     oldEnd = res.end;

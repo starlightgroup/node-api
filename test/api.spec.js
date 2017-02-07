@@ -8,22 +8,23 @@ import { assert } from 'chai';
 require('should');
 
 const sessionIdCookieRegex = /^PHPSESSID\=([^\;]+)\; Path=\/\; HttpOnly/;
+const csrfTokenCookieRegex = /^XSRF\-TOKEN\=([^\;]+)\; Path=\//;
 
-function extractCookie(res, rgx){
+function extractCookie(res, rgx) {
   let
     cookies = res.headers['set-cookie'],
     val,
     matched = false;
   cookies.map(function (c) {
-    if(!matched) {
+    if (!matched) {
       let results = rgx.exec(c);
-      if(results){
+      if (results) {
         val = results[1];
         matched = true;
       }
     }
   });
-  if(matched){
+  if (matched) {
     return val;
   }
   return false;
@@ -39,19 +40,23 @@ describe('web application', function () {
     supertest(app)
       .get('/api/v2/ping')
       .expect('X-Powered-By', 'TacticalMastery')
-      .expect(200, {msg:'PONG'})
+      .expect(200, { msg: 'PONG' })
       .end(function (error, res) {
-        if(error){
+        if (error) {
           done(error);
         } else {
           // console.log('/api/v2/ping cookies ',res.headers['set-cookie']);
-          let sId=extractCookie(res, sessionIdCookieRegex);
-          if(sId === false){
-            done(new Error('PHPSESSID not set!'));
-          } else {
-            sessionId = sId;
-            done();
+          let sId = extractCookie(res, sessionIdCookieRegex);
+          if (sId === false) {
+            return done(new Error('PHPSESSID not set!'));
           }
+          let csrf = extractCookie(res, csrfTokenCookieRegex);
+          if (csrf === false) {
+            return done(new Error('XSRF-TOKEN not set!'));
+          }
+          sessionId = sId;
+          csrfToken = csrf;
+          done();
         }
       });
   });
@@ -61,11 +66,11 @@ describe('web application', function () {
     it('sets proper data for /api/v2/testSession WITH session token provided', function (done) {
       supertest(app)
         .get('/api/v2/testSession')
-        .set('Cookie', [util.format('PHPSESSID=%s',sessionId)])
+        .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
         .expect('X-Powered-By', 'TacticalMastery')
         .expect(200)
         .end(function (error, res) {
-          if(error){
+          if (error) {
             done(error);
           } else {
             // console.log('/api/v2/testSession with session token cookies ',res.headers['set-cookie']);
@@ -74,11 +79,17 @@ describe('web application', function () {
             res.body.entryPoint.should.be.equal('/api/v2/ping');
             res.body.userAgent.should.match(/^node-superagent/);
 
-            let sId=extractCookie(res, sessionIdCookieRegex);
-            if(sId === false){
-              done();
+            let csrf = extractCookie(res, csrfTokenCookieRegex);
+            if (csrf === false) {
+              return done(new Error('XSRF-TOKEN not set!'));
+            }
+            csrfToken=csrf;
+
+            let sId = extractCookie(res, sessionIdCookieRegex);
+            if (sId === false) {
+              return done();
             } else {
-              done(new Error('PHPSESSID is reset! Bad session behaviour'));
+              return done(new Error('PHPSESSID is reset! Bad session behaviour'));
             }
           }
         });
@@ -89,7 +100,7 @@ describe('web application', function () {
         .expect('X-Powered-By', 'TacticalMastery')
         .expect(200)
         .end(function (error, res) {
-          if(error){
+          if (error) {
             done(error);
           } else {
             // console.log('/api/v2/testSession 2 without session token cookies ',res.headers['set-cookie']);
@@ -98,11 +109,15 @@ describe('web application', function () {
             res.body.entryPoint.should.be.equal('/api/v2/testSession');
             res.body.userAgent.should.match(/^node-superagent/);
 
+            let csrf = extractCookie(res, csrfTokenCookieRegex);
+            if (csrf === false) {
+              return done(new Error('XSRF-TOKEN not set!'));
+            }
+            csrfToken=csrf;
+
             let sId = extractCookie(res, sessionIdCookieRegex);
 
-            // console.log(res.headers['set-cookie']);
-
-            if(sId === false){
+            if (sId === false) {
               done(new Error('PHPSESSID not set!'));
             } else {
               sessionId = sId;
@@ -129,10 +144,10 @@ describe('web application', function () {
     supertest(app)
       .post('/api/v2/add-contact')
       .send({
-            FirstName: 'test_FirstName',
-            LastName: 'test_LastName',
-            Email: 'test@email.com',
-            Phone: '222-222-4444'
+        FirstName: 'test_FirstName',
+        LastName: 'test_LastName',
+        Email: 'test@email.com',
+        Phone: '222-222-4444'
       })
       .expect(200, done);
   });
@@ -141,10 +156,10 @@ describe('web application', function () {
     supertest(app)
       .post('/api/v2/update-contact')
       .send({
-            firstName: 'test_FirstName_updated',
-            lastName: 'test_LastName_updated',
-            emailAddress: 'test@email.com',
-            phoneNumber: '111-222-3333'
+        firstName: 'test_FirstName_updated',
+        lastName: 'test_LastName_updated',
+        emailAddress: 'test@email.com',
+        phoneNumber: '111-222-3333'
       })
       .expect(200, done);
   });
