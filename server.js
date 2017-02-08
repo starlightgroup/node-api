@@ -91,7 +91,7 @@ app.use(function sessionTamperingProtectionMiddleware(req, res, next) {
 });
 
 
-app.use(csurf({ cookie: true }));
+app.use(csurf({ cookie: false }));
 
 //CSRF protection middleware with cookies
 //provide CSRF token in Anatolij's way - it works with angular 1.x from the box
@@ -154,11 +154,11 @@ app.use(express.static('public'));
 // app.use(raven.middleware.express.errorHandler('https://547e29c8a3854f969ff5912c76f34ef0:62c29411c70e46df81438b09d05526b0@sentry.io/106191'));
 
 app.use(function (err, req, res, next) {
-  console.log(err);
   if (err) {
     if (err.code === 'EBADCSRFTOKEN') {
       res.status(403).send('Invalid API Key');
     }else {
+      console.log(err);
       if (typeof err.status != "undefined")   res.status(err.status);
       if(res.error){
         res.error(err.message || err);

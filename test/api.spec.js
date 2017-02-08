@@ -171,16 +171,46 @@ describe('web application', function () {
   });
 
   describe('/api/v2/add-contact', function () {
+    let
+      acCsrfToken,
+      acSessionId;
+
+    it('has 404 on / but we need to start session properly to run tests', function (done) {
+      supertest(app)
+        .get('/')
+        .expect('X-Powered-By', 'TacticalMastery')
+        .expect(404)
+        .end(function (error, res) {
+          if (error) {
+            return done(error);
+          }
+          // console.log('/api/v2/ping cookies ',res.headers['set-cookie']);
+          let sId = extractCookie(res, sessionIdCookieRegex);
+          if (sId === false) {
+            return done(new Error('PHPSESSID not set!'));
+          }
+          let csrf = extractCookie(res, csrfTokenCookieRegex);
+          if (csrf === false) {
+            return done(new Error('XSRF-TOKEN not set!'));
+          }
+          acSessionId = sId;
+          acCsrfToken = csrf;
+
+          done();
+        });
+    });
+
+
     it('has 200 on POST /api/v2/add-contact', function (done) {
       supertest(app)
         .post('/api/v2/add-contact')
-        .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
+        .set('Cookie', [util.format('PHPSESSID=%s', acSessionId)])
         .send({
           FirstName: 'test_FirstName',
           LastName: 'test_LastName',
           Email: 'test@email.com',
           Phone: '222-222-4444',
-          _csrf: csrfToken
+          _csrf: acCsrfToken
         })
         .expect(200, function (error, res) {
           if (error) {
@@ -190,7 +220,6 @@ describe('web application', function () {
           if (csrf === false) {
             return done(new Error('XSRF-TOKEN not set!'));
           }
-          csrfToken = csrf;
           done();
         });
     });
@@ -247,16 +276,42 @@ describe('web application', function () {
   });
 
   describe('/api/v2/update-contact', function () {
+    let ucSessionId,
+      ucCsrfToken;
+
+    it('has 404 on / but we need to start session properly to run tests', function (done) {
+      supertest(app)
+        .get('/')
+        .expect('X-Powered-By', 'TacticalMastery')
+        .expect(404)
+        .end(function (error, res) {
+          if (error) {
+            return done(error);
+          }
+          // console.log('/api/v2/ping cookies ',res.headers['set-cookie']);
+          let sId = extractCookie(res, sessionIdCookieRegex);
+          if (sId === false) {
+            return done(new Error('PHPSESSID not set!'));
+          }
+          let csrf = extractCookie(res, csrfTokenCookieRegex);
+          if (csrf === false) {
+            return done(new Error('XSRF-TOKEN not set!'));
+          }
+          ucSessionId = sId;
+          ucCsrfToken = csrf;
+          done();
+        });
+    });
     it('has 200 on POST /api/v2/update-contact', function (done) {
       supertest(app)
         .post('/api/v2/update-contact')
-        .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
+        .set('Cookie', [util.format('PHPSESSID=%s', ucSessionId)])
         .send({
           firstName: 'test_FirstName_updated',
           lastName: 'test_LastName_updated',
           emailAddress: 'test@email.com',
           phoneNumber: '111-222-3333',
-          _csrf: csrfToken
+          _csrf: ucCsrfToken
         })
         .expect(200, function (error, res) {
           if (error) {
@@ -266,7 +321,7 @@ describe('web application', function () {
           if (csrf === false) {
             return done(new Error('XSRF-TOKEN not set!'));
           }
-          csrfToken = csrf;
+          ucCsrfToken = csrf;
           done();
         });
     });

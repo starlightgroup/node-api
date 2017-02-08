@@ -28,7 +28,7 @@ exports.punishForEnteringSiteFromBadLocation = function (req, res, next) {
     }
     return next();
   }
-  res.status(403).send('Invalid API Key');
+  return res.status(403).send('Invalid API Key');
 };
 
 
