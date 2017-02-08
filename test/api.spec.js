@@ -149,22 +149,7 @@ describe('web application', function () {
       supertest(app)
         .get('/api/v2/testSession')
         .expect('X-Powered-By', 'TacticalMastery')
-        .expect(403,'Invalid API Key')
-        .end(function (error, res) {
-          if (error) {
-            return done(error);
-          }
-          let csrf = extractCookie(res, csrfTokenCookieRegex);
-          if (csrf === false) {
-            return done(new Error('XSRF-TOKEN not set!'));
-          }
-          let sId = extractCookie(res, sessionIdCookieRegex);
-
-          if (sId === false) {
-            return done(new Error('PHPSESSID not set!'));
-          }
-          done();
-        });
+        .expect(403, 'Invalid API Key', done);
     });
   });
 
@@ -220,18 +205,7 @@ describe('web application', function () {
           Phone: '222-222-4444',
           // _csrf: csrfToken
         })
-        .expect(403, 'Invalid API Key')
-        .end(function (error, res) {
-          if (error) {
-            return done(error);
-          }
-          let csrf = extractCookie(res, csrfTokenCookieRegex);
-          if (csrf === false) {
-            return done(new Error('XSRF-TOKEN not set!'));
-          }
-          csrfToken = csrf;
-          done();
-        });
+        .expect(403, 'Invalid API Key', done);
     });
     it('has 403 on POST /api/v2/add-contact with bad CSRF token', function (done) {
       supertest(app)
@@ -244,7 +218,7 @@ describe('web application', function () {
           Phone: '222-222-4444',
           _csrf: 'Во имя Отца, и Сына, и Святаго духа, аминь!'
         })
-        .expect(403, 'Invalid API Key',done);
+        .expect(403, 'Invalid API Key', done);
     });
     it('has 403 on POST /api/v2/add-contact without session', function (done) {
       supertest(app)
@@ -255,7 +229,7 @@ describe('web application', function () {
           Email: 'test@email.com',
           Phone: '222-222-4444'
         })
-        .expect(403, 'Invalid API Key',done);
+        .expect(403, 'Invalid API Key', done);
     });
     it('has 403 on POST /api/v2/add-contact with bad entry point', function (done) {
       supertest(app)
@@ -268,7 +242,7 @@ describe('web application', function () {
           Phone: '222-222-4444',
           _csrf: taintedCsrfToken
         })
-        .expect(403, 'Invalid API Key',done);
+        .expect(403, 'Invalid API Key', done);
     });
   });
 
@@ -307,7 +281,7 @@ describe('web application', function () {
           phoneNumber: '111-222-3333'
           // _csrf: csrfToken
         })
-        .expect(403, 'Invalid API Key',done);
+        .expect(403, 'Invalid API Key', done);
     });
     it('has 403 on POST /api/v2/update-contact with bad CSRF token', function (done) {
       supertest(app)
@@ -320,7 +294,7 @@ describe('web application', function () {
           phoneNumber: '111-222-3333',
           _csrf: 'Во имя Отца, и Сына, и Святаго духа, аминь!'
         })
-        .expect(403, 'Invalid API Key',done);
+        .expect(403, 'Invalid API Key', done);
     });
     it('has 403 on POST /api/v2/update-contact without session data', function (done) {
       supertest(app)
@@ -331,7 +305,7 @@ describe('web application', function () {
           emailAddress: 'test@email.com',
           phoneNumber: '111-222-3333'
         })
-        .expect(403, 'Invalid API Key',done);
+        .expect(403, 'Invalid API Key', done);
     });
   });
 //TODO for every endpoint
@@ -358,7 +332,7 @@ describe('web application', function () {
           someSaneData: 'to be entered here'
           // _csrf: csrfToken
         })
-        .expect(403, 'Invalid API Key',done);
+        .expect(403, 'Invalid API Key', done);
     });
     it('has 403 on POST /api/v2/create-lead with bad CSRF token', function (done) {
       supertest(app)
@@ -368,7 +342,7 @@ describe('web application', function () {
           someSaneData: 'to be entered here',
           _csrf: 'Во имя Отца, и Сына, и Святаго духа, аминь!'
         })
-        .expect(403, 'Invalid API Key',done);
+        .expect(403, 'Invalid API Key', done);
     });
     it('has 403 on POST /api/v2/create-lead with wrong entryPoint', function (done) {
       supertest(app)
@@ -378,7 +352,7 @@ describe('web application', function () {
           someSaneData: 'to be entered here',
           _csrf: taintedCsrfToken
         })
-        .expect(403, 'Invalid API Key',done);
+        .expect(403, 'Invalid API Key', done);
     });
   });
   describe('/api/v2/create-order', function () {
@@ -391,7 +365,7 @@ describe('web application', function () {
           someSaneData: 'to be entered here',
           //_csrf: 'Во имя Отца, и Сына, и Святаго духа, аминь!'
         })
-        .expect(403, 'Invalid API Key',done);
+        .expect(403, 'Invalid API Key', done);
     });
     it('has 403 on POST /api/v2/create-order with bad CSRF token', function (done) {
       supertest(app)
@@ -401,18 +375,7 @@ describe('web application', function () {
           someSaneData: 'to be entered here',
           _csrf: 'Во имя Отца, и Сына, и Святаго духа, аминь!'
         })
-        .expect(403, 'Invalid API Key')
-        .end(function (error, res) {
-          if (error) {
-            return done(error);
-          }
-          let csrf = extractCookie(res, csrfTokenCookieRegex);
-          if (csrf === false) {
-            return done(new Error('XSRF-TOKEN not set!'));
-          }
-          csrfToken = csrf;
-          done();
-        });
+        .expect(403, 'Invalid API Key', done);
     });
     it('has 403 on POST /api/v2/create-order with wrong entryPoint', function (done) {
       supertest(app)
@@ -422,18 +385,7 @@ describe('web application', function () {
           someSaneData: 'to be entered here',
           _csrf: taintedCsrfToken
         })
-        .expect(403, 'Invalid API Key')
-        .end(function (error, res) {
-          if (error) {
-            return done(error);
-          }
-          let csrf = extractCookie(res, csrfTokenCookieRegex);
-          if (csrf === false) {
-            return done(new Error('XSRF-TOKEN not set!'));
-          }
-          taintedCsrfToken = csrf;
-          done();
-        });
+        .expect(403, 'Invalid API Key', done);
     });
   });
   describe('/api/v2/upsell', function () {
@@ -446,7 +398,7 @@ describe('web application', function () {
           someSaneData: 'to be entered here',
           // _csrf: 'Во имя Отца, и Сына, и Святаго духа, аминь!'
         })
-        .expect(403, 'Invalid API Key',done);
+        .expect(403, 'Invalid API Key', done);
     });
     it('has 403 on POST /api/v2/create-upsell with bad CSRF token', function (done) {
       supertest(app)
@@ -456,7 +408,7 @@ describe('web application', function () {
           someSaneData: 'to be entered here',
           _csrf: 'Во имя Отца, и Сына, и Святаго духа, аминь!'
         })
-        .expect(403, 'Invalid API Key',done);
+        .expect(403, 'Invalid API Key', done);
     });
     it('has 403 on POST /api/v2/create-upsell with wrong entryPoint', function (done) {
       supertest(app)
@@ -466,18 +418,7 @@ describe('web application', function () {
           someSaneData: 'to be entered here',
           _csrf: taintedCsrfToken
         })
-        .expect(403, 'Invalid API Key')
-        .end(function (error, res) {
-          if (error) {
-            return done(error);
-          }
-          let csrf = extractCookie(res, csrfTokenCookieRegex);
-          if (csrf === false) {
-            return done(new Error('XSRF-TOKEN not set!'));
-          }
-          taintedCsrfToken = csrf;
-          done();
-        });
+        .expect(403, 'Invalid API Key', done);
     });
   });
 });
