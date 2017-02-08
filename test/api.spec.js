@@ -158,8 +158,6 @@ describe('web application', function () {
           if (csrf === false) {
             return done(new Error('XSRF-TOKEN not set!'));
           }
-          csrfToken = csrf;
-
           let sId = extractCookie(res, sessionIdCookieRegex);
 
           if (sId === false) {
