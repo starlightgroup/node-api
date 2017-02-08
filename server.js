@@ -27,6 +27,10 @@ import raven from 'raven';
 
 import {routes} from './config/routes/v2';
 
+//https://starlightgroup.atlassian.net/browse/SG-8
+//protect /api/v2/ from session tampering
+import security from './api/middlewares/security.js';
+
 const app = express();
 console.log("Currently Running On : " , config.ENV);
 
@@ -65,11 +69,11 @@ app.use(expressSession({
 //it saves IP and entry point into session.
 //if IP changes, it is likely to be bot or somebody using tor
 //if entryPoint is the api endpoint being called now, it is likely to be bot
-
+//UPD this middleware only saves data, it do not punish bots yet)
 //https://starlightgroup.atlassian.net/browse/SG-5
 //https://starlightgroup.atlassian.net/browse/SG-8
 //https://starlightgroup.atlassian.net/browse/SG-9
-app.use(function (req, res, next) {
+app.use(function sessionTamperingProtectionMiddleware(req, res, next) {
   res.set('X-Powered-By', 'TacticalMastery'); //do not expose, that it is expressJS application
 
   //http://stackoverflow.com/a/10849772/1885921
@@ -125,9 +129,16 @@ function logResponseBody(req, res, next) {
 
     oldEnd.apply(res, arguments);
   };
-
   next();
 }
+
+
+//https://starlightgroup.atlassian.net/browse/SG-8
+//secure /api/ from access by bots
+//for additional info see function `sessionTamperingProtectionMiddleware` above
+app.use('/api', security.punishForChangingIP);
+app.use('/api', security.punishForChangingUserAgent);
+app.use('/api', security.punishForEnteringSiteFromBadLocation);
 
 
 // route with appropriate version prefix
