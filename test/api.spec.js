@@ -93,7 +93,7 @@ describe('web application', function () {
       .get('/api/v2/ping')
       //      .set('Cookie', [util.format('PHPSESSID=%s', sessionId)]) - no session id - aka first visit!!!
       .expect('X-Powered-By', 'TacticalMastery')
-      .expect(200, {msg: 'PONG'})
+      .expect(403, 'Invalid API Key')
       .end(function (error, res) {
         if (error) {
           return done(error);
@@ -129,7 +129,7 @@ describe('web application', function () {
           // console.log('/api/v2/testSession with session token cookies ',res.headers['set-cookie']);
 
           res.body.ip.should.exist;
-          res.body.entryPoint.should.be.equal('/api/v2/ping');
+          res.body.entryPoint.should.be.equal('/');
           res.body.userAgent.should.match(/^node-superagent/);
           res.body.isBot.should.be.false;
           let csrf = extractCookie(res, csrfTokenCookieRegex);
