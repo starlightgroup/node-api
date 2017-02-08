@@ -76,14 +76,13 @@ describe('web application', function () {
         }
         // console.log('/api/v2/ping cookies ',res.headers['set-cookie']);
         let sId = extractCookie(res, sessionIdCookieRegex);
-        if (sId === false) {
-          return done(new Error('PHPSESSID not set!'));
+        if (sId !== false) {
+          return done(new Error('PHPSESSID is reset! Bad session behaviour'));
         }
         let csrf = extractCookie(res, csrfTokenCookieRegex);
         if (csrf === false) {
           return done(new Error('XSRF-TOKEN not set!'));
         }
-        sessionId = sId;
         csrfToken = csrf;
         done();
       });
