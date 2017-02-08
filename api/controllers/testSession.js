@@ -16,7 +16,8 @@ const testSession = function (req, res, next) {
       .json({
         'ip': req.session.ip,
         'entryPoint': req.session.entryPoint,
-        'userAgent': req.session.userAgent
+        'userAgent': req.session.userAgent,
+        'isBot' : !!req.session.isBot
       });
   }
 };
