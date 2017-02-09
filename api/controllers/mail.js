@@ -11,7 +11,7 @@ async function getStateInfo(req, res, next) {
     const stateNumber = xss(req.params.stateNumber);
     let addr = zipcodes.lookup(stateNumber);
     if (addr != undefined) {
-        return res.success({data: addr})
+        return res.success({data: addr});
     }
     res.error('state not found', 200);
 }
