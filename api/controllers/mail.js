@@ -3,7 +3,6 @@ import phone from 'phone';
 import xss from 'xss';
 
 import config from '../../server-config';
-import * as redis from '../common/redis';
 import zipcodes from 'zipcodes';
 
 const autopilot = new Autopilot(config.autopilot.key);

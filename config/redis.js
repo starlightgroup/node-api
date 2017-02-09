@@ -8,6 +8,7 @@ import config from '../server-config';
 const redisUrl = config.redis.REDIS_URL;
 
 const redis = new RedisClient(redisUrl, {
+  dropBufferSupport: true,
   retryStrategy: function retryStrategy (times, isRecursive) {
     // Exponential with a minimum of 2 seconds
     if (times > 20) {
