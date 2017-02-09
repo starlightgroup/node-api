@@ -153,7 +153,7 @@ describe('web application', function () {
     });
   });
 
-  it('has 200 and NY on /api/v2/state/:state', function (done) {
+  it('has 200 and NY on /api/v2/state/00544', function (done) {
     supertest(app)
       .get('/api/v2/state/00544')
       .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
@@ -166,6 +166,40 @@ describe('web application', function () {
         res.body.data.should.exist;
         res.body.data.state.should.exist;
         res.body.data.state.should.be.equal('NY');
+        done();
+      });
+  });
+
+  it('has 200 and Marion city on /api/v2/state/62959', function (done) {
+    supertest(app)
+      .get('/api/v2/state/62959')
+      .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
+      .expect(200)
+      .end(function (err, res) {
+        if (err) {
+          return done(err);
+        }
+        res.body.should.exist;
+        res.body.data.should.exist;
+        res.body.data.city.should.exist;
+        res.body.data.city.should.be.equal('Marion');
+        done();
+      });
+  });
+
+  it('has 200 and Beverly Hills on /api/v2/state/90210', function (done) {
+    supertest(app)
+      .get('/api/v2/state/90210')
+      .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
+      .expect(200)
+      .end(function (err, res) {
+        if (err) {
+          return done(err);
+        }
+        res.body.should.exist;
+        res.body.data.should.exist;
+        res.body.data.city.should.exist;
+        res.body.data.city.should.be.equal('Beverly Hills');
         done();
       });
   });

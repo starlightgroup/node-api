@@ -9,7 +9,6 @@ const autopilot = new Autopilot(config.autopilot.key);
 
 async function getStateInfo(req, res, next) {
     const stateNumber = xss(req.params.stateNumber);
-    console.log(stateNumber);
     let addr = zipcodes.lookup(stateNumber);
     if (addr != undefined) {
         return res.success({data: addr})
