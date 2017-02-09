@@ -7,7 +7,10 @@
 
 this is not 100% production ready approach.
 
-1. you need linux box with `npm`, `node`,`redis`,`git`. I tested on this versions
+1. Check system
+===============
+
+you need linux box with `npm`, `node`,`redis`,`git`. I tested on this versions
 
 ```shell
 
@@ -24,9 +27,13 @@ this is not 100% production ready approach.
 
 it is possible to build and run this api on other OSes, but i have near 0 skills with them.
 
-2. you need start `redis` server with stack sessings - listening on localhost:6379 without password
+2. Check redis
+===============
+you need start `redis` server with stack sessings - listening on localhost:6379 without password
 
-3. You need to clone both frontend and backend repo in, for example `/home/{username}/projects/starlight`
+3. Clone repos 
+===============
+You need to clone both frontend and backend repo in, for example `/home/{username}/projects/starlight`
 
 ```shell
 
@@ -39,7 +46,9 @@ it is possible to build and run this api on other OSes, but i have near 0 skills
 
 ```
 
-4. Than you need to change branch to `dev` in both repos and install modules required
+4. Set proper branch 
+================
+Than you need to change branch to `dev` in both repos and install modules required
 
 
 For frontend
@@ -65,7 +74,10 @@ For backend
 
 ```
 
-5. Backend has embedded web server, that serves all static files from `~/projects/node-api/public`
+5. Link code 
+===============
+
+Backend has embedded web server, that serves all static files from `~/projects/node-api/public`
 We will use it to serve both frontend and backend from the same domain. To do so, we need to
 symlink compiled frontend code to web server folder.
 
@@ -76,7 +88,9 @@ symlink compiled frontend code to web server folder.
 
 ```
 
-6. Than we need to start code
+6. Start code
+================
+Than we need to start code
 
 ```
 
@@ -85,7 +99,9 @@ symlink compiled frontend code to web server folder.
 
 ```
 
-7. It will start both frontend code and backend code on [http://localhost:8000](http://localhost:8000)
+7. Verify code is running
+=================
+It will start both frontend code and backend code on [http://localhost:8000](http://localhost:8000)
 
 
 Frontend files are accessible on
