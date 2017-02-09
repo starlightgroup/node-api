@@ -4,19 +4,18 @@ import xss from 'xss';
 
 import config from '../../server-config';
 import * as redis from '../common/redis';
+import zipcodes from 'zipcodes';
 
 const autopilot = new Autopilot(config.autopilot.key);
 
 async function getStateInfo(req, res, next) {
     const stateNumber = xss(req.params.stateNumber);
     console.log(stateNumber);
-    const details = await redis.getJson(stateNumber);
-    if(details) {
-        res.success({data: mapToStateDetails(details)});
+    let addr = zipcodes.lookup(stateNumber);
+    if (addr != undefined) {
+        return res.success({data: addr})
     }
-    else {
-        res.error('state not found', 200);
-    }
+    res.error('state not found', 200);
 }
 
 async function triggerJourney(req, res, next) {

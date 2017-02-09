@@ -1,9 +1,10 @@
+'use strict';
+
 import RedisClient from 'ioredis';
 
 // let connectionDetails;
 import config from '../server-config';
 
-'use strict';
 const redisUrl = config.redis.REDIS_URL;
 
 const redis = new RedisClient(redisUrl, {

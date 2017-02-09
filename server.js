@@ -23,8 +23,6 @@ import hpp from 'hpp';
 import csp from 'helmet-csp';
 import raven from 'raven';
 
-// import csvimport from './config/import';
-
 import {routes} from './config/routes/v2';
 
 //https://starlightgroup.atlassian.net/browse/SG-8
