@@ -40,6 +40,9 @@
     "xss": "^0.3.1",
     "zipcodes": "^2.1.0"
   },
+  "optionalDependencies": {
+    "hiredis": "^0.5.0"
+  },
   "devDependencies": {
     "babel-cli": "^6.18.0",
     "babel-plugin-transform-runtime": "^6.15.0",
