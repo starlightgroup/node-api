@@ -1,12 +1,14 @@
+'use strict';
+
 import RedisClient from 'ioredis';
 
 // let connectionDetails;
 import config from '../server-config';
 
-'use strict';
 const redisUrl = config.redis.REDIS_URL;
 
 const redis = new RedisClient(redisUrl, {
+  dropBufferSupport: true,
   retryStrategy: function retryStrategy (times, isRecursive) {
     // Exponential with a minimum of 2 seconds
     if (times > 20) {

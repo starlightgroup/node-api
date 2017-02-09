@@ -23,8 +23,6 @@ import hpp from 'hpp';
 import csp from 'helmet-csp';
 import raven from 'raven';
 
-// import csvimport from './config/import';
-
 import {routes} from './config/routes/v2';
 
 //https://starlightgroup.atlassian.net/browse/SG-8
@@ -182,13 +180,15 @@ app.use(function (err, req, res, next) {
 // console.log("HTTPS Server Started at port : " + https_port);
 
 
-http
-  .createServer(app)
-  .listen(config.PORT, config.HOST, function (error) {
-    if(error){
-      throw error;
-    }
-    console.log("HTTP Server Started at %s:%s", config.HOST, config.PORT );
-  });
+if(!module.parent) {
+  http
+    .createServer(app)
+    .listen(config.PORT, config.HOST, function (error) {
+      if(error){
+        throw error;
+      }
+      console.log("HTTP Server Started at %s:%s", config.HOST, config.PORT);
+    });
+}
 
 module.exports = exports = app;
