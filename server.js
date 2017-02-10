@@ -152,7 +152,7 @@ function logResponseBody(req, res, next) {
 //https://starlightgroup.atlassian.net/browse/SG-8
 //secure /api/ from access by bots
 //for additional info see function `sessionTamperingProtectionMiddleware` above
-app.use('/api', security.punishForChangingIP);
+//app.use('/api', security.punishForChangingIP); //TODO write with proper IP in production
 app.use('/api', security.punishForChangingUserAgent);
 app.use('/api', security.punishForEnteringSiteFromBadLocation);
 
