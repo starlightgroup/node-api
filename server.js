@@ -36,14 +36,44 @@ console.log("Currently Running On : " , config.ENV);
 app.use(helmet());
 app.use(helmet.referrerPolicy());
 app.use(helmet.frameguard({ action: 'deny' }));
+/*/
+//under construction
+app.use(csp({
+  // Specify directives as normal.
+  directives: {
+    defaultSrc: ["'self'"],
+    scriptSrc: ["'self'", "'unsafe-inline'", 'cdn.jsdelivr.net','cdn.rawgit.com','fast.wistia.com'],
+    styleSrc: ["'self'",'cdn.jsdelivr.net','fonts.googleapis.com'],
+    fontSrc: ["'self'"],
+    imgSrc: ["'self'"],
+    sandbox: ['allow-forms', 'allow-scripts'],
+    reportUri: '/report-violation',
+    objectSrc: ["'none'"],
+    upgradeInsecureRequests: true
+  },
 
-// app.use(csp({
-//   directives: {
-//     defaultSrc: ["'self'"],
-//     styleSrc : ["'self'"]
-//   }
-// }));
+  // This module will detect common mistakes in your directives and throw errors
+  // if it finds any. To disable this, enable "loose mode".
+  loose: false,
 
+  // Set to true if you only want browsers to report errors, not block them.
+  // You may also set this to a function(req, res) in order to decide dynamically
+  // whether to use reportOnly mode, e.g., to allow for a dynamic kill switch.
+  reportOnly: false,
+
+  // Set to true if you want to blindly set all headers: Content-Security-Policy,
+  // X-WebKit-CSP, and X-Content-Security-Policy.
+  setAllHeaders: false,
+
+  // Set to true if you want to disable CSP on Android where it can be buggy.
+  disableAndroid: false,
+
+  // Set to false if you want to completely disable any user-agent sniffing.
+  // This may make the headers less compatible but it will be much faster.
+  // This defaults to `true`.
+  browserSniff: true
+}));
+//*/
 app.use(helmet.hpkp({
   maxAge: 2592000, //30 days
   sha256s: ['AbCdEfSeTyLBvTjEOhGD1627853=', 'ZyXwYuBdQsPIUVxNGRDAKGgxhJVu456=']
@@ -77,7 +107,10 @@ app.use(expressSession({
   secret: config.secret,
   httpOnly: true,
   resave: true,
-  saveUninitialized: true
+  saveUninitialized: true,
+  cookie: { //http://stackoverflow.com/a/14570856/1885921
+    secure: true
+  }
 }));
 //end of SG-5
 
@@ -116,7 +149,7 @@ app.use(function (req,res,next) {
   if (req.session) {
     const token = req.csrfToken();
     res.locals.csrf = token;
-    res.cookie('XSRF-TOKEN', token);
+    res.cookie('XSRF-TOKEN', token, {secure:true});
   }
   next();
 });
