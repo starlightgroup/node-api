@@ -36,7 +36,7 @@ console.log("Currently Running On : " , config.ENV);
 app.use(helmet());
 app.use(helmet.referrerPolicy());
 app.use(helmet.frameguard({ action: 'deny' }));
-/*/
+//*/
 //under construction
 app.use(csp({
   // Specify directives as normal.
@@ -47,7 +47,7 @@ app.use(csp({
     fontSrc: ["'self'"],
     imgSrc: ["'self'"],
     sandbox: ['allow-forms', 'allow-scripts'],
-    reportUri: '/report-violation',
+    reportUri: 'https://a434819b5a5f4bfeeaa5d47c8af8ac87.report-uri.io/r/default/csp/reportOnly', //https://report-uri.io/account/setup/
     objectSrc: ["'none'"],
     upgradeInsecureRequests: true
   },
@@ -109,7 +109,7 @@ app.use(expressSession({
   resave: true,
   saveUninitialized: true,
   cookie: { //http://stackoverflow.com/a/14570856/1885921
-    secure: true
+    secure: config.ENV !== 'development'
   }
 }));
 //end of SG-5
@@ -149,7 +149,7 @@ app.use(function (req,res,next) {
   if (req.session) {
     const token = req.csrfToken();
     res.locals.csrf = token;
-    res.cookie('XSRF-TOKEN', token, {secure:true});
+    res.cookie('XSRF-TOKEN', token, {secure: config.ENV !== 'development'});
   }
   next();
 });
