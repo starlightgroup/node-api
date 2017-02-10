@@ -42,7 +42,13 @@ app.use(csp({
   // Specify directives as normal.
   directives: {
     defaultSrc: ["'self'"],
-    scriptSrc: ["'self'", "'unsafe-inline'", 'cdn.jsdelivr.net','cdn.rawgit.com','fast.wistia.com'],
+    scriptSrc: [
+      "'self'",
+//      "'unsafe-inline'", they say, it can be dangerous
+      'cdn.jsdelivr.net',
+      'cdn.rawgit.com',
+      'fast.wistia.com'
+    ],
     styleSrc: ["'self'",'cdn.jsdelivr.net','fonts.googleapis.com'],
     fontSrc: ["'self'"],
     imgSrc: ["'self'"],
@@ -76,7 +82,23 @@ app.use(csp({
 //*/
 app.use(helmet.hpkp({
   maxAge: 2592000, //30 days
-  sha256s: ['AbCdEfSeTyLBvTjEOhGD1627853=', 'ZyXwYuBdQsPIUVxNGRDAKGgxhJVu456=']
+  sha256s: [
+//new - generated here - https://report-uri.io/home/pkp_hash
+    /*
+     Here is your PKP hash for ssl369830.cloudflaressl.com: pin-sha256="EZpO1a5wa3q9eyxOxvTaSVciRXlm57R6fYJ2gsIbrJg="
+     Here is your PKP hash for COMODO ECC Domain Validation Secure Server CA 2: pin-sha256="x9SZw6TwIqfmvrLZ/kz1o0Ossjmn728BnBKpUFqGNVM="
+     Here is your PKP hash for COMODO ECC Certification Authority: pin-sha256="58qRu/uxh4gFezqAcERupSkRYBlBAvfcw7mEjGPLnNU="
+     Here is your PKP hash for AddTrust External CA Root: pin-sha256="lCppFqbkrlJ3EcVFAkeip0+44VaoJUymbnOaEUk7tEU="
+     */
+
+    'EZpO1a5wa3q9eyxOxvTaSVciRXlm57R6fYJ2gsIbrJg=',
+    'x9SZw6TwIqfmvrLZ/kz1o0Ossjmn728BnBKpUFqGNVM=',
+    '58qRu/uxh4gFezqAcERupSkRYBlBAvfcw7mEjGPLnNU=',
+    'lCppFqbkrlJ3EcVFAkeip0+44VaoJUymbnOaEUk7tEU=',
+//old
+    'AbCdEfSeTyLBvTjEOhGD1627853=',
+    'ZyXwYuBdQsPIUVxNGRDAKGgxhJVu456='
+  ]
 }));
 
 // app.use(helmet.noCache());
