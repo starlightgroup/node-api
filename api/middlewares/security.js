@@ -24,6 +24,7 @@ exports.punishForEnteringSiteFromBadLocation = function (req, res, next) {
   if (req.session) {
     if (validEntryPoints.indexOf(req.session.entryPoint) === -1) {
       req.session.isBot = true;
+      res.set('X-PUNISHEDBY','BAD LOCATION');
       return res.status(403).send('Invalid API Key');
     }
     return next();
@@ -36,6 +37,7 @@ exports.punishForChangingIP = function (req, res, next) {
   if (req.session) {
     let rIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     if (req.session.ip !== rIp) {
+      res.set('X-PUNISHEDBY','BAD IP');
       req.session.isBot = true;
       return res.status(403).send('Invalid API Key');
     }
@@ -48,6 +50,7 @@ exports.punishForChangingUserAgent = function (req, res, next) {
   if (req.session) {
     let ua = req.get('User-Agent');
     if (req.session.userAgent !== ua) {
+      res.set('X-PUNISHEDBY','BAD UA');
       req.session.isBot = true;
       return res.status(403).send('Invalid API Key');
     }
