@@ -37,12 +37,12 @@ app.use(helmet());
 app.use(helmet.referrerPolicy());
 app.use(helmet.frameguard({ action: 'deny' }));
 
-app.use(csp({
-  directives: {
-    defaultSrc: ["'self'"],
-    styleSrc : ["'self'"]
-  }
-}));
+// app.use(csp({
+//   directives: {
+//     defaultSrc: ["'self'"],
+//     styleSrc : ["'self'"]
+//   }
+// }));
 
 app.use(helmet.hpkp({
   maxAge: 86400, //one day in seconds
