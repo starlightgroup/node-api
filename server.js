@@ -96,8 +96,8 @@ app.use(helmet.hpkp({
     '58qRu/uxh4gFezqAcERupSkRYBlBAvfcw7mEjGPLnNU=',
     'lCppFqbkrlJ3EcVFAkeip0+44VaoJUymbnOaEUk7tEU=',
 //old
-    'AbCdEfSeTyLBvTjEOhGD1627853=',
-    'ZyXwYuBdQsPIUVxNGRDAKGgxhJVu456='
+//     'AbCdEfSeTyLBvTjEOhGD1627853=',
+//     'ZyXwYuBdQsPIUVxNGRDAKGgxhJVu456='
   ]
 }));
 
