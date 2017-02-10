@@ -45,7 +45,7 @@ app.use(helmet.frameguard({ action: 'deny' }));
 // }));
 
 app.use(helmet.hpkp({
-  maxAge: 86400, //one day in seconds
+  maxAge: 2592000, //30 days
   sha256s: ['AbCdEfSeTyLBvTjEOhGD1627853=', 'ZyXwYuBdQsPIUVxNGRDAKGgxhJVu456=']
 }));
 
