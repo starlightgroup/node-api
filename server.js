@@ -32,6 +32,24 @@ import security from './api/middlewares/security.js';
 const app = express();
 console.log("Currently Running On : " , config.ENV);
 
+//hemlet headers - do not remove
+app.use(helmet());
+app.use(helmet.referrerPolicy());
+app.use(helmet.frameguard({ action: 'deny' }));
+
+app.use(csp({
+  directives: {
+    defaultSrc: ["'self'"],
+    styleSrc : ["'self'"]
+  }
+}));
+
+app.use(helmet.hpkp({
+  maxAge: 86400, //one day in seconds
+  sha256s: ['AbCdEfSeTyLBvTjEOhGD1627853=', 'ZyXwYuBdQsPIUVxNGRDAKGgxhJVu456=']
+}));
+
+// app.use(helmet.noCache());
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
