@@ -53,20 +53,20 @@ const cloudFlareIp6Range = [
 
 //this middleware have to be the first!!!
 //https://starlightgroup.atlassian.net/projects/SG/issues/SG-35
-exports.verifyThatSiteIsAccessedFromCloudflare = function (req,res,next) {
+exports.verifyThatSiteIsAccessedFromCloudflare = function (req, res, next) {
   let rIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 //https://github.com/keverw/range_check#check-if-ip-is-within-range
   let isOk = false;
   // console.log(rangeCheck.inRange('2001:db8:1234::1', '2001:db8::/32')); //returns true
   cloudFlareIp4Range.map(function (ipRange) {
-    isOk = isOk || rangeCheck.inRange(ipRange,rIp)
+    isOk = isOk || rangeCheck.inRange(ipRange, rIp);
   });
   if (isOk) {
     return next;
   }
 
   cloudFlareIp6Range.map(function (ipRange) {
-    isOk = isOk || rangeCheck.inRange(ipRange,rIp)
+    isOk = isOk || rangeCheck.inRange(ipRange, rIp);
   });
   if (isOk) {
     return next;
@@ -74,7 +74,7 @@ exports.verifyThatSiteIsAccessedFromCloudflare = function (req,res,next) {
 
   return res
     .status(500)
-    .end('NOT OK')
+    .end('NOT OK');
 };
 
 exports.getIp = function (req) {
