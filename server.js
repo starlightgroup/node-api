@@ -32,6 +32,90 @@ import security from './api/middlewares/security.js';
 const app = express();
 console.log("Currently Running On : " , config.ENV);
 
+//hemlet headers - do not remove
+app.use(helmet());
+app.use(helmet.referrerPolicy());
+app.use(helmet.frameguard({ action: 'deny' }));
+/*/
+//under construction
+app.use(csp({
+  // some examples
+  // 
+  // Specify directives as normal.
+  directives: {
+    defaultSrc: ["'self'",'cdn.jsdelivr.net','*.segment.com','segment.com','*.wistia.com', '*.akamaihd.net', 'blob:'],
+    scriptSrc: [
+      "'self'",
+      "'unsafe-inline'", //they say, it can be dangerous
+      'cdn.jsdelivr.net',
+      'cdn.rawgit.com',
+      '*.wistia.com',
+      '*.litix.io'
+      // "'sha256-LC866cQ9tlE73BIp/WFYbgTYkS859vx0Hfk5RBVENLo='"
+    ],
+    styleSrc: [
+      "'self'",
+      'cdn.jsdelivr.net',
+      'fonts.googleapis.com',
+      '*.segment.com',
+      "'unsafe-inline'"
+      // "'sha256-6EANf3q7TA3PzDpgLK8msCpC3+5Oq9al9X2vFTn/4Zo='",
+      // "'sha256-7YxZjqgD/pE+dM1CMFFeuqfzrw5kL6AzVXgC130wbtc='",
+      // "'sha256-68t8GdqcvIIBWHbcG8ZlsUUhN/8isFuMo7CI53+xcSM='"
+      ],
+    fontSrc: ["'self'",'fonts.gstatic.com', 'cdn.jsdelivr.net', 'data:'],
+    imgSrc: ["'self'", 'data:', '*.akamaihd.net','*.wistia.com'],
+    sandbox: ['allow-forms', 'allow-scripts'],
+    reportUri: 'https://a434819b5a5f4bfeeaa5d47c8af8ac87.report-uri.io/r/default/csp/reportOnly', //https://report-uri.io/account/setup/
+    // objectSrc: ["'none'"],
+    mediaSrc: ['data:'],
+    upgradeInsecureRequests: true
+  },
+
+  // This module will detect common mistakes in your directives and throw errors
+  // if it finds any. To disable this, enable "loose mode".
+  loose: false,
+
+  // Set to true if you only want browsers to report errors, not block them.
+  // You may also set this to a function(req, res) in order to decide dynamically
+  // whether to use reportOnly mode, e.g., to allow for a dynamic kill switch.
+  reportOnly: false,
+
+  // Set to true if you want to blindly set all headers: Content-Security-Policy,
+  // X-WebKit-CSP, and X-Content-Security-Policy.
+  setAllHeaders: false,
+
+  // Set to true if you want to disable CSP on Android where it can be buggy.
+  disableAndroid: false,
+
+  // Set to false if you want to completely disable any user-agent sniffing.
+  // This may make the headers less compatible but it will be much faster.
+  // This defaults to `true`.
+  browserSniff: true
+}));
+*/
+app.use(helmet.hpkp({
+  maxAge: 2592000, //30 days
+  sha256s: [
+//new - generated here - https://report-uri.io/home/pkp_hash
+    /*
+     Here is your PKP hash for ssl369830.cloudflaressl.com: pin-sha256="EZpO1a5wa3q9eyxOxvTaSVciRXlm57R6fYJ2gsIbrJg="
+     Here is your PKP hash for COMODO ECC Domain Validation Secure Server CA 2: pin-sha256="x9SZw6TwIqfmvrLZ/kz1o0Ossjmn728BnBKpUFqGNVM="
+     Here is your PKP hash for COMODO ECC Certification Authority: pin-sha256="58qRu/uxh4gFezqAcERupSkRYBlBAvfcw7mEjGPLnNU="
+     Here is your PKP hash for AddTrust External CA Root: pin-sha256="lCppFqbkrlJ3EcVFAkeip0+44VaoJUymbnOaEUk7tEU="
+     */
+
+    'EZpO1a5wa3q9eyxOxvTaSVciRXlm57R6fYJ2gsIbrJg=',
+    'x9SZw6TwIqfmvrLZ/kz1o0Ossjmn728BnBKpUFqGNVM=',
+    '58qRu/uxh4gFezqAcERupSkRYBlBAvfcw7mEjGPLnNU=',
+    'lCppFqbkrlJ3EcVFAkeip0+44VaoJUymbnOaEUk7tEU=',
+//old
+//     'AbCdEfSeTyLBvTjEOhGD1627853=',
+//     'ZyXwYuBdQsPIUVxNGRDAKGgxhJVu456='
+  ]
+}));
+
+// app.use(helmet.noCache());
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
@@ -59,7 +143,10 @@ app.use(expressSession({
   secret: config.secret,
   httpOnly: true,
   resave: true,
-  saveUninitialized: true
+  saveUninitialized: true,
+  cookie: { //http://stackoverflow.com/a/14570856/1885921
+    secure: config.ENV !== 'development'
+  }
 }));
 //end of SG-5
 
@@ -73,10 +160,8 @@ app.use(expressSession({
 //https://starlightgroup.atlassian.net/browse/SG-9
 app.use(function sessionTamperingProtectionMiddleware(req, res, next) {
   res.set('X-Powered-By', 'TacticalMastery'); //do not expose, that it is expressJS application
-
-  //http://stackoverflow.com/a/10849772/1885921
   if (!req.session.ip) {
-    req.session.ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    req.session.ip = security.getIp(req);
   }
   if (!req.session.entryPoint) {
     //http://expressjs.com/en/api.html#req.originalUrl
@@ -98,7 +183,7 @@ app.use(function (req,res,next) {
   if (req.session) {
     const token = req.csrfToken();
     res.locals.csrf = token;
-    res.cookie('XSRF-TOKEN', token);
+    res.cookie('XSRF-TOKEN', token, {secure: config.ENV !== 'development'});
   }
   next();
 });
@@ -134,7 +219,7 @@ function logResponseBody(req, res, next) {
 //https://starlightgroup.atlassian.net/browse/SG-8
 //secure /api/ from access by bots
 //for additional info see function `sessionTamperingProtectionMiddleware` above
-app.use('/api', security.punishForChangingIP);
+//app.use('/api', security.punishForChangingIP); //TODO - not carefully tested yet - Anatolij
 app.use('/api', security.punishForChangingUserAgent);
 app.use('/api', security.punishForEnteringSiteFromBadLocation);
 

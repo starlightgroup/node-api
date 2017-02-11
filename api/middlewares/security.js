@@ -3,6 +3,7 @@
 //it makes api return 403 error and sets `req.session.isBot` to true
 
 import rangeCheck from 'range_check';
+import config from './../../server-config';
 
 //This is first pages of site, that real users usually visits
 //TODO - verify that nothing is missing
@@ -49,6 +50,7 @@ const cloudFlareIp6Range = [
   '2a06:98c0::/29'
 ];
 
+
 //this middleware have to be the first!!!
 exports.verifyThatSiteIsAccessedFromCloudflare = function (req,res,next) {
   let rIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
@@ -75,11 +77,21 @@ exports.verifyThatSiteIsAccessedFromCloudflare = function (req,res,next) {
     .end('SORRY')
 };
 
-
+exports.getIp = function (req) {
+//https://support.cloudflare.com/hc/en-us/articles/200170986-How-does-CloudFlare-handle-HTTP-Request-headers-
+  if (config.ENV !== 'development' && req.headers['cf-connecting-ip']) {
+    return req.headers['cf-connecting-ip'];
+  }
+//http://stackoverflow.com/a/10849772/1885921
+  return req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+};
 
 exports.punishForEnteringSiteFromBadLocation = function (req, res, next) {
   if (req.session) {
     if (validEntryPoints.indexOf(req.session.entryPoint) === -1) {
+      if (config.ENV !== 'production') {
+        res.set('X-PUNISHEDBY', 'BAD LOCATION');
+      }
       req.session.isBot = true;
       return res.status(403).send('Invalid API Key');
     }
@@ -91,8 +103,11 @@ exports.punishForEnteringSiteFromBadLocation = function (req, res, next) {
 
 exports.punishForChangingIP = function (req, res, next) {
   if (req.session) {
-    let rIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    let rIp = getIp(req);
     if (req.session.ip !== rIp) {
+      if (config.ENV !== 'production') {
+        res.set('X-PUNISHEDBY', 'BAD LOCATION');
+      }
       req.session.isBot = true;
       return res.status(403).send('Invalid API Key');
     }
@@ -105,6 +120,9 @@ exports.punishForChangingUserAgent = function (req, res, next) {
   if (req.session) {
     let ua = req.get('User-Agent');
     if (req.session.userAgent !== ua) {
+      if (config.ENV !== 'production') {
+        res.set('X-PUNISHEDBY', 'BAD UA');
+      }
       req.session.isBot = true;
       return res.status(403).send('Invalid API Key');
     }
