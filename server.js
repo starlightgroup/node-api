@@ -32,6 +32,13 @@ import security from './api/middlewares/security.js';
 const app = express();
 console.log("Currently Running On : " , config.ENV);
 
+//verify that site is requested from Cloudflare
+//all other sources will get error
+//https://starlightgroup.atlassian.net/projects/SG/issues/SG-35
+if (['production','staging'].indexOf(config.ENV) !== -1){
+  app.use(security.verifyThatSiteIsAccessedFromCloudflare);
+}
+
 //hemlet headers - do not remove
 app.use(helmet());
 app.use(helmet.referrerPolicy());
