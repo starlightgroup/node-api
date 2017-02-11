@@ -1,7 +1,7 @@
 'use strict';
 require('@risingstack/trace');
 import express from 'express';
-import fs from 'fs';
+
 import logger from './api/common/log';
 import bodyParser from 'body-parser';
 import config from './server-config';
@@ -17,11 +17,10 @@ import csurf from 'csurf'; //add CSRF protection https://www.npmjs.com/package/c
 import redis from './config/redis.js'; //load redis client
 
 import http from 'http';
-import forceSSL from 'express-force-ssl';
+
 import helmet from 'helmet';
 import hpp from 'hpp';
 import csp from 'helmet-csp';
-import raven from 'raven';
 
 import {routes} from './config/routes/v2';
 
@@ -36,17 +35,83 @@ console.log("Currently Running On : " , config.ENV);
 app.use(helmet());
 app.use(helmet.referrerPolicy());
 app.use(helmet.frameguard({ action: 'deny' }));
+/*/
+//under construction
+app.use(csp({
+  // some examples
+  // 
+  // Specify directives as normal.
+  directives: {
+    defaultSrc: ["'self'",'cdn.jsdelivr.net','*.segment.com','segment.com','*.wistia.com', '*.akamaihd.net', 'blob:'],
+    scriptSrc: [
+      "'self'",
+      "'unsafe-inline'", //they say, it can be dangerous
+      'cdn.jsdelivr.net',
+      'cdn.rawgit.com',
+      '*.wistia.com',
+      '*.litix.io'
+      // "'sha256-LC866cQ9tlE73BIp/WFYbgTYkS859vx0Hfk5RBVENLo='"
+    ],
+    styleSrc: [
+      "'self'",
+      'cdn.jsdelivr.net',
+      'fonts.googleapis.com',
+      '*.segment.com',
+      "'unsafe-inline'"
+      // "'sha256-6EANf3q7TA3PzDpgLK8msCpC3+5Oq9al9X2vFTn/4Zo='",
+      // "'sha256-7YxZjqgD/pE+dM1CMFFeuqfzrw5kL6AzVXgC130wbtc='",
+      // "'sha256-68t8GdqcvIIBWHbcG8ZlsUUhN/8isFuMo7CI53+xcSM='"
+      ],
+    fontSrc: ["'self'",'fonts.gstatic.com', 'cdn.jsdelivr.net', 'data:'],
+    imgSrc: ["'self'", 'data:', '*.akamaihd.net','*.wistia.com'],
+    sandbox: ['allow-forms', 'allow-scripts'],
+    reportUri: 'https://a434819b5a5f4bfeeaa5d47c8af8ac87.report-uri.io/r/default/csp/reportOnly', //https://report-uri.io/account/setup/
+    // objectSrc: ["'none'"],
+    mediaSrc: ['data:'],
+    upgradeInsecureRequests: true
+  },
 
-// app.use(csp({
-//   directives: {
-//     defaultSrc: ["'self'"],
-//     styleSrc : ["'self'"]
-//   }
-// }));
+  // This module will detect common mistakes in your directives and throw errors
+  // if it finds any. To disable this, enable "loose mode".
+  loose: false,
 
+  // Set to true if you only want browsers to report errors, not block them.
+  // You may also set this to a function(req, res) in order to decide dynamically
+  // whether to use reportOnly mode, e.g., to allow for a dynamic kill switch.
+  reportOnly: false,
+
+  // Set to true if you want to blindly set all headers: Content-Security-Policy,
+  // X-WebKit-CSP, and X-Content-Security-Policy.
+  setAllHeaders: false,
+
+  // Set to true if you want to disable CSP on Android where it can be buggy.
+  disableAndroid: false,
+
+  // Set to false if you want to completely disable any user-agent sniffing.
+  // This may make the headers less compatible but it will be much faster.
+  // This defaults to `true`.
+  browserSniff: true
+}));
+*/
 app.use(helmet.hpkp({
-  maxAge: 86400, //one day in seconds
-  sha256s: ['AbCdEfSeTyLBvTjEOhGD1627853=', 'ZyXwYuBdQsPIUVxNGRDAKGgxhJVu456=']
+  maxAge: 2592000, //30 days
+  sha256s: [
+//new - generated here - https://report-uri.io/home/pkp_hash
+    /*
+     Here is your PKP hash for ssl369830.cloudflaressl.com: pin-sha256="EZpO1a5wa3q9eyxOxvTaSVciRXlm57R6fYJ2gsIbrJg="
+     Here is your PKP hash for COMODO ECC Domain Validation Secure Server CA 2: pin-sha256="x9SZw6TwIqfmvrLZ/kz1o0Ossjmn728BnBKpUFqGNVM="
+     Here is your PKP hash for COMODO ECC Certification Authority: pin-sha256="58qRu/uxh4gFezqAcERupSkRYBlBAvfcw7mEjGPLnNU="
+     Here is your PKP hash for AddTrust External CA Root: pin-sha256="lCppFqbkrlJ3EcVFAkeip0+44VaoJUymbnOaEUk7tEU="
+     */
+
+    'EZpO1a5wa3q9eyxOxvTaSVciRXlm57R6fYJ2gsIbrJg=',
+    'x9SZw6TwIqfmvrLZ/kz1o0Ossjmn728BnBKpUFqGNVM=',
+    '58qRu/uxh4gFezqAcERupSkRYBlBAvfcw7mEjGPLnNU=',
+    'lCppFqbkrlJ3EcVFAkeip0+44VaoJUymbnOaEUk7tEU=',
+//old
+//     'AbCdEfSeTyLBvTjEOhGD1627853=',
+//     'ZyXwYuBdQsPIUVxNGRDAKGgxhJVu456='
+  ]
 }));
 
 // app.use(helmet.noCache());
@@ -77,7 +142,10 @@ app.use(expressSession({
   secret: config.secret,
   httpOnly: true,
   resave: true,
-  saveUninitialized: true
+  saveUninitialized: true,
+  cookie: { //http://stackoverflow.com/a/14570856/1885921
+    secure: config.ENV !== 'development'
+  }
 }));
 //end of SG-5
 
@@ -116,7 +184,7 @@ app.use(function (req,res,next) {
   if (req.session) {
     const token = req.csrfToken();
     res.locals.csrf = token;
-    res.cookie('XSRF-TOKEN', token);
+    res.cookie('XSRF-TOKEN', token, {secure: config.ENV !== 'development'});
   }
   next();
 });
@@ -166,8 +234,6 @@ Object.keys(routes).forEach(r => {
 });
 
 app.use(express.static('public'));
-
-// app.use(raven.middleware.express.errorHandler('https://547e29c8a3854f969ff5912c76f34ef0:62c29411c70e46df81438b09d05526b0@sentry.io/106191'));
 
 app.use(function (err, req, res, next) {
   if (err) {
