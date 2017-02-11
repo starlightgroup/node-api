@@ -57,12 +57,13 @@ app.use(csp({
       "'self'",
       'cdn.jsdelivr.net',
       'fonts.googleapis.com',
+      '*.segment.com',
       "'unsafe-inline'"
       // "'sha256-6EANf3q7TA3PzDpgLK8msCpC3+5Oq9al9X2vFTn/4Zo='",
       // "'sha256-7YxZjqgD/pE+dM1CMFFeuqfzrw5kL6AzVXgC130wbtc='",
       // "'sha256-68t8GdqcvIIBWHbcG8ZlsUUhN/8isFuMo7CI53+xcSM='"
       ],
-    fontSrc: ["'self'",'fonts.gstatic.com', 'cdn.jsdelivr.net'],
+    fontSrc: ["'self'",'fonts.gstatic.com', 'cdn.jsdelivr.net', 'data:'],
     imgSrc: ["'self'", 'data:', '*.akamaihd.net','*.wistia.com'],
     sandbox: ['allow-forms', 'allow-scripts'],
     reportUri: 'https://a434819b5a5f4bfeeaa5d47c8af8ac87.report-uri.io/r/default/csp/reportOnly', //https://report-uri.io/account/setup/
