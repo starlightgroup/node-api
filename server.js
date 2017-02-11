@@ -1,7 +1,7 @@
 'use strict';
 require('@risingstack/trace');
 import express from 'express';
-import fs from 'fs';
+
 import logger from './api/common/log';
 import bodyParser from 'body-parser';
 import config from './server-config';
@@ -17,11 +17,10 @@ import csurf from 'csurf'; //add CSRF protection https://www.npmjs.com/package/c
 import redis from './config/redis.js'; //load redis client
 
 import http from 'http';
-import forceSSL from 'express-force-ssl';
+
 import helmet from 'helmet';
 import hpp from 'hpp';
 import csp from 'helmet-csp';
-import raven from 'raven';
 
 import {routes} from './config/routes/v2';
 
@@ -233,8 +232,6 @@ Object.keys(routes).forEach(r => {
 });
 
 app.use(express.static('public'));
-
-// app.use(raven.middleware.express.errorHandler('https://547e29c8a3854f969ff5912c76f34ef0:62c29411c70e46df81438b09d05526b0@sentry.io/106191'));
 
 app.use(function (err, req, res, next) {
   if (err) {
