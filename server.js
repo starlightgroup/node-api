@@ -44,7 +44,7 @@ app.use(csp({
     defaultSrc: ["'self'",'cdn.jsdelivr.net','*.segment.com','segment.com'],
     scriptSrc: [
       "'self'",
-//      "'unsafe-inline'", they say, it can be dangerous
+      "'unsafe-inline'", //they say, it can be dangerous
       'cdn.jsdelivr.net',
       'cdn.rawgit.com',
       'fast.wistia.com',
@@ -54,6 +54,7 @@ app.use(csp({
       "'self'",
       'cdn.jsdelivr.net',
       'fonts.googleapis.com',
+      "'unsafe-inline'", //they say, it can be dangerous
       "'sha256-6EANf3q7TA3PzDpgLK8msCpC3+5Oq9al9X2vFTn/4Zo='",
       "'sha256-7YxZjqgD/pE+dM1CMFFeuqfzrw5kL6AzVXgC130wbtc='",
       "'sha256-68t8GdqcvIIBWHbcG8ZlsUUhN/8isFuMo7CI53+xcSM='"
