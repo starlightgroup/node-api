@@ -144,7 +144,7 @@ app.use(expressSession({
   resave: true,
   saveUninitialized: true,
   cookie: { //http://stackoverflow.com/a/14570856/1885921
-    secure: config.ENV !== 'development'
+    secure: config.ENV === 'production'
   }
 }));
 //end of SG-5
@@ -184,7 +184,7 @@ app.use(function (req,res,next) {
   if (req.session) {
     const token = req.csrfToken();
     res.locals.csrf = token;
-    res.cookie('XSRF-TOKEN', token, {secure: config.ENV !== 'development'});
+    res.cookie('XSRF-TOKEN', token, {secure: config.ENV === 'production'});
   }
   next();
 });
@@ -237,10 +237,10 @@ app.use(express.static('public'));
 
 app.use(function (err, req, res, next) {
   if (err) {
+      console.log(err)
     if (err.code === 'EBADCSRFTOKEN') {
       res.status(403).send('Invalid API Key');
     }else {
-      console.log(err);
       if (typeof err.status != "undefined")   res.status(err.status);
       if(res.error){
         res.error(err.message || err);
