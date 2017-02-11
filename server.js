@@ -160,10 +160,8 @@ app.use(expressSession({
 //https://starlightgroup.atlassian.net/browse/SG-9
 app.use(function sessionTamperingProtectionMiddleware(req, res, next) {
   res.set('X-Powered-By', 'TacticalMastery'); //do not expose, that it is expressJS application
-
-  //http://stackoverflow.com/a/10849772/1885921
   if (!req.session.ip) {
-    req.session.ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    req.session.ip = security.getIp(req);
   }
   if (!req.session.entryPoint) {
     //http://expressjs.com/en/api.html#req.originalUrl
@@ -221,7 +219,7 @@ function logResponseBody(req, res, next) {
 //https://starlightgroup.atlassian.net/browse/SG-8
 //secure /api/ from access by bots
 //for additional info see function `sessionTamperingProtectionMiddleware` above
-//app.use('/api', security.punishForChangingIP); //TODO write with proper IP in production
+//app.use('/api', security.punishForChangingIP); //TODO - not carefully tested yet - Anatolij
 app.use('/api', security.punishForChangingUserAgent);
 app.use('/api', security.punishForEnteringSiteFromBadLocation);
 
