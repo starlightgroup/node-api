@@ -47,14 +47,13 @@ app.use(csp({
       "'unsafe-inline'", //they say, it can be dangerous
       'cdn.jsdelivr.net',
       'cdn.rawgit.com',
-      'fast.wistia.com',
-      "'sha256-LC866cQ9tlE73BIp/WFYbgTYkS859vx0Hfk5RBVENLo='"
+      'fast.wistia.com'
+      // "'sha256-LC866cQ9tlE73BIp/WFYbgTYkS859vx0Hfk5RBVENLo='"
     ],
     styleSrc: [
       "'self'",
       'cdn.jsdelivr.net',
       'fonts.googleapis.com',
-      "'unsafe-inline'", //they say, it can be dangerous
       "'sha256-6EANf3q7TA3PzDpgLK8msCpC3+5Oq9al9X2vFTn/4Zo='",
       "'sha256-7YxZjqgD/pE+dM1CMFFeuqfzrw5kL6AzVXgC130wbtc='",
       "'sha256-68t8GdqcvIIBWHbcG8ZlsUUhN/8isFuMo7CI53+xcSM='"
