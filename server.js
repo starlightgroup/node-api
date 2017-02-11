@@ -39,30 +39,35 @@ app.use(helmet.frameguard({ action: 'deny' }));
 //*/
 //under construction
 app.use(csp({
+  // some examples
+  // 
   // Specify directives as normal.
   directives: {
-    defaultSrc: ["'self'",'cdn.jsdelivr.net','*.segment.com','segment.com'],
+    defaultSrc: ["'self'",'cdn.jsdelivr.net','*.segment.com','segment.com','*.wistia.com', '*.akamaihd.net', 'blob:'],
     scriptSrc: [
       "'self'",
       "'unsafe-inline'", //they say, it can be dangerous
       'cdn.jsdelivr.net',
       'cdn.rawgit.com',
-      'fast.wistia.com'
+      '*.wistia.com',
+      '*.litix.io'
       // "'sha256-LC866cQ9tlE73BIp/WFYbgTYkS859vx0Hfk5RBVENLo='"
     ],
     styleSrc: [
       "'self'",
       'cdn.jsdelivr.net',
       'fonts.googleapis.com',
-      "'sha256-6EANf3q7TA3PzDpgLK8msCpC3+5Oq9al9X2vFTn/4Zo='",
-      "'sha256-7YxZjqgD/pE+dM1CMFFeuqfzrw5kL6AzVXgC130wbtc='",
-      "'sha256-68t8GdqcvIIBWHbcG8ZlsUUhN/8isFuMo7CI53+xcSM='"
+      "'unsafe-inline'"
+      // "'sha256-6EANf3q7TA3PzDpgLK8msCpC3+5Oq9al9X2vFTn/4Zo='",
+      // "'sha256-7YxZjqgD/pE+dM1CMFFeuqfzrw5kL6AzVXgC130wbtc='",
+      // "'sha256-68t8GdqcvIIBWHbcG8ZlsUUhN/8isFuMo7CI53+xcSM='"
       ],
     fontSrc: ["'self'",'fonts.gstatic.com', 'cdn.jsdelivr.net'],
-    imgSrc: ["'self'"],
+    imgSrc: ["'self'", 'data:', '*.akamaihd.net','*.wistia.com'],
     sandbox: ['allow-forms', 'allow-scripts'],
     reportUri: 'https://a434819b5a5f4bfeeaa5d47c8af8ac87.report-uri.io/r/default/csp/reportOnly', //https://report-uri.io/account/setup/
-    objectSrc: ["'none'"],
+    // objectSrc: ["'none'"],
+    mediaSrc: ['data:'],
     upgradeInsecureRequests: true
   },
 
