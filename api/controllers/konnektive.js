@@ -52,8 +52,6 @@ async function addKonnektiveOrder(req, res, next) {
     //body.lastName = req.body.lastName || 'NA';
     //req.body.cardExpiryDate = `${req.body.month}/${req.body.year}`;
     //delete req.body.productId;
-    console.response("--------New Order---------")
-    console.response(body)
 
     const options = {
         uri: 'https://api.konnektive.com/order/import/',
