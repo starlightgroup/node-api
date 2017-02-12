@@ -16,7 +16,7 @@ async function addKonnektiveOrder(req, res, next) {
     body.address2 = xss(req.body.address2);
     body.campaignId = xss(req.body.campaignId);
     body.cardMonth = xss(req.body.cardMonth);
-    body.cardNumber = xss(req.body.cardNumber);
+    body.cardNumber = xss(req.body.cardNumber).replace(" ","");
     body.cardYear = xss(req.body.cardYear);
     body.city = xss(req.body.city);
     body.emailAddress = xss(req.body.emailAddress);
