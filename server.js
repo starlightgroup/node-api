@@ -1,7 +1,7 @@
 'use strict';
 require('@risingstack/trace');
 import express from 'express';
-import fs from 'fs';
+
 import logger from './api/common/log';
 import bodyParser from 'body-parser';
 import config from './server-config';
@@ -17,7 +17,7 @@ import csurf from 'csurf'; //add CSRF protection https://www.npmjs.com/package/c
 import redis from './config/redis.js'; //load redis client
 
 import http from 'http';
-import forceSSL from 'express-force-ssl';
+
 import helmet from 'helmet';
 import hpp from 'hpp';
 import csp from 'helmet-csp';
@@ -271,19 +271,6 @@ app.use(function (err, req, res, next) {
     }
   }
 });
-
-// var https_port = (process.env.HTTPS_PORT || 4443);
-
-// var options = {
-//   //new location of evssl certs
-//   cert: fs.readFileSync('/etc/nginx/ssl/tacticalmastery_cf.crt'),
-//   key: fs.readFileSync('/etc/nginx/ssl/tacticalmastery_cf.key'),
-//   requestCert: true
-// };
-
-// https.createServer(options,app).listen(https_port);
-// console.log("HTTPS Server Started at port : " + https_port);
-
 
 if(!module.parent) {
   http
