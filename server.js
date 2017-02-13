@@ -1,4 +1,4 @@
-'use strict';
+[6~'use strict';
 require('@risingstack/trace');
 import express from 'express';
 import fs from 'fs';
@@ -167,14 +167,14 @@ app.use(function sessionTamperingProtectionMiddleware(req, res, next) {
 //CSRF protection middleware with cookies
 //provide CSRF token in Anatolij's way - it works with angular 1.x from the box
 //https://starlightgroup.atlassian.net/browse/SG-14
-app.use(function (req,res,next) {
-  if (req.session) {
+//app.use(function (req,res,next) {
+//  if (req.session) {
 //    const token = req.csrfToken();
 //    res.locals.csrf = token;
 //    res.cookie('XSRF-TOKEN', token, {secure: config.ENV !== 'development'});
-  }
-  next();
-});
+//  }
+//  next();
+//});
 //END of SG-14
 
 
