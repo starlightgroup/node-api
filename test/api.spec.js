@@ -40,11 +40,10 @@ describe('web application', function () {
     taintedSessionId,
     taintedCsrfToken;
 
-  it('has 404 on / but we need to start session properly to run tests', function (done) {
+  it('has anything on / but we need to start session properly to run tests', function (done) {
     supertest(app)
       .get('/')
       .expect('X-Powered-By', 'TacticalMastery')
-      .expect(404)
       .end(function (error, res) {
         if (error) {
           return done(error);
@@ -92,6 +91,7 @@ describe('web application', function () {
       .get('/api/v2/ping')
       //      .set('Cookie', [util.format('PHPSESSID=%s', sessionId)]) - no session id - aka first visit!!!
       .expect('X-Powered-By', 'TacticalMastery')
+      .expect('X-PUNISHEDBY', 'BAD LOCATION')
       .expect(403, 'Invalid API Key')
       .end(function (error, res) {
         if (error) {
@@ -149,6 +149,7 @@ describe('web application', function () {
       supertest(app)
         .get('/api/v2/testSession')
         .expect('X-Powered-By', 'TacticalMastery')
+        .expect('X-PUNISHEDBY', 'BAD LOCATION')
         .expect(403, 'Invalid API Key', done);
     });
   });
@@ -209,11 +210,10 @@ describe('web application', function () {
       acCsrfToken,
       acSessionId;
 
-    it('has 404 on / but we need to start session properly to run tests', function (done) {
+    it('has anything on/ but we need to start session properly to run tests', function (done) {
       supertest(app)
         .get('/')
         .expect('X-Powered-By', 'TacticalMastery')
-        .expect(404)
         .end(function (error, res) {
           if (error) {
             return done(error);
@@ -297,7 +297,8 @@ describe('web application', function () {
     it('has 403 on POST /api/v2/add-contact with bad entry point', function (done) {
       supertest(app)
         .post('/api/v2/add-contact')
-        .set('Cookie', [util.format('PHPSESSID=%s', taintedCsrfToken)])
+        .set('Cookie', [util.format('PHPSESSID=%s', taintedSessionId)])
+        .expect('X-PUNISHEDBY', 'BAD LOCATION')
         .send({
           FirstName: 'test_FirstName',
           LastName: 'test_LastName',
@@ -313,11 +314,10 @@ describe('web application', function () {
     let ucSessionId,
       ucCsrfToken;
 
-    it('has 404 on / but we need to start session properly to run tests', function (done) {
+    it('has anything on / but we need to start session properly to run tests', function (done) {
       supertest(app)
         .get('/')
         .expect('X-Powered-By', 'TacticalMastery')
-        .expect(404)
         .end(function (error, res) {
           if (error) {
             return done(error);
@@ -437,6 +437,7 @@ describe('web application', function () {
       supertest(app)
         .post('/api/v2/create-lead')
         .set('Cookie', [util.format('PHPSESSID=%s', taintedSessionId)])
+        .expect('X-PUNISHEDBY', 'BAD LOCATION')
         .send({
           someSaneData: 'to be entered here',
           _csrf: taintedCsrfToken
