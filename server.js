@@ -146,6 +146,9 @@ app.use(expressContentLength.validateMax({max: MAX_CONTENT_LENGTH_ACCEPTED, stat
 //setup redis powered sessions
 //https://github.com/vodolaz095/hunt/blob/master/lib/http/expressApp.js#L236-L244
 const RedisSessionStore = connectRedis(expressSession);
+if(isProtectedByCloudflare){
+  app.set('trust proxy', 1); // trust first proxy
+}
 app.use(cookieParser(config.secret));
 app.use(expressSession({
   key: 'PHPSESSID', //LOL, let they waste some time hacking this as PHP application, at least it will be detected by Cloudfare :-)
@@ -159,7 +162,7 @@ app.use(expressSession({
   resave: true,
   saveUninitialized: true,
   cookie: { //http://stackoverflow.com/a/14570856/1885921
-    secure: isProtectedByCloudflare
+     secure: isProtectedByCloudflare //https://github.com/expressjs/session#cookiesecure
   }
 }));
 //end of SG-5
