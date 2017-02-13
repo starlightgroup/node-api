@@ -30,11 +30,13 @@ import security from './api/middlewares/security.js';
 
 const app = express();
 console.log("Currently Running On : " , config.ENV);
+const isProtectedByCloudflare = ['production','staging'].indexOf(config.ENV) !== -1;
+
 
 //verify that site is requested from Cloudflare
 //all other sources will get error
 //https://starlightgroup.atlassian.net/projects/SG/issues/SG-35
-if (['production','staging'].indexOf(config.ENV) !== -1){
+if (isProtectedByCloudflare){
   app.use(security.verifyThatSiteIsAccessedFromCloudflare);
 }
 
@@ -151,7 +153,7 @@ app.use(expressSession({
   resave: true,
   saveUninitialized: true,
   cookie: { //http://stackoverflow.com/a/14570856/1885921
-    secure: config.ENV === 'production'
+    secure: isProtectedByCloudflare
   }
 }));
 //end of SG-5
@@ -169,7 +171,7 @@ app.use(function sessionTamperingProtectionMiddleware(req, res, next) {
 
   //http://stackoverflow.com/a/10849772/1885921
   if (!req.session.ip) {
-    req.session.ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    req.session.ip = security.getIp(req);
   }
   if (!req.session.entryPoint) {
     //http://expressjs.com/en/api.html#req.originalUrl
@@ -191,7 +193,7 @@ app.use(function (req,res,next) {
   if (req.session) {
     const token = req.csrfToken();
     res.locals.csrf = token;
-    res.cookie('XSRF-TOKEN', token, {secure: config.ENV === 'production'});
+    res.cookie('XSRF-TOKEN', token, {secure: isProtectedByCloudflare});
   }
   next();
 });
@@ -227,7 +229,9 @@ function logResponseBody(req, res, next) {
 //https://starlightgroup.atlassian.net/browse/SG-8
 //secure /api/ from access by bots
 //for additional info see function `sessionTamperingProtectionMiddleware` above
-//app.use('/api', security.punishForChangingIP); //TODO write with proper IP in production
+if (isProtectedByCloudflare) {
+  app.use('/api', security.punishForChangingIP);
+}
 app.use('/api', security.punishForChangingUserAgent);
 app.use('/api', security.punishForEnteringSiteFromBadLocation);
 
@@ -244,7 +248,7 @@ app.use(express.static('public'));
 
 app.use(function (err, req, res, next) {
   if (err) {
-      console.log(err)
+    console.error(err); //output error to STDERR proccess stream
     if (err.code === 'EBADCSRFTOKEN') {
       res.status(403).send('Invalid API Key');
     }else {
