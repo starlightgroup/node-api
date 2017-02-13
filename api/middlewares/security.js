@@ -79,23 +79,16 @@ exports.verifyThatSiteIsAccessedFromCloudflare = function (req, res, next) {
     .end('NOT OK');
 };
 
-exports.getIp = function (req) {
+function getIp(req) {
 //https://support.cloudflare.com/hc/en-us/articles/200170986-How-does-CloudFlare-handle-HTTP-Request-headers-
   if (config.ENV !== 'development' && req.headers['cf-connecting-ip']) {
     return req.headers['cf-connecting-ip'];
   }
 //http://stackoverflow.com/a/10849772/1885921
   return req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-};
+}
 
-exports.getIp = function (req) {
-//https://support.cloudflare.com/hc/en-us/articles/200170986-How-does-CloudFlare-handle-HTTP-Request-headers-
-  if (config.ENV !== 'development' && req.headers['cf-connecting-ip']) {
-    return req.headers['cf-connecting-ip'];
-  }
-//http://stackoverflow.com/a/10849772/1885921
-  return req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-};
+exports.getIp = getIp;
 
 exports.punishForEnteringSiteFromBadLocation = function (req, res, next) {
   if (req.session) {
