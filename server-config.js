@@ -15,9 +15,6 @@ if (process.env.REDIS_PORT_6379_TCP_ADDR && process.env.REDIS_PORT_6379_TCP_PORT
 
 module.exports = {
   ENV : process.env.NODE_ENV || 'development',
-//ENV can be production - live server
-//ENV can be staging - testing server
-
   PORT : process.env.PORT || 8000,
   HOST : process.env.HOST || '0.0.0.0',
 

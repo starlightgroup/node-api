@@ -151,7 +151,7 @@ app.use(expressSession({
   resave: true,
   saveUninitialized: true,
   cookie: { //http://stackoverflow.com/a/14570856/1885921
-    secure: config.ENV !== 'development'
+    secure: config.ENV === 'production'
   }
 }));
 //end of SG-5
@@ -166,8 +166,10 @@ app.use(expressSession({
 //https://starlightgroup.atlassian.net/browse/SG-9
 app.use(function sessionTamperingProtectionMiddleware(req, res, next) {
   res.set('X-Powered-By', 'TacticalMastery'); //do not expose, that it is expressJS application
+
+  //http://stackoverflow.com/a/10849772/1885921
   if (!req.session.ip) {
-    req.session.ip = security.getIp(req);
+    req.session.ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   }
   if (!req.session.entryPoint) {
     //http://expressjs.com/en/api.html#req.originalUrl
@@ -189,7 +191,7 @@ app.use(function (req,res,next) {
   if (req.session) {
     const token = req.csrfToken();
     res.locals.csrf = token;
-    res.cookie('XSRF-TOKEN', token, {secure: config.ENV !== 'development'});
+    res.cookie('XSRF-TOKEN', token, {secure: config.ENV === 'production'});
   }
   next();
 });
@@ -225,7 +227,7 @@ function logResponseBody(req, res, next) {
 //https://starlightgroup.atlassian.net/browse/SG-8
 //secure /api/ from access by bots
 //for additional info see function `sessionTamperingProtectionMiddleware` above
-//app.use('/api', security.punishForChangingIP); //TODO - not carefully tested yet - Anatolij
+//app.use('/api', security.punishForChangingIP); //TODO write with proper IP in production
 app.use('/api', security.punishForChangingUserAgent);
 app.use('/api', security.punishForEnteringSiteFromBadLocation);
 
@@ -242,10 +244,10 @@ app.use(express.static('public'));
 
 app.use(function (err, req, res, next) {
   if (err) {
+      console.log(err)
     if (err.code === 'EBADCSRFTOKEN') {
       res.status(403).send('Invalid API Key');
     }else {
-      console.log(err);
       if (typeof err.status != "undefined")   res.status(err.status);
       if(res.error){
         res.error(err.message || err);
