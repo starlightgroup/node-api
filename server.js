@@ -1,7 +1,7 @@
-[6~'use strict';
+'use strict';
 require('@risingstack/trace');
 import express from 'express';
-import fs from 'fs';
+
 import logger from './api/common/log';
 import bodyParser from 'body-parser';
 import config from './server-config';
@@ -17,11 +17,10 @@ import csurf from 'csurf'; //add CSRF protection https://www.npmjs.com/package/c
 import redis from './config/redis.js'; //load redis client
 
 import http from 'http';
-import forceSSL from 'express-force-ssl';
+
 import helmet from 'helmet';
 import hpp from 'hpp';
 import csp from 'helmet-csp';
-import raven from 'raven';
 
 import {routes} from './config/routes/v2';
 
@@ -31,30 +30,59 @@ import security from './api/middlewares/security.js';
 
 const app = express();
 console.log("Currently Running On : " , config.ENV);
+const isProtectedByCloudflare = ['production','staging'].indexOf(config.ENV) !== -1;
+
+
+//verify that site is requested from Cloudflare
+//all other sources will get error
+//https://starlightgroup.atlassian.net/projects/SG/issues/SG-35
+if (isProtectedByCloudflare){
+  // app.use(security.verifyThatSiteIsAccessedFromCloudflare);
+  //TODO
+  //if we use this middleware, it will give `500 - NOT OK` on dev server for reasons i do not know yet
+  //but it dissalows others to work, so i comment it
+  // -Anatolij
+}
+
+
 
 //hemlet headers - do not remove
 app.use(helmet());
 app.use(helmet.referrerPolicy());
 app.use(helmet.frameguard({ action: 'deny' }));
-//*/
+/*/
 //under construction
 app.use(csp({
+  // some examples
+  // 
   // Specify directives as normal.
   directives: {
-    defaultSrc: ["'self'"],
+    defaultSrc: ["'self'",'cdn.jsdelivr.net','*.segment.com','segment.com','*.wistia.com', '*.akamaihd.net', 'blob:'],
     scriptSrc: [
       "'self'",
-//      "'unsafe-inline'", they say, it can be dangerous
+      "'unsafe-inline'", //they say, it can be dangerous
       'cdn.jsdelivr.net',
       'cdn.rawgit.com',
-      'fast.wistia.com'
+      '*.wistia.com',
+      '*.litix.io'
+      // "'sha256-LC866cQ9tlE73BIp/WFYbgTYkS859vx0Hfk5RBVENLo='"
     ],
-    styleSrc: ["'self'",'cdn.jsdelivr.net','fonts.googleapis.com'],
-    fontSrc: ["'self'"],
-    imgSrc: ["'self'"],
+    styleSrc: [
+      "'self'",
+      'cdn.jsdelivr.net',
+      'fonts.googleapis.com',
+      '*.segment.com',
+      "'unsafe-inline'"
+      // "'sha256-6EANf3q7TA3PzDpgLK8msCpC3+5Oq9al9X2vFTn/4Zo='",
+      // "'sha256-7YxZjqgD/pE+dM1CMFFeuqfzrw5kL6AzVXgC130wbtc='",
+      // "'sha256-68t8GdqcvIIBWHbcG8ZlsUUhN/8isFuMo7CI53+xcSM='"
+      ],
+    fontSrc: ["'self'",'fonts.gstatic.com', 'cdn.jsdelivr.net', 'data:'],
+    imgSrc: ["'self'", 'data:', '*.akamaihd.net','*.wistia.com'],
     sandbox: ['allow-forms', 'allow-scripts'],
     reportUri: 'https://a434819b5a5f4bfeeaa5d47c8af8ac87.report-uri.io/r/default/csp/reportOnly', //https://report-uri.io/account/setup/
-    objectSrc: ["'none'"],
+    // objectSrc: ["'none'"],
+    mediaSrc: ['data:'],
     upgradeInsecureRequests: true
   },
 
@@ -79,7 +107,7 @@ app.use(csp({
   // This defaults to `true`.
   browserSniff: true
 }));
-//*/
+*/
 app.use(helmet.hpkp({
   maxAge: 2592000, //30 days
   sha256s: [
@@ -118,6 +146,9 @@ app.use(expressContentLength.validateMax({max: MAX_CONTENT_LENGTH_ACCEPTED, stat
 //setup redis powered sessions
 //https://github.com/vodolaz095/hunt/blob/master/lib/http/expressApp.js#L236-L244
 const RedisSessionStore = connectRedis(expressSession);
+if(isProtectedByCloudflare){
+  app.enable('trust proxy'); // http://expressjs.com/en/4x/api.html#trust.proxy.options.table
+}
 app.use(cookieParser(config.secret));
 app.use(expressSession({
   key: 'PHPSESSID', //LOL, let they waste some time hacking this as PHP application, at least it will be detected by Cloudfare :-)
@@ -131,7 +162,7 @@ app.use(expressSession({
   resave: true,
   saveUninitialized: true,
   cookie: { //http://stackoverflow.com/a/14570856/1885921
-    secure: config.ENV !== 'development'
+     secure: isProtectedByCloudflare //https://github.com/expressjs/session#cookiesecure
   }
 }));
 //end of SG-5
@@ -149,7 +180,7 @@ app.use(function sessionTamperingProtectionMiddleware(req, res, next) {
 
   //http://stackoverflow.com/a/10849772/1885921
   if (!req.session.ip) {
-    req.session.ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    req.session.ip = security.getIp(req);
   }
   if (!req.session.entryPoint) {
     //http://expressjs.com/en/api.html#req.originalUrl
@@ -207,9 +238,12 @@ function logResponseBody(req, res, next) {
 //https://starlightgroup.atlassian.net/browse/SG-8
 //secure /api/ from access by bots
 //for additional info see function `sessionTamperingProtectionMiddleware` above
-//app.use('/api', security.punishForChangingIP); //TODO write with proper IP in production
-//app.use('/api', security.punishForChangingUserAgent);
-//app.use('/api', security.punishForEnteringSiteFromBadLocation);
+// if (isProtectedByCloudflare) {
+//   app.use('/api', security.punishForChangingIP);
+// }
+// app.use('/api', security.punishForChangingUserAgent);
+// app.use('/api', security.punishForEnteringSiteFromBadLocation);
+
 
 
 // route with appropriate version prefix
@@ -222,14 +256,12 @@ Object.keys(routes).forEach(r => {
 
 app.use(express.static('public'));
 
-// app.use(raven.middleware.express.errorHandler('https://547e29c8a3854f969ff5912c76f34ef0:62c29411c70e46df81438b09d05526b0@sentry.io/106191'));
-
 app.use(function (err, req, res, next) {
   if (err) {
+    console.error(err); //output error to STDERR proccess stream
     if (err.code === 'EBADCSRFTOKEN') {
       res.status(403).send('Invalid API Key');
     }else {
-      console.log(err);
       if (typeof err.status != "undefined")   res.status(err.status);
       if(res.error){
         res.error(err.message || err);
