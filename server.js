@@ -171,7 +171,7 @@ app.use(function sessionTamperingProtectionMiddleware(req, res, next) {
 
   //http://stackoverflow.com/a/10849772/1885921
   if (!req.session.ip) {
-    req.session.ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    req.session.ip = security.getIp(req);
   }
   if (!req.session.entryPoint) {
     //http://expressjs.com/en/api.html#req.originalUrl
@@ -229,7 +229,7 @@ function logResponseBody(req, res, next) {
 //https://starlightgroup.atlassian.net/browse/SG-8
 //secure /api/ from access by bots
 //for additional info see function `sessionTamperingProtectionMiddleware` above
-if(isProtectedByCloudflare){
+if (isProtectedByCloudflare) {
   app.use('/api', security.punishForChangingIP);
 }
 app.use('/api', security.punishForChangingUserAgent);
