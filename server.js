@@ -262,7 +262,6 @@ app.use(function (err, req, res, next) {
     if (err.code === 'EBADCSRFTOKEN') {
       res.status(403).send('Invalid API Key');
     }else {
-      console.log(err);
       if (typeof err.status != "undefined")   res.status(err.status);
       if(res.error){
         res.error(err.message || err);
