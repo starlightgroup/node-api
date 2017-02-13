@@ -162,16 +162,16 @@ app.use(function sessionTamperingProtectionMiddleware(req, res, next) {
 });
 
 
-app.use(csurf({ cookie: false }));
+//app.use(csurf({ cookie: false }));
 
 //CSRF protection middleware with cookies
 //provide CSRF token in Anatolij's way - it works with angular 1.x from the box
 //https://starlightgroup.atlassian.net/browse/SG-14
 app.use(function (req,res,next) {
   if (req.session) {
-    const token = req.csrfToken();
-    res.locals.csrf = token;
-    res.cookie('XSRF-TOKEN', token, {secure: config.ENV !== 'development'});
+//    const token = req.csrfToken();
+//    res.locals.csrf = token;
+//    res.cookie('XSRF-TOKEN', token, {secure: config.ENV !== 'development'});
   }
   next();
 });
@@ -208,8 +208,8 @@ function logResponseBody(req, res, next) {
 //secure /api/ from access by bots
 //for additional info see function `sessionTamperingProtectionMiddleware` above
 //app.use('/api', security.punishForChangingIP); //TODO write with proper IP in production
-app.use('/api', security.punishForChangingUserAgent);
-app.use('/api', security.punishForEnteringSiteFromBadLocation);
+//app.use('/api', security.punishForChangingUserAgent);
+//app.use('/api', security.punishForEnteringSiteFromBadLocation);
 
 
 // route with appropriate version prefix
