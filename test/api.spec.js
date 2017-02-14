@@ -403,12 +403,44 @@ describe('web application', function () {
   it('protects from bot who entered the site using wrong entry point');
 
 
-//TODO for missing tests - i have no idea what it have to return --Anatolij
+//https://starlightgroup.atlassian.net/browse/SG-80
+// Only check API call
   describe('/api/v2/get-lead', function () {
-    it('has something usefull on GET /api/v2/get-lead/:id');
+    it('has 200 on GET on /api/v2/get-lead/:id', function (done) {
+      this.timeout(3000);
+    supertest(app)
+      .get('/api/v2/get-lead/NOT_ORDER_ID')
+      .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
+      .expect(200, function (error, res) {
+        if (error) {
+          return done(error);
+        }
+        res.body.message.should.exist;
+        if (res.body.success == false) {
+          res.body.error.should.exist;
+        }
+        return done();
+      });
+    });
   });
-  describe('/api/v2/get-lead', function () {
-    it('has something usefull on GET /api/v2//get-trans/:id');
+
+  describe('/api/v2/get-trans', function () {
+    it('has 200 on GET /api/v2/get-trans/:id', function (done) {
+      this.timeout(3000);
+    supertest(app)
+      .get('/api/v2/get-trans/NOT_ORDER_ID')
+      .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
+      .expect(200, function (error, res) {
+        if (error) {
+          return done(error);
+        }
+        res.body.message.should.exist;
+        if (res.body.success == false) {
+          res.body.error.should.exist;
+        }
+        return done();
+      });
+    });
   });
 
   describe('/api/v2/create-lead', function () {
