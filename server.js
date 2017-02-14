@@ -72,7 +72,6 @@ app.use(csp({
       'cdn.segment.com/analytics.js',
       'cdn.segment.com/analytics.js/v1/7FMBWsjMCbyWvbx4UuGCovr1SYyokQYd',
       'cdn.segment.com/analytics.js/v1/7FMBWsjMCbyWvbx4UuGCovr1SYyokQYd/analytics.min.js',
-      'cdn.segment.com/analytics.js/v1/7FMBWsjMCbyWvbx4UuGCovr1SYyokQYd/analytics.min.js',
       '*.akamaihd.net',
       'blob:'
     ],
