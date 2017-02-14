@@ -71,6 +71,8 @@ app.use(csp({
       'cdn.segment.com/analytics.js/v1/7FMBWsjMCbyWvbx4UuGCovr1SYyokQYd',
       'cdn.segment.com/analytics.js/v1/7FMBWsjMCbyWvbx4UuGCovr1SYyokQYd/analytics.min.js',
       '*.akamaihd.net',
+      'api.segment.io',
+      'data:text/',
       'blob:'
     ],
     scriptSrc: [
@@ -106,7 +108,14 @@ app.use(csp({
       // "'sha256-68t8GdqcvIIBWHbcG8ZlsUUhN/8isFuMo7CI53+xcSM='"
       ],
     fontSrc: ["'self'",'fonts.gstatic.com', 'cdn.jsdelivr.net', 'data:'],
-    imgSrc: ["'self'", 'data:', '*.akamaihd.net','*.wistia.com'],
+    imgSrc: ["'self'",
+      'data:',
+      '*.akamaihd.net',
+      '*.wistia.com',
+      'www.google-analytics.com',
+      'stats.g.doubleclick.net',
+      'www.google.com',
+    ],
     sandbox: ['allow-forms', 'allow-scripts'],
     reportUri: 'https://a434819b5a5f4bfeeaa5d47c8af8ac87.report-uri.io/r/default/csp/reportOnly', //https://report-uri.io/account/setup/
     // objectSrc: ["'none'"],
