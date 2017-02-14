@@ -63,8 +63,6 @@ app.use(csp({
   directives: {
     defaultSrc: [
       "'self'",
-      "'unsafe-inline'", //they say, it can be dangerous
-      "'unsafe-eval'", //to make vistia video work
       'cdn.jsdelivr.net',
       '*.segment.com',
       'segment.com',
