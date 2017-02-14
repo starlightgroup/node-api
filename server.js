@@ -51,7 +51,7 @@ if (isProtectedByCloudflare){
 app.use(helmet());
 app.use(helmet.referrerPolicy());
 app.use(helmet.frameguard({ action: 'deny' }));
-/*/
+
 //under construction
 app.use(csp({
   // some examples
@@ -108,7 +108,7 @@ app.use(csp({
   // This defaults to `true`.
   browserSniff: true
 }));
-*/
+
 app.use(helmet.hpkp({
   maxAge: 2592000, //30 days
   sha256s: [
