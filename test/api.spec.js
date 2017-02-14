@@ -478,6 +478,31 @@ describe('web application', function () {
         })
         .expect(403, 'Invalid API Key', done);
     });
+
+    it('has 200 on POST /api/v2/create-lead', function (done) {
+      this.timeout(3000);
+      supertest(app)
+        .post('/api/v2/create-lead')
+        .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
+        .send({
+          firstName: 'test',
+          phoneNumber: '111-111-1111',
+          emailAddress: 'test@test.com',
+          _csrf: csrfToken
+        })
+        .expect(200, function (error, res) {
+          if (error) {
+            return done(error);
+          }
+          if (res.body.success) {
+            res.body.orderId.should.exist;
+          } else {
+            res.body.error.should.exist;
+          }
+          return done();
+        });
+    });
+
   });
   describe('/api/v2/create-order', function () {
     it('has something usefull on POST /api/v2/create-order');
