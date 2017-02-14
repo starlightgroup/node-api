@@ -1,7 +1,7 @@
 'use strict';
 require('@risingstack/trace');
 
-import path from 'path'
+import path from 'path';
 
 import express from 'express';
 
