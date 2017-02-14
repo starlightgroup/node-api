@@ -22,6 +22,7 @@ import helmet from 'helmet';
 import hpp from 'hpp';
 import csp from 'helmet-csp';
 
+
 import {routes} from './config/routes/v2';
 
 //https://starlightgroup.atlassian.net/browse/SG-8
@@ -50,11 +51,11 @@ if (isProtectedByCloudflare){
 app.use(helmet());
 app.use(helmet.referrerPolicy());
 app.use(helmet.frameguard({ action: 'deny' }));
-/*/
+
 //under construction
 app.use(csp({
   // some examples
-  // 
+  //
   // Specify directives as normal.
   directives: {
     defaultSrc: ["'self'",'cdn.jsdelivr.net','*.segment.com','segment.com','*.wistia.com', '*.akamaihd.net', 'blob:'],
@@ -107,7 +108,7 @@ app.use(csp({
   // This defaults to `true`.
   browserSniff: true
 }));
-*/
+
 app.use(helmet.hpkp({
   maxAge: 2592000, //30 days
   sha256s: [
@@ -270,19 +271,6 @@ app.use(function (err, req, res, next) {
     }
   }
 });
-
-// var https_port = (process.env.HTTPS_PORT || 4443);
-
-// var options = {
-//   //new location of evssl certs
-//   cert: fs.readFileSync('/etc/nginx/ssl/tacticalmastery_cf.crt'),
-//   key: fs.readFileSync('/etc/nginx/ssl/tacticalmastery_cf.key'),
-//   requestCert: true
-// };
-
-// https.createServer(options,app).listen(https_port);
-// console.log("HTTPS Server Started at port : " + https_port);
-
 
 if(!module.parent) {
   http
