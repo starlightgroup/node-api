@@ -416,9 +416,8 @@ describe('web application', function () {
           return done(error);
         }
         if (res.body.success) {
-          res.body.data.should.exist
-        }
-        else {
+          res.body.data.should.exist;
+        } else {
           res.body.error.should.exist;
         }
         return done();
@@ -437,9 +436,8 @@ describe('web application', function () {
           return done(error);
         }
         if (res.body.success) {
-          res.body.data.should.exist
-        }
-        else {
+          res.body.data.should.exist;
+        } else {
           res.body.error.should.exist;
         }
         return done();
