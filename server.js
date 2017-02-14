@@ -107,7 +107,12 @@ app.use(csp({
       // "'sha256-7YxZjqgD/pE+dM1CMFFeuqfzrw5kL6AzVXgC130wbtc='",
       // "'sha256-68t8GdqcvIIBWHbcG8ZlsUUhN/8isFuMo7CI53+xcSM='"
       ],
-    fontSrc: ["'self'",'fonts.gstatic.com', 'cdn.jsdelivr.net', 'data:'],
+    fontSrc: ["'self'",
+      'fonts.gstatic.com',
+      'cdn.jsdelivr.net',
+      'fast.wistia.com/fonts/WistiaOpenSansSemiBold.woff',
+      'data:'
+    ],
     imgSrc: ["'self'",
       'data:',
       '*.akamaihd.net',
