@@ -115,7 +115,7 @@ app.use(csp({
   // Set to true if you only want browsers to report errors, not block them.
   // You may also set this to a function(req, res) in order to decide dynamically
   // whether to use reportOnly mode, e.g., to allow for a dynamic kill switch.
-  reportOnly: false,
+  reportOnly: true,
 
   // Set to true if you want to blindly set all headers: Content-Security-Policy,
   // X-WebKit-CSP, and X-Content-Security-Policy.
