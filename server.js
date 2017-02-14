@@ -72,7 +72,7 @@ app.use(csp({
       'cdn.segment.com/analytics.js/v1/7FMBWsjMCbyWvbx4UuGCovr1SYyokQYd/analytics.min.js',
       '*.akamaihd.net',
       'api.segment.io',
-      'data:text/',
+      'data:',
       'blob:'
     ],
     scriptSrc: [
@@ -120,6 +120,7 @@ app.use(csp({
       'www.google-analytics.com',
       'stats.g.doubleclick.net',
       'www.google.com',
+      'www.google.ru'
     ],
     sandbox: ['allow-forms', 'allow-scripts'],
     reportUri: 'https://a434819b5a5f4bfeeaa5d47c8af8ac87.report-uri.io/r/default/csp/reportOnly', //https://report-uri.io/account/setup/
