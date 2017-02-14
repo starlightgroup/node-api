@@ -409,14 +409,16 @@ describe('web application', function () {
     it('has 200 on GET on /api/v2/get-lead/:id', function (done) {
       this.timeout(3000);
     supertest(app)
-      .get('/api/v2/get-lead/NOT_ORDER_ID')
+      .get('/api/v2/get-lead/25B18557B3')
       .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
       .expect(200, function (error, res) {
         if (error) {
           return done(error);
         }
-        res.body.message.should.exist;
-        if (res.body.success == false) {
+        if (res.body.success) {
+          res.body.data.should.exist
+        }
+        else {
           res.body.error.should.exist;
         }
         return done();
@@ -428,14 +430,16 @@ describe('web application', function () {
     it('has 200 on GET /api/v2/get-trans/:id', function (done) {
       this.timeout(3000);
     supertest(app)
-      .get('/api/v2/get-trans/NOT_ORDER_ID')
+      .get('/api/v2/get-trans/25B18557B3')
       .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
       .expect(200, function (error, res) {
         if (error) {
           return done(error);
         }
-        res.body.message.should.exist;
-        if (res.body.success == false) {
+        if (res.body.success) {
+          res.body.data.should.exist
+        }
+        else {
           res.body.error.should.exist;
         }
         return done();
