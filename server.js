@@ -64,6 +64,8 @@ app.use(csp({
       "'unsafe-inline'", //they say, it can be dangerous
       'cdn.jsdelivr.net',
       'cdn.rawgit.com',
+      'https://fast.wistia.com/assets/external/E-v1.js',
+      'https://cdn.segment.com/analytics.js/v1/*',
       '*.wistia.com',
       '*.litix.io'
       // "'sha256-LC866cQ9tlE73BIp/WFYbgTYkS859vx0Hfk5RBVENLo='"
