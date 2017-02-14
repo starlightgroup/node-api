@@ -22,6 +22,7 @@ import helmet from 'helmet';
 import hpp from 'hpp';
 import csp from 'helmet-csp';
 
+
 import {routes} from './config/routes/v2';
 
 //https://starlightgroup.atlassian.net/browse/SG-8
@@ -30,16 +31,31 @@ import security from './api/middlewares/security.js';
 
 const app = express();
 console.log("Currently Running On : " , config.ENV);
+const isProtectedByCloudflare = ['production','staging'].indexOf(config.ENV) !== -1;
+
+
+//verify that site is requested from Cloudflare
+//all other sources will get error
+//https://starlightgroup.atlassian.net/projects/SG/issues/SG-35
+if (isProtectedByCloudflare){
+  // app.use(security.verifyThatSiteIsAccessedFromCloudflare);
+  //TODO
+  //if we use this middleware, it will give `500 - NOT OK` on dev server for reasons i do not know yet
+  //but it dissalows others to work, so i comment it
+  // -Anatolij
+}
+
+
 
 //hemlet headers - do not remove
 app.use(helmet());
 app.use(helmet.referrerPolicy());
 app.use(helmet.frameguard({ action: 'deny' }));
-/*/
+
 //under construction
 app.use(csp({
   // some examples
-  // 
+  //
   // Specify directives as normal.
   directives: {
     defaultSrc: ["'self'",'cdn.jsdelivr.net','*.segment.com','segment.com','*.wistia.com', '*.akamaihd.net', 'blob:'],
@@ -92,7 +108,7 @@ app.use(csp({
   // This defaults to `true`.
   browserSniff: true
 }));
-*/
+
 app.use(helmet.hpkp({
   maxAge: 2592000, //30 days
   sha256s: [
@@ -131,6 +147,9 @@ app.use(expressContentLength.validateMax({max: MAX_CONTENT_LENGTH_ACCEPTED, stat
 //setup redis powered sessions
 //https://github.com/vodolaz095/hunt/blob/master/lib/http/expressApp.js#L236-L244
 const RedisSessionStore = connectRedis(expressSession);
+if(isProtectedByCloudflare){
+  app.enable('trust proxy'); // http://expressjs.com/en/4x/api.html#trust.proxy.options.table
+}
 app.use(cookieParser(config.secret));
 app.use(expressSession({
   key: 'PHPSESSID', //LOL, let they waste some time hacking this as PHP application, at least it will be detected by Cloudfare :-)
@@ -144,7 +163,7 @@ app.use(expressSession({
   resave: true,
   saveUninitialized: true,
   cookie: { //http://stackoverflow.com/a/14570856/1885921
-    secure: config.ENV !== 'development'
+     secure: isProtectedByCloudflare //https://github.com/expressjs/session#cookiesecure
   }
 }));
 //end of SG-5
@@ -162,7 +181,7 @@ app.use(function sessionTamperingProtectionMiddleware(req, res, next) {
 
   //http://stackoverflow.com/a/10849772/1885921
   if (!req.session.ip) {
-    req.session.ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    req.session.ip = security.getIp(req);
   }
   if (!req.session.entryPoint) {
     //http://expressjs.com/en/api.html#req.originalUrl
@@ -184,7 +203,7 @@ app.use(function (req,res,next) {
   if (req.session) {
     const token = req.csrfToken();
     res.locals.csrf = token;
-    res.cookie('XSRF-TOKEN', token, {secure: config.ENV !== 'development'});
+    res.cookie('XSRF-TOKEN', token, {secure: isProtectedByCloudflare});
   }
   next();
 });
@@ -220,7 +239,9 @@ function logResponseBody(req, res, next) {
 //https://starlightgroup.atlassian.net/browse/SG-8
 //secure /api/ from access by bots
 //for additional info see function `sessionTamperingProtectionMiddleware` above
-//app.use('/api', security.punishForChangingIP); //TODO write with proper IP in production
+if (isProtectedByCloudflare) {
+  app.use('/api', security.punishForChangingIP);
+}
 app.use('/api', security.punishForChangingUserAgent);
 app.use('/api', security.punishForEnteringSiteFromBadLocation);
 
@@ -237,10 +258,10 @@ app.use(express.static('public'));
 
 app.use(function (err, req, res, next) {
   if (err) {
+    console.error(err); //output error to STDERR proccess stream
     if (err.code === 'EBADCSRFTOKEN') {
       res.status(403).send('Invalid API Key');
     }else {
-      console.log(err);
       if (typeof err.status != "undefined")   res.status(err.status);
       if(res.error){
         res.error(err.message || err);
@@ -250,19 +271,6 @@ app.use(function (err, req, res, next) {
     }
   }
 });
-
-// var https_port = (process.env.HTTPS_PORT || 4443);
-
-// var options = {
-//   //new location of evssl certs
-//   cert: fs.readFileSync('/etc/nginx/ssl/tacticalmastery_cf.crt'),
-//   key: fs.readFileSync('/etc/nginx/ssl/tacticalmastery_cf.key'),
-//   requestCert: true
-// };
-
-// https.createServer(options,app).listen(https_port);
-// console.log("HTTPS Server Started at port : " + https_port);
-
 
 if(!module.parent) {
   http

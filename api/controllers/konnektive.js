@@ -16,7 +16,7 @@ async function addKonnektiveOrder(req, res, next) {
     body.address2 = xss(req.body.address2);
     body.campaignId = xss(req.body.campaignId);
     body.cardMonth = xss(req.body.cardMonth);
-    body.cardNumber = xss(req.body.cardNumber);
+    body.cardNumber = xss(req.body.cardNumber).replace(/\s/g,"");
     body.cardYear = xss(req.body.cardYear);
     body.city = xss(req.body.city);
     body.emailAddress = xss(req.body.emailAddress);
@@ -52,7 +52,6 @@ async function addKonnektiveOrder(req, res, next) {
     //body.lastName = req.body.lastName || 'NA';
     //req.body.cardExpiryDate = `${req.body.month}/${req.body.year}`;
     //delete req.body.productId;
-        
 
     const options = {
         uri: 'https://api.konnektive.com/order/import/',

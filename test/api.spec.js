@@ -40,11 +40,10 @@ describe('web application', function () {
     taintedSessionId,
     taintedCsrfToken;
 
-  it('has 404 on / but we need to start session properly to run tests', function (done) {
+  it('has anything on / but we need to start session properly to run tests', function (done) {
     supertest(app)
       .get('/')
       .expect('X-Powered-By', 'TacticalMastery')
-      .expect(404)
       .end(function (error, res) {
         if (error) {
           return done(error);
@@ -92,6 +91,7 @@ describe('web application', function () {
       .get('/api/v2/ping')
       //      .set('Cookie', [util.format('PHPSESSID=%s', sessionId)]) - no session id - aka first visit!!!
       .expect('X-Powered-By', 'TacticalMastery')
+      .expect('X-PUNISHEDBY', 'BAD LOCATION')
       .expect(403, 'Invalid API Key')
       .end(function (error, res) {
         if (error) {
@@ -149,6 +149,7 @@ describe('web application', function () {
       supertest(app)
         .get('/api/v2/testSession')
         .expect('X-Powered-By', 'TacticalMastery')
+        .expect('X-PUNISHEDBY', 'BAD LOCATION')
         .expect(403, 'Invalid API Key', done);
     });
   });
@@ -209,11 +210,10 @@ describe('web application', function () {
       acCsrfToken,
       acSessionId;
 
-    it('has 404 on / but we need to start session properly to run tests', function (done) {
+    it('has anything on/ but we need to start session properly to run tests', function (done) {
       supertest(app)
         .get('/')
         .expect('X-Powered-By', 'TacticalMastery')
-        .expect(404)
         .end(function (error, res) {
           if (error) {
             return done(error);
@@ -297,7 +297,8 @@ describe('web application', function () {
     it('has 403 on POST /api/v2/add-contact with bad entry point', function (done) {
       supertest(app)
         .post('/api/v2/add-contact')
-        .set('Cookie', [util.format('PHPSESSID=%s', taintedCsrfToken)])
+        .set('Cookie', [util.format('PHPSESSID=%s', taintedSessionId)])
+        .expect('X-PUNISHEDBY', 'BAD LOCATION')
         .send({
           FirstName: 'test_FirstName',
           LastName: 'test_LastName',
@@ -313,11 +314,10 @@ describe('web application', function () {
     let ucSessionId,
       ucCsrfToken;
 
-    it('has 404 on / but we need to start session properly to run tests', function (done) {
+    it('has anything on / but we need to start session properly to run tests', function (done) {
       supertest(app)
         .get('/')
         .expect('X-Powered-By', 'TacticalMastery')
-        .expect(404)
         .end(function (error, res) {
           if (error) {
             return done(error);
@@ -403,12 +403,46 @@ describe('web application', function () {
   it('protects from bot who entered the site using wrong entry point');
 
 
-//TODO for missing tests - i have no idea what it have to return --Anatolij
+//https://starlightgroup.atlassian.net/browse/SG-80
+// Only check API call
   describe('/api/v2/get-lead', function () {
-    it('has something usefull on GET /api/v2/get-lead/:id');
+    it('has 200 on GET on /api/v2/get-lead/:id', function (done) {
+      this.timeout(3000);
+    supertest(app)
+      .get('/api/v2/get-lead/25B18557B3')
+      .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
+      .expect(200, function (error, res) {
+        if (error) {
+          return done(error);
+        }
+        if (res.body.success) {
+          res.body.data.should.exist;
+        } else {
+          res.body.error.should.exist;
+        }
+        return done();
+      });
+    });
   });
-  describe('/api/v2/get-lead', function () {
-    it('has something usefull on GET /api/v2//get-trans/:id');
+
+  describe('/api/v2/get-trans', function () {
+    it('has 200 on GET /api/v2/get-trans/:id', function (done) {
+      this.timeout(3000);
+    supertest(app)
+      .get('/api/v2/get-trans/25B18557B3')
+      .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
+      .expect(200, function (error, res) {
+        if (error) {
+          return done(error);
+        }
+        if (res.body.success) {
+          res.body.data.should.exist;
+        } else {
+          res.body.error.should.exist;
+        }
+        return done();
+      });
+    });
   });
 
   describe('/api/v2/create-lead', function () {
@@ -437,12 +471,38 @@ describe('web application', function () {
       supertest(app)
         .post('/api/v2/create-lead')
         .set('Cookie', [util.format('PHPSESSID=%s', taintedSessionId)])
+        .expect('X-PUNISHEDBY', 'BAD LOCATION')
         .send({
           someSaneData: 'to be entered here',
           _csrf: taintedCsrfToken
         })
         .expect(403, 'Invalid API Key', done);
     });
+
+    it('has 200 on POST /api/v2/create-lead', function (done) {
+      this.timeout(3000);
+      supertest(app)
+        .post('/api/v2/create-lead')
+        .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
+        .send({
+          firstName: 'test',
+          phoneNumber: '111-111-1111',
+          emailAddress: 'test@test.com',
+          _csrf: csrfToken
+        })
+        .expect(200, function (error, res) {
+          if (error) {
+            return done(error);
+          }
+          if (res.body.success) {
+            res.body.orderId.should.exist;
+          } else {
+            res.body.error.should.exist;
+          }
+          return done();
+        });
+    });
+
   });
   describe('/api/v2/create-order', function () {
     it('has something usefull on POST /api/v2/create-order');

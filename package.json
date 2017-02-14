@@ -33,6 +33,7 @@
     "hpp": "^0.2.1",
     "ioredis": "^2.4.0",
     "phone": "^1.0.8",
+    "range_check": "^1.4.0",
     "request-promise": "^4.1.1",
     "snyk": "^1.20.0",
     "through": "^2.3.8",
