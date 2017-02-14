@@ -32,6 +32,8 @@ function extractCookie(res, rgx) {
 
 
 describe('web application', function () {
+  this.timeout(10000); //not everybody have good internet connection, including codeship
+
   let
 //being used in all requests
     sessionId,
