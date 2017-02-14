@@ -460,8 +460,11 @@ describe('web application', function () {
           if (error) {
             return done(error);
           }
-          console.log('/api/v2/create-lead data ',res.body);
-
+          if (res.body.success) {
+            res.body.orderId.should.exist;
+          } else {
+            res.body.error.should.exist;
+          }
           return done();
         });
     });
