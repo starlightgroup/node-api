@@ -61,15 +61,25 @@ app.use(csp({
   //
   // Specify directives as normal.
   directives: {
-    defaultSrc: ["'self'",'cdn.jsdelivr.net','*.segment.com','segment.com','*.wistia.com', '*.akamaihd.net', 'blob:'],
+    defaultSrc: [
+      "'self'",
+      'cdn.jsdelivr.net',
+      '*.segment.com',
+      'segment.com',
+      '*.wistia.com',
+      '*.akamaihd.net',
+      'blob:'
+    ],
     scriptSrc: [
       "'self'",
       "'unsafe-inline'", //they say, it can be dangerous
+      "'unsafe-eval'", //to make vistia video work
       'cdn.jsdelivr.net',
       'cdn.rawgit.com',
-      'fast.wistia.com',
-      'cdn.segment.com',
       '*.wistia.com',
+      'segment.com',
+      '*.segment.com',
+      'cdn.segment.com',
       '*.litix.io'
       // "'sha256-LC866cQ9tlE73BIp/WFYbgTYkS859vx0Hfk5RBVENLo='"
     ],
@@ -78,7 +88,8 @@ app.use(csp({
       'cdn.jsdelivr.net',
       'fonts.googleapis.com',
       '*.segment.com',
-      "'unsafe-inline'"
+      "'unsafe-inline'",
+      "'unsafe-eval'", //to make vistia video work
       // "'sha256-6EANf3q7TA3PzDpgLK8msCpC3+5Oq9al9X2vFTn/4Zo='",
       // "'sha256-7YxZjqgD/pE+dM1CMFFeuqfzrw5kL6AzVXgC130wbtc='",
       // "'sha256-68t8GdqcvIIBWHbcG8ZlsUUhN/8isFuMo7CI53+xcSM='"
