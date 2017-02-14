@@ -1,5 +1,8 @@
 'use strict';
 require('@risingstack/trace');
+
+import path from 'path'
+
 import express from 'express';
 
 import logger from './api/common/log';
@@ -256,7 +259,8 @@ Object.keys(routes).forEach(r => {
   app.use(`/api/${r}`, router);
 });
 
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname,'public')));
+app.use('/tacticalsales/', express.static(path.join(__dirname,'public')));
 
 app.use(function (err, req, res, next) {
   if (err) {
