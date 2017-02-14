@@ -77,6 +77,14 @@ app.use(csp({
       "'self'",
       "'unsafe-inline'", //they say, it can be dangerous
       "'unsafe-eval'", //to make vistia video work
+//this all is loaded by Vistia widget
+      'data:text/',
+      'www.google-analytics.com',
+      'api.segment.io',
+      'cdn.ravenjs.com',
+      'stats.g.doubleclick.net',
+      'www.google.com/ads/ga-audiences',
+//other code
       'cdn.jsdelivr.net',
       'cdn.rawgit.com',
       '*.wistia.com',
