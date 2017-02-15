@@ -6,5 +6,9 @@ app-server:
     - ./public:/src/app/public
   links:
     - redis
+  environment:
+    - NODE_ENV=development
+    - REDIS_AUTH=tlergerbyhormecielkwarsiblevateximethanimpsonaturyotholholonitervusebardebedaphorgebulgibroperymbeam
 redis:
-  image: redis:3.0.7
+  build: ./redis
+

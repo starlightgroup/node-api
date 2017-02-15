@@ -10,3 +10,4 @@ public/
 test/
 Dockerfile
 docker-compose.yml
+redis/
