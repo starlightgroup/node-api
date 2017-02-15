@@ -1,0 +1,14 @@
+app-server:
+  build: .
+  ports:
+    - "8000:8000"
+  volumes:
+    - ./public:/src/app/public
+  links:
+    - redis
+  environment:
+    - NODE_ENV=development
+    - REDIS_AUTH=tlergerbyhormecielkwarsiblevateximethanimpsonaturyotholholonitervusebardebedaphorgebulgibroperymbeam
+redis:
+  build: ./redis
+

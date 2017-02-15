@@ -13,6 +13,14 @@ if (process.env.REDIS_PORT_6379_TCP_ADDR && process.env.REDIS_PORT_6379_TCP_PORT
   redisUrl = util.format('redis://%s:%s/', process.env.REDIS_PORT_6379_TCP_ADDR, process.env.REDIS_PORT_6379_TCP_PORT);
 }
 
+//for secured docker compose setup
+if (process.env.REDIS_PORT_6379_TCP_ADDR && process.env.REDIS_PORT_6379_TCP_PORT && process.env.REDIS_AUTH) {
+  redisUrl = util.format("redis://redis:%s@%s:%s/",
+    process.env.REDIS_AUTH,
+    process.env.REDIS_PORT_6379_TCP_ADDR,
+    process.env.REDIS_PORT_6379_TCP_PORT);
+}
+
 module.exports = {
   ENV : process.env.NODE_ENV || 'development',
 //ENV can be production - live server

@@ -505,7 +505,60 @@ describe('web application', function () {
 
   });
   describe('/api/v2/create-order', function () {
-    it('has something usefull on POST /api/v2/create-order');
+    let createOrderCSRFToken;
+
+    it('has anything on / but we need to start session properly to run tests', function (done) {
+      supertest(app)
+        .get('/')
+        .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
+        .expect('X-Powered-By', 'TacticalMastery')
+        .end(function (error, res) {
+          if (error) {
+            return done(error);
+          }
+          let csrf = extractCookie(res, csrfTokenCookieRegex);
+          if (csrf === false) {
+            return done(new Error('XSRF-TOKEN not set!'));
+          }
+          createOrderCSRFToken = csrf;
+          done();
+        });
+    });
+
+    it('has something usefull on POST /api/v2/create-order', function (done) {
+      supertest(app)
+        .post('/api/v2/create-order')
+        .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
+        .send({
+          address1: 'Lenin\'s street',
+          address2: 'house 10 flat 5',
+          campaignId: '', //blank? strange
+          cardMonth: '4444111144441111',
+          cardNumber: '12',
+          cardYear: '20',
+          city: 'New York',
+          emailAddress: 'testing@mail.ru',
+          firstName: 'testing',
+          lastName: 'testing',
+          orderId: '', //blank?
+          phoneNumber: '222-222-4444',
+          postalCode: '00054',
+          productId: '',
+          state: 'NY',
+          _csrf: createOrderCSRFToken
+        })
+        .expect(200, function (error, res) {
+          if (error) {
+            return done(error);
+          }
+          if (res.body.success) {
+            res.body.orderId.should.exist;
+          } else {
+            res.body.error.should.exist;
+          }
+          return done();
+        });
+    });
     it('has 403 on POST /api/v2/create-order with missing CSRF token', function (done) {
       supertest(app)
         .post('/api/v2/create-order')
