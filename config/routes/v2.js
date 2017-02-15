@@ -1,5 +1,5 @@
 import mailCtrl from '../../api/controllers/mail';
-import smsCtrl from '../../api/controllers/sms';
+// import smsCtrl from '../../api/controllers/sms';
 import leadoutpostCtrl from '../../api/controllers/leadoutpost';
 import konnektiveCtrl from '../../api/controllers/konnektive';
 import testSession from '../../api/controllers/testSession';
@@ -35,7 +35,7 @@ function route(router) {
 //related to https://starlightgroup.atlassian.net/browse/SG-5
 //shows 404 on production
   router.get('/testSession', testSession);
-};
+}
 
 var routes = {v2 : route};
 

@@ -1,11 +1,12 @@
 'use strict';
+/* global __dirname */
+
 require('@risingstack/trace');
 
 import path from 'path';
 
 import express from 'express';
 
-import logger from './api/common/log';
 import bodyParser from 'body-parser';
 import config from './server-config';
 import expressPromiseRouter from 'express-promise-router';
@@ -33,7 +34,7 @@ import {routes} from './config/routes/v2';
 import security from './api/middlewares/security.js';
 
 const app = express();
-console.log("Currently Running On : " , config.ENV);
+console.log('Currently Running On : ' , config.ENV);
 const isProtectedByCloudflare = ['production','staging'].indexOf(config.ENV) !== -1;
 
 
@@ -53,7 +54,7 @@ if (isProtectedByCloudflare){
 //hemlet headers - do not remove
 app.use(helmet());
 app.use(helmet.referrerPolicy());
-app.use(helmet.frameguard({ action: 'deny' }));
+app.use(helmet.frameguard({action: 'deny'}));
 
 //under construction
 app.use(csp({
@@ -62,7 +63,7 @@ app.use(csp({
   // Specify directives as normal.
   directives: {
     defaultSrc: [
-      "'self'",
+      "'self'",// eslint-disable-line quotes
       'cdn.jsdelivr.net',
       '*.segment.com',
       'segment.com',
@@ -76,9 +77,12 @@ app.use(csp({
       'blob:'
     ],
     scriptSrc: [
-      "'self'",
-      "'unsafe-inline'", //they say, it can be dangerous
-      "'unsafe-eval'", //to make vistia video work
+      "'self'", // eslint-disable-line quotes
+      //they say, it can be dangerous
+      //to make vistia video work
+      "'unsafe-inline'",// eslint-disable-line quotes
+      "'unsafe-eval'",// eslint-disable-line quotes
+
 //this all is loaded by Vistia widget
       'data:',
       'www.google-analytics.com',
@@ -97,23 +101,27 @@ app.use(csp({
       // "'sha256-LC866cQ9tlE73BIp/WFYbgTYkS859vx0Hfk5RBVENLo='"
     ],
     styleSrc: [
-      "'self'",
+      "'self'", // eslint-disable-line quotes
       'cdn.jsdelivr.net',
       'fonts.googleapis.com',
       '*.segment.com',
-      "'unsafe-inline'",
-      "'unsafe-eval'", //to make vistia video work
+// to make vistia video work
+      "'unsafe-inline'",// eslint-disable-line quotes
+      "'unsafe-eval'", // eslint-disable-line quotes
+
       // "'sha256-6EANf3q7TA3PzDpgLK8msCpC3+5Oq9al9X2vFTn/4Zo='",
       // "'sha256-7YxZjqgD/pE+dM1CMFFeuqfzrw5kL6AzVXgC130wbtc='",
       // "'sha256-68t8GdqcvIIBWHbcG8ZlsUUhN/8isFuMo7CI53+xcSM='"
-      ],
-    fontSrc: ["'self'",
+    ],
+    fontSrc: [
+      "'self'",// eslint-disable-line quotes
       'fonts.gstatic.com',
       'cdn.jsdelivr.net',
       'fast.wistia.com/fonts/WistiaOpenSansSemiBold.woff',
       'data:'
     ],
-    imgSrc: ["'self'",
+    imgSrc: [
+      "'self'",// eslint-disable-line quotes
       'data:',
       '*.akamaihd.net',
       '*.wistia.com',
@@ -181,7 +189,11 @@ app.use(hpp());
 
 //TODO how do we plan to serve assets using nodejs, if there is 9 kbytes limit on returned data? - Anatolij
 const MAX_CONTENT_LENGTH_ACCEPTED = 9999;
-app.use(expressContentLength.validateMax({max: MAX_CONTENT_LENGTH_ACCEPTED, status: 400, message: "stop max size for the content-length!"})); // max size accepted for the content-length
+app.use(expressContentLength.validateMax({
+  max: MAX_CONTENT_LENGTH_ACCEPTED,
+  status: 400,
+  message: 'stop max size for the content-length!'
+})); // max size accepted for the content-length
 
 
 //https://starlightgroup.atlassian.net/browse/SG-5
@@ -205,7 +217,7 @@ app.use(expressSession({
   resave: true,
   saveUninitialized: true,
   cookie: { //http://stackoverflow.com/a/14570856/1885921
-     secure: isProtectedByCloudflare //https://github.com/expressjs/session#cookiesecure
+    secure: isProtectedByCloudflare //https://github.com/expressjs/session#cookiesecure
   }
 }));
 //end of SG-5
@@ -236,7 +248,7 @@ app.use(function sessionTamperingProtectionMiddleware(req, res, next) {
 });
 
 
-app.use(csurf({ cookie: false }));
+app.use(csurf({cookie: false})); //please, it have to be false, do not touch it --Anatolij
 
 //CSRF protection middleware with cookies
 //provide CSRF token in Anatolij's way - it works with angular 1.x from the box
@@ -251,31 +263,6 @@ app.use(function (req,res,next) {
 });
 //END of SG-14
 
-
-//This function IS NEVER used -- Anatolij
-function logResponseBody(req, res, next) {
-  const oldWrite = res.write,
-    oldEnd = res.end;
-
-  const chunks = [];
-
-  res.write = function (chunk) {
-    chunks.push(new Buffer(chunk));
-
-    oldWrite.apply(res, arguments);
-  };
-
-  res.end = function (chunk) {
-    if (chunk)
-      chunks.push(new Buffer(chunk));
-
-    const body = Buffer.concat(chunks).toString('utf8');
-    logger.info(body);
-
-    oldEnd.apply(res, arguments);
-  };
-  next();
-}
 
 
 //https://starlightgroup.atlassian.net/browse/SG-8
@@ -299,17 +286,18 @@ Object.keys(routes).forEach(r => {
 app.use(express.static(path.join(__dirname,'public')));
 app.use('/tacticalsales/', express.static(path.join(__dirname,'public')));
 
+// eslint-disable-next-line no-unused-vars
 app.use(function (err, req, res, next) {
   if (err) {
     console.error(err); //output error to STDERR proccess stream
     if (err.code === 'EBADCSRFTOKEN') {
       res.status(403).send('Invalid API Key');
-    }else {
-      if (typeof err.status != "undefined")   res.status(err.status);
-      if(res.error){
+    } else {
+      if (typeof err.status != 'undefined') res.status(err.status);
+      if (res.error) {
         res.error(err.message || err);
-      }else {
-          res.status(err.code || 500 ).send(err.message || 'Server error');
+      } else {
+        res.status(err.code || 500).send(err.message || 'Server error');
       }
     }
   }
@@ -322,7 +310,7 @@ if(!module.parent) {
       if(error){
         throw error;
       }
-      console.log("HTTP Server Started at %s:%s", config.HOST, config.PORT);
+      console.log('HTTP Server Started at %s:%s', config.HOST, config.PORT);
     });
 }
 
