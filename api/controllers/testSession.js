@@ -7,7 +7,7 @@ import config from '../../server-config';
 // related to performing unit tests for
 // https://starlightgroup.atlassian.net/browse/SG-5
 
-const testSession = function (req, res, next) {
+const testSession = function (req, res) {
   if (config.ENV === 'production') {
     res.sendStatus(404);
   } else {

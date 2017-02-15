@@ -1,9 +1,9 @@
 'use strict';
+/* global it, describe */
+
 import supertest from 'supertest';
 import app from '../server.js';
 import util from 'util';
-import {expect} from 'chai';
-import {assert} from 'chai';
 
 require('should');
 
@@ -32,6 +32,7 @@ function extractCookie(res, rgx) {
 
 
 describe('web application', function () {
+// eslint-disable-next-line
   this.timeout(10000); //not everybody have good internet connection, including codeship
 
   let
@@ -409,41 +410,39 @@ describe('web application', function () {
 // Only check API call
   describe('/api/v2/get-lead', function () {
     it('has 200 on GET on /api/v2/get-lead/:id', function (done) {
-      this.timeout(3000);
-    supertest(app)
-      .get('/api/v2/get-lead/25B18557B3')
-      .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
-      .expect(200, function (error, res) {
-        if (error) {
-          return done(error);
-        }
-        if (res.body.success) {
-          res.body.data.should.exist;
-        } else {
-          res.body.error.should.exist;
-        }
-        return done();
-      });
+      supertest(app)
+        .get('/api/v2/get-lead/25B18557B3')
+        .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
+        .expect(200, function (error, res) {
+          if (error) {
+            return done(error);
+          }
+          if (res.body.success) {
+            res.body.data.should.exist;
+          } else {
+            res.body.error.should.exist;
+          }
+          return done();
+        });
     });
   });
 
   describe('/api/v2/get-trans', function () {
     it('has 200 on GET /api/v2/get-trans/:id', function (done) {
-      this.timeout(3000);
-    supertest(app)
-      .get('/api/v2/get-trans/25B18557B3')
-      .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
-      .expect(200, function (error, res) {
-        if (error) {
-          return done(error);
-        }
-        if (res.body.success) {
-          res.body.data.should.exist;
-        } else {
-          res.body.error.should.exist;
-        }
-        return done();
-      });
+      supertest(app)
+        .get('/api/v2/get-trans/25B18557B3')
+        .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
+        .expect(200, function (error, res) {
+          if (error) {
+            return done(error);
+          }
+          if (res.body.success) {
+            res.body.data.should.exist;
+          } else {
+            res.body.error.should.exist;
+          }
+          return done();
+        });
     });
   });
 
@@ -482,7 +481,6 @@ describe('web application', function () {
     });
 
     it('has 200 on POST /api/v2/create-lead', function (done) {
-      this.timeout(3000);
       supertest(app)
         .post('/api/v2/create-lead')
         .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
