@@ -1,0 +1,10 @@
+app-server:
+  build: .
+  ports:
+    - "8000:8000"
+  volumes:
+    - ./public:/src/app/public
+  links:
+    - redis
+redis:
+  image: redis:3.0.7

@@ -9,3 +9,4 @@ npm-debug.log*
 public/
 test/
 Dockerfile
+docker-compose.yml
