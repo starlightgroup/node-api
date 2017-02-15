@@ -18,7 +18,7 @@
   },
   "main": "dist/index.js",
   "dependencies": {
-    "@risingstack/trace": "^3.1.0",
+    "@risingstack/trace": "^3.4.0",
     "autopilot-api": "^2.0.0",
     "body-parser": "^1.15.2",
     "connect-redis": "^3.2.0",
