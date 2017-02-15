@@ -15,7 +15,7 @@ if (process.env.REDIS_PORT_6379_TCP_ADDR && process.env.REDIS_PORT_6379_TCP_PORT
 
 //for secured docker compose setup
 if (process.env.REDIS_PORT_6379_TCP_ADDR && process.env.REDIS_PORT_6379_TCP_PORT && process.env.REDIS_AUTH) {
-  redisUrl = util.format("redis://redis:%s@%s:%s/",
+  redisUrl = util.format('redis://redis:%s@%s:%s/',
     process.env.REDIS_AUTH,
     process.env.REDIS_PORT_6379_TCP_ADDR,
     process.env.REDIS_PORT_6379_TCP_PORT);

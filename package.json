@@ -14,7 +14,7 @@
     "snyk_test": "snyk test",
     "test": "nyc --require babel-core/register mocha ./test/**/*.spec.js",
     "test-unit": "NODE_ENV=test _mocha -R spec --compilers js:babel-core/register --recursive",
-    "lint": "eslint *.js api/**/*.js config/**/*.js test/**/*.js"
+    "lint": "eslint *.js api/**/*.js config/redis.js config/**/*.js test/**/*.js"
   },
   "main": "dist/index.js",
   "dependencies": {
