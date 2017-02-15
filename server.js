@@ -236,19 +236,19 @@ app.use(function sessionTamperingProtectionMiddleware(req, res, next) {
 });
 
 
-app.use(csurf({ cookie: false }));
+//app.use(csurf({ cookie: false }));
 
 //CSRF protection middleware with cookies
 //provide CSRF token in Anatolij's way - it works with angular 1.x from the box
 //https://starlightgroup.atlassian.net/browse/SG-14
-app.use(function (req,res,next) {
-  if (req.session) {
-    const token = req.csrfToken();
-    res.locals.csrf = token;
-    res.cookie('XSRF-TOKEN', token, {secure: isProtectedByCloudflare});
-  }
-  next();
-});
+//app.use(function (req,res,next) {
+//  if (req.session) {
+//    const token = req.csrfToken();
+//    res.locals.csrf = token;
+//    res.cookie('XSRF-TOKEN', token, {secure: config.ENV !== 'development'});
+//  }
+//  next();
+//});
 //END of SG-14
 
 
@@ -281,11 +281,12 @@ function logResponseBody(req, res, next) {
 //https://starlightgroup.atlassian.net/browse/SG-8
 //secure /api/ from access by bots
 //for additional info see function `sessionTamperingProtectionMiddleware` above
-if (isProtectedByCloudflare) {
-  app.use('/api', security.punishForChangingIP);
-}
-app.use('/api', security.punishForChangingUserAgent);
-app.use('/api', security.punishForEnteringSiteFromBadLocation);
+// if (isProtectedByCloudflare) {
+//   app.use('/api', security.punishForChangingIP);
+// }
+// app.use('/api', security.punishForChangingUserAgent);
+// app.use('/api', security.punishForEnteringSiteFromBadLocation);
+
 
 
 // route with appropriate version prefix
