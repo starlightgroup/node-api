@@ -1,9 +1,9 @@
 'use strict';
+/* global it, describe, process */
+
 import supertest from 'supertest';
-import app from '../server.js';
+import app from '../app.js';
 import util from 'util';
-import {expect} from 'chai';
-import {assert} from 'chai';
 
 require('should');
 
@@ -30,8 +30,10 @@ function extractCookie(res, rgx) {
   return false;
 }
 
+console.log('NodeJS version being used - %s for %s', process.version, process.arch);
 
 describe('web application', function () {
+// eslint-disable-next-line
   this.timeout(10000); //not everybody have good internet connection, including codeship
 
   let
@@ -409,41 +411,39 @@ describe('web application', function () {
 // Only check API call
   describe('/api/v2/get-lead', function () {
     it('has 200 on GET on /api/v2/get-lead/:id', function (done) {
-      this.timeout(3000);
-    supertest(app)
-      .get('/api/v2/get-lead/25B18557B3')
-      .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
-      .expect(200, function (error, res) {
-        if (error) {
-          return done(error);
-        }
-        if (res.body.success) {
-          res.body.data.should.exist;
-        } else {
-          res.body.error.should.exist;
-        }
-        return done();
-      });
+      supertest(app)
+        .get('/api/v2/get-lead/25B18557B3')
+        .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
+        .expect(200, function (error, res) {
+          if (error) {
+            return done(error);
+          }
+          if (res.body.success) {
+            res.body.data.should.exist;
+          } else {
+            res.body.error.should.exist;
+          }
+          return done();
+        });
     });
   });
 
   describe('/api/v2/get-trans', function () {
     it('has 200 on GET /api/v2/get-trans/:id', function (done) {
-      this.timeout(3000);
-    supertest(app)
-      .get('/api/v2/get-trans/25B18557B3')
-      .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
-      .expect(200, function (error, res) {
-        if (error) {
-          return done(error);
-        }
-        if (res.body.success) {
-          res.body.data.should.exist;
-        } else {
-          res.body.error.should.exist;
-        }
-        return done();
-      });
+      supertest(app)
+        .get('/api/v2/get-trans/25B18557B3')
+        .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
+        .expect(200, function (error, res) {
+          if (error) {
+            return done(error);
+          }
+          if (res.body.success) {
+            res.body.data.should.exist;
+          } else {
+            res.body.error.should.exist;
+          }
+          return done();
+        });
     });
   });
 
@@ -482,7 +482,6 @@ describe('web application', function () {
     });
 
     it('has 200 on POST /api/v2/create-lead', function (done) {
-      this.timeout(3000);
       supertest(app)
         .post('/api/v2/create-lead')
         .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
@@ -507,7 +506,60 @@ describe('web application', function () {
 
   });
   describe('/api/v2/create-order', function () {
-    it('has something usefull on POST /api/v2/create-order');
+    let createOrderCSRFToken;
+
+    it('has anything on / but we need to start session properly to run tests', function (done) {
+      supertest(app)
+        .get('/')
+        .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
+        .expect('X-Powered-By', 'TacticalMastery')
+        .end(function (error, res) {
+          if (error) {
+            return done(error);
+          }
+          let csrf = extractCookie(res, csrfTokenCookieRegex);
+          if (csrf === false) {
+            return done(new Error('XSRF-TOKEN not set!'));
+          }
+          createOrderCSRFToken = csrf;
+          done();
+        });
+    });
+
+    it('has something usefull on POST /api/v2/create-order', function (done) {
+      supertest(app)
+        .post('/api/v2/create-order')
+        .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
+        .send({
+          address1: 'Lenin\'s street',
+          address2: 'house 10 flat 5',
+          campaignId: '', //blank? strange
+          cardMonth: '4444111144441111',
+          cardNumber: '12',
+          cardYear: '20',
+          city: 'New York',
+          emailAddress: 'testing@mail.ru',
+          firstName: 'testing',
+          lastName: 'testing',
+          orderId: '', //blank?
+          phoneNumber: '222-222-4444',
+          postalCode: '00054',
+          productId: '',
+          state: 'NY',
+          _csrf: createOrderCSRFToken
+        })
+        .expect(200, function (error, res) {
+          if (error) {
+            return done(error);
+          }
+          if (res.body.success) {
+            res.body.orderId.should.exist;
+          } else {
+            res.body.error.should.exist;
+          }
+          return done();
+        });
+    });
     it('has 403 on POST /api/v2/create-order with missing CSRF token', function (done) {
       supertest(app)
         .post('/api/v2/create-order')
