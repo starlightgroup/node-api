@@ -67,8 +67,6 @@ app.use(csp({
       'segment.com',
       '*.wistia.com',
       'cdn.segment.com/analytics.js',
-      'cdn.segment.com/analytics.js/v1/7FMBWsjMCbyWvbx4UuGCovr1SYyokQYd',
-      'cdn.segment.com/analytics.js/v1/7FMBWsjMCbyWvbx4UuGCovr1SYyokQYd/analytics.min.js',
       '*.akamaihd.net',
       'api.segment.io',
       'data:',
@@ -300,5 +298,6 @@ app.use(function (err, req, res, next) {
     }
   }
 });
+
 
 module.exports = exports = app;
