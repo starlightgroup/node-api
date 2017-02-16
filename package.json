@@ -9,7 +9,7 @@
     "npm": "^4.1.2"
   },
   "scripts": {
-    "start": "babel-node server.js",
+    "start": "node app.js",
     "build": "rm -rf .dist ; babel . --ignore node_modules  --out-dir .dist --source-maps ;cp ./Dockerfile .dist/Dockerfile; cp ./package.json .dist/package.json",
     "snyk_test": "snyk test",
     "test": "nyc --require babel-core/register mocha ./test/**/*.spec.js",
