@@ -658,9 +658,14 @@ describe('web application', function () {
         .get('/api/v2/ping')
         .set('PHPSESSID', headerSessionId)
         .expect('X-Powered-By', 'TacticalMastery')
-        .expect(200, {msg: 'PONG'},done);
+        .expect(200, { msg: 'PONG' })
+        .end(function (err, res) {
+          if (err) {
+            return done(err);
+          }
+          console.log(res.headers);
+          done();
+        });
     });
-
-
   });
 });

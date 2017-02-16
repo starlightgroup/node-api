@@ -230,16 +230,12 @@ app.use(function (req, res, next) {
   }
   req.sessionStore.get(sessionId, function (err, sess) {
     if (err) {
-      console.error('error getting session',err);
-
+      console.error('error getting session',err); //TODO more testing what errors can bubble up
     }
-    req.session.regenerate(function (error) {
-      if(error) {
-        return next(error);
-      }
-      req.sessionStore.createSession(req, sess);
-      return next();
-    });
+    if(sess){
+      req.session = sess;
+    }
+    next();
   });
 });
 
