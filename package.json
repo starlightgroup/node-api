@@ -9,7 +9,7 @@
     "npm": "^4.1.2"
   },
   "scripts": {
-    "start": "node app.js",
+    "start": "node index.js",
     "build": "rm -rf .dist ; babel . --ignore node_modules  --out-dir .dist --source-maps ;cp ./Dockerfile .dist/Dockerfile; cp ./package.json .dist/package.json",
     "snyk_test": "snyk test",
     "test": "nyc --require babel-core/register mocha ./test/**/*.spec.js",
@@ -20,7 +20,7 @@
   "dependencies": {
     "@risingstack/trace": "^3.4.0",
     "autopilot-api": "^2.0.0",
-    "babel-eslint": "^7.1.1",
+    "babel-register": "^6.23.0",
     "body-parser": "^1.15.2",
     "connect-redis": "^3.2.0",
     "cookie-parser": "^1.4.3",
@@ -47,6 +47,7 @@
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",
+    "babel-eslint": "^7.1.1",
     "babel-plugin-transform-runtime": "^6.15.0",
     "eslint-plugin-async-await": "0.0.0",
     "eslint-plugin-babel": "^4.0.1",
