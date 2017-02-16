@@ -228,20 +228,14 @@ app.use(function (req, res, next) {
   if (!sessionId) {
     return next();
   }
-  console.log('doing unholly worship with sessions');
-  req.sessionStore.get(sessionId, function (err, sess) {
-    console.log('session error getting -%s',sessionId, err);
-    console.log('session getting', sess);
-
+  req.sessionStore.load(sessionId, function (err, sess) {
     if (err) {
       console.error('error getting session', err); //TODO more testing what errors can bubble up
     }
     if (sess) {
-      console.log('session found and inserted');
       req.session = sess;
       return next();
     }
-    console.log('regenerating session');
     return req.session.regenerate(next);
   });
 });

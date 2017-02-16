@@ -635,6 +635,7 @@ describe('web application', function () {
         .get('/')
         .expect('X-Powered-By', 'TacticalMastery')
         .expect('phpsessid', /[a-zA-Z0-9\-]+/)
+        .expect('XSRF-TOKEN', /[a-zA-Z0-9\-]+/)
         .end(function (error, res) {
           if (error) {
             return done(error);
@@ -649,7 +650,6 @@ describe('web application', function () {
             return done(new Error('XSRF-TOKEN not set!'));
           }
           headerSessionId = res.headers.phpsessid;
-          headerCSRFToken = csrf;
           done();
         });
     });
@@ -660,13 +660,31 @@ describe('web application', function () {
         .set({ 'PHPSESSID': headerSessionId })
         .expect('X-Powered-By', 'TacticalMastery')
         .expect(200, { msg: 'PONG' })
+        .expect('phpsessid', /[a-zA-Z0-9\-]+/)
+        .expect('XSRF-TOKEN', /[a-zA-Z0-9\-]+/)
         .end(function (err, res) {
           if (err) {
             return done(err);
           }
-          console.log(res.headers);
+          headerCSRFToken = res.headers['xsrf-token'];
           done();
         });
     });
+
+    it('has 200 on POST /api/v2/add-contact', function (done) {
+      supertest(app)
+        .post('/api/v2/add-contact')
+        .set({ 'PHPSESSID': headerSessionId })
+        .send({
+          FirstName: 'test_FirstName',
+          LastName: 'test_LastName',
+          Email: 'test@email.com',
+          Phone: '222-222-4444',
+          _csrf: headerCSRFToken
+        })
+        .expect(200)
+        .end(done);
+    });
+
   });
 });
