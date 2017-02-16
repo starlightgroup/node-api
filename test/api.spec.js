@@ -623,4 +623,44 @@ describe('web application', function () {
         .expect(403, 'Invalid API Key', done);
     });
   });
+
+  describe('operate with cookies disabled', function () {
+    let
+      headerSessionId,
+      headerCSRFToken;
+
+    it('has anything on / but we need to start cookieless session to run tests properly', function (done) {
+      supertest(app)
+        .get('/')
+        .expect('X-Powered-By', 'TacticalMastery')
+        .expect('phpsessid', /[a-zA-Z0-9\-]+/)
+        .end(function (error, res) {
+          if (error) {
+            return done(error);
+          }
+          // console.log('/api/v2/ping cookies ',res.headers['set-cookie']);
+          let sId = extractCookie(res, sessionIdCookieRegex);
+          if (sId === false) {
+            return done(new Error('PHPSESSID cookie provided set!'));
+          }
+          let csrf = extractCookie(res, csrfTokenCookieRegex);
+          if (csrf === false) {
+            return done(new Error('XSRF-TOKEN not set!'));
+          }
+          headerSessionId = sId;
+          headerCSRFToken = csrf;
+          done();
+        });
+    });
+
+    it('has 200 and pong on /api/v2/ping', function (done) {
+      supertest(app)
+        .get('/api/v2/ping')
+        .set('PHPSESSID', headerSessionId)
+        .expect('X-Powered-By', 'TacticalMastery')
+        .expect(200, {msg: 'PONG'},done);
+    });
+
+
+  });
 });
