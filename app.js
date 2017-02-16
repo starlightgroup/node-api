@@ -308,11 +308,6 @@ Object.keys(routes).forEach(r => {
 app.use(express.static(path.join(__dirname,'public')));
 app.use('/tacticalsales/', express.static(path.join(__dirname,'public')));
 
-//for cookiless sessions hack
-app.use(function (req,res,next) {
-  return req.session.save(next);
-});
-
 // eslint-disable-next-line no-unused-vars
 app.use(function (err, req, res, next) {
   if (err) {
