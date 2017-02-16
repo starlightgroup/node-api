@@ -448,7 +448,6 @@ describe('web application', function () {
   });
 
   describe('/api/v2/create-lead', function () {
-    it('has something usefull on POST /api/v2/create-lead');
     it('has 403 on POST /api/v2/create-lead with missing CSRF token', function (done) {
       supertest(app)
         .post('/api/v2/create-lead')
