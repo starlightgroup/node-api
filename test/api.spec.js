@@ -647,7 +647,7 @@ describe('web application', function () {
           if (csrf === false) {
             return done(new Error('XSRF-TOKEN not set!'));
           }
-          headerSessionId = sId;
+          headerSessionId = res.headers.phpsessid;
           headerCSRFToken = csrf;
           done();
         });
@@ -656,7 +656,7 @@ describe('web application', function () {
     it('has 200 and pong on /api/v2/ping', function (done) {
       supertest(app)
         .get('/api/v2/ping')
-        .set('PHPSESSID', headerSessionId)
+        .set({ 'PHPSESSID': headerSessionId })
         .expect('X-Powered-By', 'TacticalMastery')
         .expect(200, { msg: 'PONG' })
         .end(function (err, res) {
