@@ -20,8 +20,6 @@ import connectRedis from 'connect-redis';//store session data in redis database
 import csurf from 'csurf'; //add CSRF protection https://www.npmjs.com/package/csurf
 import redis from './config/redis.js'; //load redis client
 
-import http from 'http';
-
 import helmet from 'helmet';
 import hpp from 'hpp';
 import csp from 'helmet-csp';
@@ -302,16 +300,5 @@ app.use(function (err, req, res, next) {
     }
   }
 });
-
-if(!module.parent) {
-  http
-    .createServer(app)
-    .listen(config.PORT, config.HOST, function (error) {
-      if(error){
-        throw error;
-      }
-      console.log('HTTP Server Started at %s:%s', config.HOST, config.PORT);
-    });
-}
 
 module.exports = exports = app;

@@ -1,8 +1,8 @@
 'use strict';
-/* global it, describe */
+/* global it, describe, process */
 
 import supertest from 'supertest';
-import app from '../server.js';
+import app from '../app.js';
 import util from 'util';
 
 require('should');
@@ -30,6 +30,7 @@ function extractCookie(res, rgx) {
   return false;
 }
 
+console.log('NodeJS version being used - %s for %s', process.version, process.arch);
 
 describe('web application', function () {
 // eslint-disable-next-line
