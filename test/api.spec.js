@@ -652,13 +652,12 @@ describe('web application', function () {
           done();
         });
     });
-
     it('has 200 and pong on /api/v2/ping', function (done) {
       supertest(app)
         .get('/api/v2/ping')
-        .set({ 'PHPSESSID': headerSessionId })
+        .set('PHPSESSID', headerSessionId)
         .expect('X-Powered-By', 'TacticalMastery')
-        .expect(200, { msg: 'PONG' })
+        .expect(200, {msg: 'PONG'})
         .expect('phpsessid', /[a-zA-Z0-9\-]+/)
         .expect('XSRF-TOKEN', /[a-zA-Z0-9\-]+/)
         .end(function (err, res) {
@@ -669,11 +668,10 @@ describe('web application', function () {
           done();
         });
     });
-
     it('has 200 on POST /api/v2/add-contact', function (done) {
       supertest(app)
         .post('/api/v2/add-contact')
-        .set({ 'PHPSESSID': headerSessionId })
+        .set('PHPSESSID', headerSessionId)
         .send({
           FirstName: 'test_FirstName',
           LastName: 'test_LastName',
@@ -684,6 +682,5 @@ describe('web application', function () {
         .expect(200)
         .end(done);
     });
-
   });
 });
