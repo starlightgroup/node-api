@@ -20,6 +20,8 @@ with SANE name like `hotfix/stopThingsExploding` and so on
 
 8. Notify Anatolij or Yang to merge PR using slackchat.
 
+9. DELETE your branch when it is merged pls!
+
 Anatolij github id - @vodolaz095
 
 Yang's github id - @starneit
