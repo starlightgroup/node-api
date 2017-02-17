@@ -23,17 +23,17 @@ const redis = new RedisClient(redisUrl, {
 });
 
 
-const { host, port } = redis.connector.options;
+const {host, port} = redis.connector.options;
 
-redis.on('connect', (arg) => {
+redis.on('connect', () => {
   console.log(`Connected to redis client at ${host}:${port}`);
 });
 
-redis.on('ready', (arg) => {
+redis.on('ready', () => {
   console.log('Redis server ready');
 });
 
-redis.on('error', (arg) => {
+redis.on('error', () => {
   console.log('There was an error connecting to redis');
 });
 

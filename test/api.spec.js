@@ -1,9 +1,9 @@
 'use strict';
+/* global it, describe, process */
+
 import supertest from 'supertest';
-import app from '../server.js';
+import app from '../app.js';
 import util from 'util';
-import {expect} from 'chai';
-import {assert} from 'chai';
 
 require('should');
 
@@ -30,8 +30,12 @@ function extractCookie(res, rgx) {
   return false;
 }
 
+console.log('NodeJS version being used - %s for %s', process.version, process.arch);
 
 describe('web application', function () {
+// eslint-disable-next-line
+  this.timeout(10000); //not everybody have good internet connection, including codeship
+
   let
 //being used in all requests
     sessionId,
@@ -40,11 +44,10 @@ describe('web application', function () {
     taintedSessionId,
     taintedCsrfToken;
 
-  it('has 404 on / but we need to start session properly to run tests', function (done) {
+  it('has anything on / but we need to start session properly to run tests', function (done) {
     supertest(app)
       .get('/')
       .expect('X-Powered-By', 'TacticalMastery')
-      .expect(404)
       .end(function (error, res) {
         if (error) {
           return done(error);
@@ -92,6 +95,7 @@ describe('web application', function () {
       .get('/api/v2/ping')
       //      .set('Cookie', [util.format('PHPSESSID=%s', sessionId)]) - no session id - aka first visit!!!
       .expect('X-Powered-By', 'TacticalMastery')
+      .expect('X-PUNISHEDBY', 'BAD LOCATION')
       .expect(403, 'Invalid API Key')
       .end(function (error, res) {
         if (error) {
@@ -149,6 +153,7 @@ describe('web application', function () {
       supertest(app)
         .get('/api/v2/testSession')
         .expect('X-Powered-By', 'TacticalMastery')
+        .expect('X-PUNISHEDBY', 'BAD LOCATION')
         .expect(403, 'Invalid API Key', done);
     });
   });
@@ -209,11 +214,10 @@ describe('web application', function () {
       acCsrfToken,
       acSessionId;
 
-    it('has 404 on / but we need to start session properly to run tests', function (done) {
+    it('has anything on/ but we need to start session properly to run tests', function (done) {
       supertest(app)
         .get('/')
         .expect('X-Powered-By', 'TacticalMastery')
-        .expect(404)
         .end(function (error, res) {
           if (error) {
             return done(error);
@@ -297,7 +301,8 @@ describe('web application', function () {
     it('has 403 on POST /api/v2/add-contact with bad entry point', function (done) {
       supertest(app)
         .post('/api/v2/add-contact')
-        .set('Cookie', [util.format('PHPSESSID=%s', taintedCsrfToken)])
+        .set('Cookie', [util.format('PHPSESSID=%s', taintedSessionId)])
+        .expect('X-PUNISHEDBY', 'BAD LOCATION')
         .send({
           FirstName: 'test_FirstName',
           LastName: 'test_LastName',
@@ -313,11 +318,10 @@ describe('web application', function () {
     let ucSessionId,
       ucCsrfToken;
 
-    it('has 404 on / but we need to start session properly to run tests', function (done) {
+    it('has anything on / but we need to start session properly to run tests', function (done) {
       supertest(app)
         .get('/')
         .expect('X-Powered-By', 'TacticalMastery')
-        .expect(404)
         .end(function (error, res) {
           if (error) {
             return done(error);
@@ -403,16 +407,47 @@ describe('web application', function () {
   it('protects from bot who entered the site using wrong entry point');
 
 
-//TODO for missing tests - i have no idea what it have to return --Anatolij
+//https://starlightgroup.atlassian.net/browse/SG-80
+// Only check API call
   describe('/api/v2/get-lead', function () {
-    it('has something usefull on GET /api/v2/get-lead/:id');
+    it('has 200 on GET on /api/v2/get-lead/:id', function (done) {
+      supertest(app)
+        .get('/api/v2/get-lead/25B18557B3')
+        .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
+        .expect(200, function (error, res) {
+          if (error) {
+            return done(error);
+          }
+          if (res.body.success) {
+            res.body.data.should.exist;
+          } else {
+            res.body.error.should.exist;
+          }
+          return done();
+        });
+    });
   });
-  describe('/api/v2/get-lead', function () {
-    it('has something usefull on GET /api/v2//get-trans/:id');
+
+  describe('/api/v2/get-trans', function () {
+    it('has 200 on GET /api/v2/get-trans/:id', function (done) {
+      supertest(app)
+        .get('/api/v2/get-trans/25B18557B3')
+        .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
+        .expect(200, function (error, res) {
+          if (error) {
+            return done(error);
+          }
+          if (res.body.success) {
+            res.body.data.should.exist;
+          } else {
+            res.body.error.should.exist;
+          }
+          return done();
+        });
+    });
   });
 
   describe('/api/v2/create-lead', function () {
-    it('has something usefull on POST /api/v2/create-lead');
     it('has 403 on POST /api/v2/create-lead with missing CSRF token', function (done) {
       supertest(app)
         .post('/api/v2/create-lead')
@@ -437,15 +472,93 @@ describe('web application', function () {
       supertest(app)
         .post('/api/v2/create-lead')
         .set('Cookie', [util.format('PHPSESSID=%s', taintedSessionId)])
+        .expect('X-PUNISHEDBY', 'BAD LOCATION')
         .send({
           someSaneData: 'to be entered here',
           _csrf: taintedCsrfToken
         })
         .expect(403, 'Invalid API Key', done);
     });
+
+    it('has 200 on POST /api/v2/create-lead', function (done) {
+      supertest(app)
+        .post('/api/v2/create-lead')
+        .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
+        .send({
+          firstName: 'test',
+          phoneNumber: '111-111-1111',
+          emailAddress: 'test@test.com',
+          _csrf: csrfToken
+        })
+        .expect(200, function (error, res) {
+          if (error) {
+            return done(error);
+          }
+          if (res.body.success) {
+            res.body.orderId.should.exist;
+          } else {
+            res.body.error.should.exist;
+          }
+          return done();
+        });
+    });
+
   });
   describe('/api/v2/create-order', function () {
-    it('has something usefull on POST /api/v2/create-order');
+    let createOrderCSRFToken;
+
+    it('has anything on / but we need to start session properly to run tests', function (done) {
+      supertest(app)
+        .get('/')
+        .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
+        .expect('X-Powered-By', 'TacticalMastery')
+        .end(function (error, res) {
+          if (error) {
+            return done(error);
+          }
+          let csrf = extractCookie(res, csrfTokenCookieRegex);
+          if (csrf === false) {
+            return done(new Error('XSRF-TOKEN not set!'));
+          }
+          createOrderCSRFToken = csrf;
+          done();
+        });
+    });
+
+    it('has something usefull on POST /api/v2/create-order', function (done) {
+      supertest(app)
+        .post('/api/v2/create-order')
+        .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
+        .send({
+          address1: 'Lenin\'s street',
+          address2: 'house 10 flat 5',
+          campaignId: '', //blank? strange
+          cardMonth: '4444111144441111',
+          cardNumber: '12',
+          cardYear: '20',
+          city: 'New York',
+          emailAddress: 'testing@mail.ru',
+          firstName: 'testing',
+          lastName: 'testing',
+          orderId: '', //blank?
+          phoneNumber: '222-222-4444',
+          postalCode: '00054',
+          productId: '',
+          state: 'NY',
+          _csrf: createOrderCSRFToken
+        })
+        .expect(200, function (error, res) {
+          if (error) {
+            return done(error);
+          }
+          if (res.body.success) {
+            res.body.orderId.should.exist;
+          } else {
+            res.body.error.should.exist;
+          }
+          return done();
+        });
+    });
     it('has 403 on POST /api/v2/create-order with missing CSRF token', function (done) {
       supertest(app)
         .post('/api/v2/create-order')
@@ -478,7 +591,50 @@ describe('web application', function () {
     });
   });
   describe('/api/v2/upsell', function () {
-    it('has something usefull on POST /api/v2/upsell');
+    let upselCSRFToken;
+
+    it('has anything on / but we need to start session properly to run tests', function (done) {
+      supertest(app)
+        .get('/')
+        .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
+        .expect('X-Powered-By', 'TacticalMastery')
+        .end(function (error, res) {
+          if (error) {
+            return done(error);
+          }
+          let csrf = extractCookie(res, csrfTokenCookieRegex);
+          if (csrf === false) {
+            return done(new Error('XSRF-TOKEN not set!'));
+          }
+          upselCSRFToken = csrf;
+          done();
+        });
+    });
+
+    it('has something usefull on POST /api/v2/upsell', function (done) {
+      supertest(app)
+        .post('/api/v2/upsell')
+        .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
+        .send({
+          orderId: 'C10D785CD0',
+          productId: 115,
+          productQty: 1,
+          _csrf: upselCSRFToken
+        })
+        .expect(200, function (error, res) {
+          if (error) {
+            return done(error);
+          }
+          if (res.body.success) {
+            res.body.orderId.should.exist;
+          } else {
+            res.body.error.should.exist;
+          }
+          return done();
+        });
+
+
+    });
     it('has 403 on POST /api/v2/create-upsell with missing CSRF token', function (done) {
       supertest(app)
         .post('/api/v2/create-upsell')
@@ -508,6 +664,66 @@ describe('web application', function () {
           _csrf: taintedCsrfToken
         })
         .expect(403, 'Invalid API Key', done);
+    });
+  });
+
+  describe('operate with cookies disabled', function () {
+    let
+      headerSessionId,
+      headerCSRFToken;
+
+    it('has anything on / but we need to start cookieless session to run tests properly', function (done) {
+      supertest(app)
+        .get('/')
+        .expect('X-Powered-By', 'TacticalMastery')
+        .expect('phpsessid', /[a-zA-Z0-9\-]+/)
+        .expect('XSRF-TOKEN', /[a-zA-Z0-9\-]+/)
+        .end(function (error, res) {
+          if (error) {
+            return done(error);
+          }
+          // console.log('/api/v2/ping cookies ',res.headers['set-cookie']);
+          let sId = extractCookie(res, sessionIdCookieRegex);
+          if (sId === false) {
+            return done(new Error('PHPSESSID cookie provided set!'));
+          }
+          let csrf = extractCookie(res, csrfTokenCookieRegex);
+          if (csrf === false) {
+            return done(new Error('XSRF-TOKEN not set!'));
+          }
+          headerSessionId = res.headers.phpsessid;
+          done();
+        });
+    });
+    it('has 200 and pong on /api/v2/ping', function (done) {
+      supertest(app)
+        .get('/api/v2/ping')
+        .set('PHPSESSID', headerSessionId)
+        .expect('X-Powered-By', 'TacticalMastery')
+        .expect(200, {msg: 'PONG'})
+        .expect('phpsessid', /[a-zA-Z0-9\-]+/)
+        .expect('XSRF-TOKEN', /[a-zA-Z0-9\-]+/)
+        .end(function (err, res) {
+          if (err) {
+            return done(err);
+          }
+          headerCSRFToken = res.headers['xsrf-token'];
+          done();
+        });
+    });
+    it('has 200 on POST /api/v2/add-contact', function (done) {
+      supertest(app)
+        .post('/api/v2/add-contact')
+        .set('PHPSESSID', headerSessionId)
+        .send({
+          FirstName: 'test_FirstName',
+          LastName: 'test_LastName',
+          Email: 'test@email.com',
+          Phone: '222-222-4444',
+          _csrf: headerCSRFToken
+        })
+        .expect(200)
+        .end(done);
     });
   });
 });

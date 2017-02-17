@@ -46,7 +46,7 @@ You need to clone both frontend and backend repo in, for example `/home/{usernam
 
 ```
 
-4. Set proper branch 
+4. Set proper branches and install dependencies 
 ================
 Than you need to change branch to `dev` in both repos and install modules required
 
@@ -112,3 +112,77 @@ API accessible on
 [http://localhost:8000/api/v2/ping](http://localhost:8000/api/v2/ping)
 
 
+
+# Starting code using docker-compose
+
+1. Clone repos 
+===============
+You need to clone both frontend and backend repo in, for example `/home/{username}/projects/starlight`
+
+```shell
+
+  $ mkdir -p ~/projects/starlightgroup
+  $ git clone
+  $ cd ~/projects/starlightgroup
+
+  $ git clone git@github.com:starlightgroup/flashlightsforever.git
+  $ git clone git@github.com:starlightgroup/node-api.git
+
+
+```
+
+2. Set proper branches 
+================
+Than you need to change branch to `dev` in both repos and install modules required
+
+
+For backend
+
+
+```
+
+  $ cd ~/projects/starlightgroup/node-api
+  $ git checkout dev
+
+```
+
+For frontend (you need to build code)
+
+```shell
+
+  $ cd ~/projects/starlightgroup/flashlightsforever
+  $ git checkout dev
+  $ npm install
+  $ ./node_modules/.bin/gulp
+
+
+```
+
+
+3. Symlink/copy frontend code to `public/` directory in `node-api` directory.
+=====================================
+
+Backend has embedded web server, that serves all static files from `~/projects/node-api/public`
+We will use it to serve both frontend and backend from the same domain. To do so, we need to
+symlink compiled frontend code to web server folder.
+
+
+```
+
+  $ ln -s ~/projects/starlightgroup/flashlightsforever/tacticalsales ~/projects/starlightgroup/node-api/public
+
+``` 
+ 
+4. Start application by docker compose
+======================================
+
+
+```
+
+  # docker-compose up --build 
+
+```
+
+5. It have to start webserver on http://localhost:8000/
+With frontend served from `public/` folder. You can edit frontend code on the fly - it will 
+be instantly loaded to web server

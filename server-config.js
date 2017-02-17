@@ -1,5 +1,5 @@
 'use strict';
-
+/*global process*/
 import util from 'util';
 
 let redisUrl = 'redis://localhost:6379/';
@@ -10,11 +10,22 @@ if (process.env.REDIS_URL) {
 
 //for docker compose setup
 if (process.env.REDIS_PORT_6379_TCP_ADDR && process.env.REDIS_PORT_6379_TCP_PORT) {
-  redisUrl = util.format("redis://%s:%s/", process.env.REDIS_PORT_6379_TCP_ADDR, process.env.REDIS_PORT_6379_TCP_PORT);
+  redisUrl = util.format('redis://%s:%s/', process.env.REDIS_PORT_6379_TCP_ADDR, process.env.REDIS_PORT_6379_TCP_PORT);
+}
+
+//for secured docker compose setup
+if (process.env.REDIS_PORT_6379_TCP_ADDR && process.env.REDIS_PORT_6379_TCP_PORT && process.env.REDIS_AUTH) {
+  redisUrl = util.format('redis://redis:%s@%s:%s/',
+    process.env.REDIS_AUTH,
+    process.env.REDIS_PORT_6379_TCP_ADDR,
+    process.env.REDIS_PORT_6379_TCP_PORT);
 }
 
 module.exports = {
   ENV : process.env.NODE_ENV || 'development',
+//ENV can be production - live server
+//ENV can be staging - testing server
+
   PORT : process.env.PORT || 8000,
   HOST : process.env.HOST || '0.0.0.0',
 
