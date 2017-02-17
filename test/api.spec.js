@@ -591,7 +591,50 @@ describe('web application', function () {
     });
   });
   describe('/api/v2/upsell', function () {
-    it('has something usefull on POST /api/v2/upsell');
+    let upselCSRFToken;
+
+    it('has anything on / but we need to start session properly to run tests', function (done) {
+      supertest(app)
+        .get('/')
+        .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
+        .expect('X-Powered-By', 'TacticalMastery')
+        .end(function (error, res) {
+          if (error) {
+            return done(error);
+          }
+          let csrf = extractCookie(res, csrfTokenCookieRegex);
+          if (csrf === false) {
+            return done(new Error('XSRF-TOKEN not set!'));
+          }
+          upselCSRFToken = csrf;
+          done();
+        });
+    });
+
+    it('has something usefull on POST /api/v2/upsell', function (done) {
+      supertest(app)
+        .post('/api/v2/upsell')
+        .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
+        .send({
+          orderId: 'C10D785CD0',
+          productId: 115,
+          productQty: 1,
+          _csrf: upselCSRFToken
+        })
+        .expect(200, function (error, res) {
+          if (error) {
+            return done(error);
+          }
+          if (res.body.success) {
+            res.body.orderId.should.exist;
+          } else {
+            res.body.error.should.exist;
+          }
+          return done();
+        });
+
+
+    });
     it('has 403 on POST /api/v2/create-upsell with missing CSRF token', function (done) {
       supertest(app)
         .post('/api/v2/create-upsell')
