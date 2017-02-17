@@ -140,7 +140,7 @@ app.use(csp({
   // Set to true if you only want browsers to report errors, not block them.
   // You may also set this to a function(req, res) in order to decide dynamically
   // whether to use reportOnly mode, e.g., to allow for a dynamic kill switch.
-  reportOnly: true,
+  reportOnly: false,
 
   // Set to true if you want to blindly set all headers: Content-Security-Policy,
   // X-WebKit-CSP, and X-Content-Security-Policy.
@@ -200,6 +200,7 @@ const RedisSessionStore = connectRedis(expressSession);
 if(isProtectedByCloudflare){
   app.enable('trust proxy'); // http://expressjs.com/en/4x/api.html#trust.proxy.options.table
 }
+
 app.use(cookieParser(config.secret));
 app.use(expressSession({
   key: 'PHPSESSID', //LOL, let they waste some time hacking this as PHP application, at least it will be detected by Cloudfare :-)
@@ -218,6 +219,27 @@ app.use(expressSession({
 }));
 //end of SG-5
 
+
+//allow sessions and stuff to work with cookies disabled https://gist.github.com/j-mcnally/1155365
+app.use(function (req, res, next) {
+  const sessionId = req.header('PHPSESSID'); //they will feel like %-)
+  if (!sessionId) {
+    return next();
+  }
+  req.sessionStore.load(sessionId, function (err, sess) {
+    if (err) {
+      console.error('error getting session', err); //TODO more testing what errors can bubble up
+    }
+    if (sess) {
+      req.session = sess;
+      return next();
+    }
+    return req.session.regenerate(next);
+  });
+});
+
+
+
 //protect from tampering session - basic example
 //it saves IP and entry point into session.
 //if IP changes, it is likely to be bot or somebody using tor
@@ -228,8 +250,9 @@ app.use(expressSession({
 //https://starlightgroup.atlassian.net/browse/SG-9
 app.use(function sessionTamperingProtectionMiddleware(req, res, next) {
   res.set('X-Powered-By', 'TacticalMastery'); //do not expose, that it is expressJS application
+  //https://www.npmjs.com/package/express-session#reqsessionid-1
+  res.set('PHPSESSID', req.sessionID);
 
-  //http://stackoverflow.com/a/10849772/1885921
   if (!req.session.ip) {
     req.session.ip = security.getIp(req);
   }
@@ -254,6 +277,7 @@ app.use(function (req,res,next) {
     const token = req.csrfToken();
     res.locals.csrf = token;
     res.cookie('XSRF-TOKEN', token, {secure: isProtectedByCloudflare});
+    res.set('XSRF-TOKEN', token);
   }
   next();
 });

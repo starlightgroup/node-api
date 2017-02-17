@@ -448,7 +448,6 @@ describe('web application', function () {
   });
 
   describe('/api/v2/create-lead', function () {
-    it('has something usefull on POST /api/v2/create-lead');
     it('has 403 on POST /api/v2/create-lead with missing CSRF token', function (done) {
       supertest(app)
         .post('/api/v2/create-lead')
@@ -592,7 +591,50 @@ describe('web application', function () {
     });
   });
   describe('/api/v2/upsell', function () {
-    it('has something usefull on POST /api/v2/upsell');
+    let upselCSRFToken;
+
+    it('has anything on / but we need to start session properly to run tests', function (done) {
+      supertest(app)
+        .get('/')
+        .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
+        .expect('X-Powered-By', 'TacticalMastery')
+        .end(function (error, res) {
+          if (error) {
+            return done(error);
+          }
+          let csrf = extractCookie(res, csrfTokenCookieRegex);
+          if (csrf === false) {
+            return done(new Error('XSRF-TOKEN not set!'));
+          }
+          upselCSRFToken = csrf;
+          done();
+        });
+    });
+
+    it('has something usefull on POST /api/v2/upsell', function (done) {
+      supertest(app)
+        .post('/api/v2/upsell')
+        .set('Cookie', [util.format('PHPSESSID=%s', sessionId)])
+        .send({
+          orderId: 'C10D785CD0',
+          productId: 115,
+          productQty: 1,
+          _csrf: upselCSRFToken
+        })
+        .expect(200, function (error, res) {
+          if (error) {
+            return done(error);
+          }
+          if (res.body.success) {
+            res.body.orderId.should.exist;
+          } else {
+            res.body.error.should.exist;
+          }
+          return done();
+        });
+
+
+    });
     it('has 403 on POST /api/v2/create-upsell with missing CSRF token', function (done) {
       supertest(app)
         .post('/api/v2/create-upsell')
@@ -622,6 +664,66 @@ describe('web application', function () {
           _csrf: taintedCsrfToken
         })
         .expect(403, 'Invalid API Key', done);
+    });
+  });
+
+  describe('operate with cookies disabled', function () {
+    let
+      headerSessionId,
+      headerCSRFToken;
+
+    it('has anything on / but we need to start cookieless session to run tests properly', function (done) {
+      supertest(app)
+        .get('/')
+        .expect('X-Powered-By', 'TacticalMastery')
+        .expect('phpsessid', /[a-zA-Z0-9\-]+/)
+        .expect('XSRF-TOKEN', /[a-zA-Z0-9\-]+/)
+        .end(function (error, res) {
+          if (error) {
+            return done(error);
+          }
+          // console.log('/api/v2/ping cookies ',res.headers['set-cookie']);
+          let sId = extractCookie(res, sessionIdCookieRegex);
+          if (sId === false) {
+            return done(new Error('PHPSESSID cookie provided set!'));
+          }
+          let csrf = extractCookie(res, csrfTokenCookieRegex);
+          if (csrf === false) {
+            return done(new Error('XSRF-TOKEN not set!'));
+          }
+          headerSessionId = res.headers.phpsessid;
+          done();
+        });
+    });
+    it('has 200 and pong on /api/v2/ping', function (done) {
+      supertest(app)
+        .get('/api/v2/ping')
+        .set('PHPSESSID', headerSessionId)
+        .expect('X-Powered-By', 'TacticalMastery')
+        .expect(200, {msg: 'PONG'})
+        .expect('phpsessid', /[a-zA-Z0-9\-]+/)
+        .expect('XSRF-TOKEN', /[a-zA-Z0-9\-]+/)
+        .end(function (err, res) {
+          if (err) {
+            return done(err);
+          }
+          headerCSRFToken = res.headers['xsrf-token'];
+          done();
+        });
+    });
+    it('has 200 on POST /api/v2/add-contact', function (done) {
+      supertest(app)
+        .post('/api/v2/add-contact')
+        .set('PHPSESSID', headerSessionId)
+        .send({
+          FirstName: 'test_FirstName',
+          LastName: 'test_LastName',
+          Email: 'test@email.com',
+          Phone: '222-222-4444',
+          _csrf: headerCSRFToken
+        })
+        .expect(200)
+        .end(done);
     });
   });
 });
