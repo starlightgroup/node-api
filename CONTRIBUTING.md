@@ -1,7 +1,7 @@
 How to push code to this repository.
 ======================
-1. Verify you have sane local setup - `nodejs` of `7.5.0`, npm of `^^4.1.2` redis database with stack 
-settings listening on `localhost:6379`. You can use `docker-compose up` to help you. 
+1. Verify you have sane local setup - `nodejs` of `7.5.0`, npm of `^4.1.2`, redis (`^3.0.6`) database with stack 
+settings listening on `localhost:6379` without PASSWORD. You can use `docker-compose up` to help you. 
 Anatolij works mainly with fedora linux and has ~0 skills with Windows and Macos, so he apologies if development
 is more tricky on OSes other than linux.
 
@@ -28,8 +28,11 @@ Yang's github id - @starneit
 Branch meaning
 ====================
 
-- `dev` - code is working, ok to deploy locally for development or on dev server
+- `dev` - code is working, ok to deploy locally for development or on dev server.
+Locally code runs with environment variable of `NODE_ENV` set to `development` or non existant.
+On dev server the `NODE_ENV` have to be `staging`.
 
-- `staging` - code is working and mainly tested - ok to deploy on staging server
+- `staging` - code is working and mainly tested - ok to deploy on staging server. The`NODE_ENV` have to be `staging`.
 
-- `master` - code for production
+
+- `master` - code for production.  The`NODE_ENV` have to be `production`.
