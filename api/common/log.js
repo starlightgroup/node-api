@@ -18,3 +18,6 @@ logger.asStream = function asStream(level) {
 
 
 module.exports = logger;
+
+
+//This file is never used - Anatolij

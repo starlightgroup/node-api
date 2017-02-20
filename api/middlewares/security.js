@@ -90,6 +90,11 @@ function getIp(req) {
 
 exports.getIp = getIp;
 
+//related issues for punishing middlewares:
+//https://starlightgroup.atlassian.net/browse/SG-5
+//https://starlightgroup.atlassian.net/browse/SG-8
+//https://starlightgroup.atlassian.net/browse/SG-9
+
 exports.punishForEnteringSiteFromBadLocation = function (req, res, next) {
   if (req.session) {
     if (validEntryPoints.indexOf(req.session.entryPoint) === -1) {
