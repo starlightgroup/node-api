@@ -1,7 +1,7 @@
 'use strict';
 /* global __dirname */
 
-require('@risingstack/trace');
+// require('@risingstack/trace');
 
 import path from 'path';
 
@@ -40,11 +40,19 @@ const isProtectedByCloudflare = ['production','staging'].indexOf(config.ENV) !==
 //all other sources will get error
 //https://starlightgroup.atlassian.net/projects/SG/issues/SG-35
 if (isProtectedByCloudflare){
-  // app.use(security.verifyThatSiteIsAccessedFromCloudflare);
-  //TODO
-  //if we use this middleware, it will give `500 - NOT OK` on dev server for reasons i do not know yet
-  //but it dissalows others to work, so i comment it
+  //since Mon Feb 20 16:00:29 MSK 2017
+  //we have unit tests for this function
+  //and it have to work properly.
+  //When dev deploy is ready, we can implement it.
+  //Unfortunatly, i cannot test it with real cloudflare - i do not have it protecting my localhost
+  //i commented it out, because it i uncomment it, there can be rare case when everybody gets 500 : NOT OK response from server
   // -Anatolij
+
+  //app.use(security.verifyThatSiteIsAccessedFromCloudflare); // ####
+
+  // uncomment line (####) if you are brave and have dev,staging server
+  // working and protected by Cloudflare.
+  // and prepare that they can provide 500 : NOT OK errors.
 }
 
 

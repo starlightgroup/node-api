@@ -59,21 +59,23 @@ exports.verifyThatSiteIsAccessedFromCloudflare = function (req, res, next) {
   let rIp = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 //https://github.com/keverw/range_check#check-if-ip-is-within-range
   let isOk = false;
-  // console.log(rangeCheck.inRange('2001:db8:1234::1', '2001:db8::/32')); //returns true
+// it helped me
+// http://jodies.de/ipcalc?host=103.21.244.0&mask1=22&mask2=
   cloudFlareIp4Range.map(function (ipRange) {
-    isOk = isOk || rangeCheck.inRange(ipRange, rIp);
+    if(isOk) return;
+    isOk = rangeCheck.inRange(rIp, ipRange);
   });
   if (isOk) {
-    return next;
+    return next();
   }
-
+//https://www.ultratools.com/tools/ipv6CIDRToRangeResult?ipAddress=2400%3Acb00%3A%3A%2F32
   cloudFlareIp6Range.map(function (ipRange) {
-    isOk = isOk || rangeCheck.inRange(ipRange, rIp);
+    if(isOk) return;
+    isOk = rangeCheck.inRange(rIp, ipRange);
   });
   if (isOk) {
-    return next;
+    return next();
   }
-
   return res
     .status(500)
     .end('NOT OK');
