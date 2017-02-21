@@ -39,9 +39,7 @@ module.exports = {
   },
   konnective: {
     proxy: 'https://starlightproxy.herokuapp.com/',
-    proxyApiKey: '7d3c81',
-    loginId:  process.env.KONNECTIVE_LOGIN_ID || 'konnective_api_user',
-    password:  process.env.KONNECTIVE_PASSWORD || 'kz8A3hHQVN'
+    proxyApiKey: '7d3c81'
   },
   redis: {
     REDIS_URL: redisUrl
