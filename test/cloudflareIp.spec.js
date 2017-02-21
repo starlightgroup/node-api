@@ -35,7 +35,7 @@ ResponseMock.prototype.status = function (code) {
 
 ResponseMock.prototype.end = function (message) {
   this.message = message;
-  this.final(null, this.code, this.message)
+  this.final(null, this.code, this.message);
 };
 
 
