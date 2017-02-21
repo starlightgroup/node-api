@@ -95,8 +95,10 @@ async function getLead(req, res) {
   const orderId = xss(req.params.id);
   const options = {
     method: 'GET',
-    uri: util.format('%sorder/query/?orderId=%s', connectiveApiURL, orderId),
-    qs: body,
+    uri: util.format('%sorder/query/', connectiveApiURL),
+    qs: {
+      orderId: orderId
+    },
     headers: {
       'api-key':proxyApiKey,
       'User-Agent': 'Request-Promise',
@@ -118,8 +120,10 @@ async function getTrans(req, res) {
   const orderId = xss(req.params.id);
   const options = {
     method: 'GET',
-    uri: util.format('%stransactions/query/?orderId=%s', connectiveApiURL, orderId),
-    qs: body,
+    uri: util.format('%stransactions/query/', connectiveApiURL),
+    qs: {
+      orderId : orderId
+    },
     headers: {
       'api-key':proxyApiKey,
       'User-Agent': 'Request-Promise',
