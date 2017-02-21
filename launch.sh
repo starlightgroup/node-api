@@ -1,4 +1,4 @@
 npm install
-ln -s /home/flashlightsforever/source/tacticalsales ~/source/public
+cp -rf /home/flashlightsforever/source/tacticalsales/ public/
 forever stopall
 forever start app.js
