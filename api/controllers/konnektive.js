@@ -177,10 +177,8 @@ async function upsell(req, res) {
     res.error('Invalid Upsell Data');
   }
   else {
-    req.body.loginId = config.konnective.loginId;
-    req.body.password = config.konnective.password;
     const options = {
-      uri: 'https://api.konnektive.com/upsale/import/',
+      uri: util.format('%supsale/import/', connectiveApiURL),
       qs: req.body,
       headers: {
         'api-key':proxyApiKey,
