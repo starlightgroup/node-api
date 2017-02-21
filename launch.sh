@@ -6,4 +6,4 @@ npm install
 cp -rf /home/flashlightsforever/source/tacticalsales/ public/
 
 ./node_modules/.bin/forever stopall
-./node_modules/.bin/forever start app.js
+./node_modules/.bin/forever start index.js
