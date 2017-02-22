@@ -134,7 +134,11 @@ app.use(csp({
       'www.google.ru'
     ],
     sandbox: ['allow-forms', 'allow-scripts'],
-    reportUri: 'https://a434819b5a5f4bfeeaa5d47c8af8ac87.report-uri.io/r/default/csp/reportOnly', //https://report-uri.io/account/setup/
+    reportUri: 'https://a434819b5a5f4bfeeaa5d47c8af8ac87.report-uri.io/r/default/csp/enforce',
+
+//      'https://a434819b5a5f4bfeeaa5d47c8af8ac87.report-uri.io/r/default/csp/reportOnly', //https://report-uri.io/account/setup/
+//seems like it works for reporto only?
+
     // objectSrc: ["'none'"],
     mediaSrc: ['data:'],
     upgradeInsecureRequests: true
