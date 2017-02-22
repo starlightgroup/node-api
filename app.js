@@ -60,7 +60,7 @@ if (isProtectedByCloudflare){
 app.use(helmet());
 app.use(helmet.referrerPolicy());
 app.use(helmet.frameguard({action: 'deny'}));
-
+//*/
 //under construction
 app.use(csp({
   // some examples
@@ -134,7 +134,7 @@ app.use(csp({
       'www.google.ru'
     ],
     sandbox: ['allow-forms', 'allow-scripts'],
-    reportUri: 'https://a434819b5a5f4bfeeaa5d47c8af8ac87.report-uri.io/r/default/csp/enforce',
+    reportUri: '/a434819b5a5f4bfeeaa5d47c8af8ac87',
 
 //      'https://a434819b5a5f4bfeeaa5d47c8af8ac87.report-uri.io/r/default/csp/reportOnly', //https://report-uri.io/account/setup/
 //seems like it works for reporto only?
@@ -151,7 +151,7 @@ app.use(csp({
   // Set to true if you only want browsers to report errors, not block them.
   // You may also set this to a function(req, res) in order to decide dynamically
   // whether to use reportOnly mode, e.g., to allow for a dynamic kill switch.
-  reportOnly: false,
+  reportOnly: true,
 
   // Set to true if you want to blindly set all headers: Content-Security-Policy,
   // X-WebKit-CSP, and X-Content-Security-Policy.
@@ -170,12 +170,12 @@ app.use(helmet.hpkp({
   maxAge: 2592000, //30 days
   sha256s: [
 //new - generated here - https://report-uri.io/home/pkp_hash
-    /*
-     Here is your PKP hash for ssl369830.cloudflaressl.com: pin-sha256="EZpO1a5wa3q9eyxOxvTaSVciRXlm57R6fYJ2gsIbrJg="
-     Here is your PKP hash for COMODO ECC Domain Validation Secure Server CA 2: pin-sha256="x9SZw6TwIqfmvrLZ/kz1o0Ossjmn728BnBKpUFqGNVM="
-     Here is your PKP hash for COMODO ECC Certification Authority: pin-sha256="58qRu/uxh4gFezqAcERupSkRYBlBAvfcw7mEjGPLnNU="
-     Here is your PKP hash for AddTrust External CA Root: pin-sha256="lCppFqbkrlJ3EcVFAkeip0+44VaoJUymbnOaEUk7tEU="
-     */
+
+     // Here is your PKP hash for ssl369830.cloudflaressl.com: pin-sha256="EZpO1a5wa3q9eyxOxvTaSVciRXlm57R6fYJ2gsIbrJg="
+     // Here is your PKP hash for COMODO ECC Domain Validation Secure Server CA 2: pin-sha256="x9SZw6TwIqfmvrLZ/kz1o0Ossjmn728BnBKpUFqGNVM="
+     // Here is your PKP hash for COMODO ECC Certification Authority: pin-sha256="58qRu/uxh4gFezqAcERupSkRYBlBAvfcw7mEjGPLnNU="
+     // Here is your PKP hash for AddTrust External CA Root: pin-sha256="lCppFqbkrlJ3EcVFAkeip0+44VaoJUymbnOaEUk7tEU="
+
 
     'EZpO1a5wa3q9eyxOxvTaSVciRXlm57R6fYJ2gsIbrJg=',
     'x9SZw6TwIqfmvrLZ/kz1o0Ossjmn728BnBKpUFqGNVM=',
@@ -186,11 +186,17 @@ app.use(helmet.hpkp({
 //     'ZyXwYuBdQsPIUVxNGRDAKGgxhJVu456='
   ]
 }));
+//*/
 
 // app.use(helmet.noCache());
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
+
+app.post('/a434819b5a5f4bfeeaa5d47c8af8ac87', function (req,res) {
+  console.log(req.body);
+  res.status(200).send('ok');
+});
 
 app.use(hpp());
 
