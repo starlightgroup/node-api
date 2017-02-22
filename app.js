@@ -60,7 +60,7 @@ if (isProtectedByCloudflare){
 app.use(helmet());
 app.use(helmet.referrerPolicy());
 app.use(helmet.frameguard({action: 'deny'}));
-//*/
+/*/
 //under construction
 app.use(csp({
   // some examples
