@@ -1,7 +1,7 @@
 'use strict';
 /* global __dirname */
 
-// require('@risingstack/trace');
+require('@risingstack/trace');
 
 import path from 'path';
 
