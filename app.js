@@ -1,7 +1,6 @@
 'use strict';
 /* global __dirname */
 
-require('@risingstack/trace');
 
 import path from 'path';
 

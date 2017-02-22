@@ -1,6 +1,6 @@
 'use strict';
-
 require('babel-register');
+require('@risingstack/trace');
 
 const
   http = require('http'),

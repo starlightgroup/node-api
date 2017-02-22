@@ -1,6 +1,7 @@
 // trace.config.js
-import config from './server-config';
-import util from 'util';
+const
+  config = require('./server-config'),
+  util = require('util');
 
 module.exports = {
   serviceName: util.format('nodejs - %s', config.ENV),
