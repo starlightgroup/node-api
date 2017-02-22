@@ -140,7 +140,7 @@ app.use(csp({
 //seems like it works for reporto only?
 
     // objectSrc: ["'none'"],
-    mediaSrc: ['data:'],
+    mediaSrc: ['data:', 'blob:'],
     upgradeInsecureRequests: true
   },
 
