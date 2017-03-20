@@ -14,7 +14,9 @@
     "snyk": "snyk --dev test",
     "test": "nyc --require babel-core/register mocha ./test/**/*.spec.js",
     "test-unit": "NODE_ENV=test _mocha -R spec --compilers js:babel-core/register --recursive",
-    "lint": "eslint *.js api/**/*.js config/redis.js config/**/*.js test/**/*.js"
+    "lint": "eslint *.js api/**/*.js config/redis.js config/**/*.js test/**/*.js",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "main": "dist/index.js",
   "dependencies": {
@@ -36,7 +38,7 @@
     "phone": "^1.0.8",
     "range_check": "^1.4.0",
     "request-promise": "^4.1.1",
-    "snyk": "^1.20.0",
+    "snyk": "^1.25.2",
     "through": "^2.3.8",
     "winston": "^2.3.0",
     "xss": "^0.3.3",
@@ -60,5 +62,6 @@
     "nyc": "^10.1.2",
     "supertest": "^3.0.0",
     "forever": "^0.15.3"
-  }
+  },
+  "snyk": true
 }
